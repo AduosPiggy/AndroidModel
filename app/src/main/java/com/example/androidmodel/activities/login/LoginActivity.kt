@@ -1,5 +1,6 @@
 package com.example.androidmodel.activities.login
 
+import android.app.WallpaperManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
