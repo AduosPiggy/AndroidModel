@@ -2,8 +2,10 @@ package com.example.androidmodel.activities.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
+import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityLoginBinding
@@ -30,7 +32,8 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         }
 
         binding.btnSignUp.setOnClickListener {
-
+            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
+            Log.d("twy001","twy find vc $vc")
         }
         binding.btnSignIn.setOnClickListener {
 
@@ -40,7 +43,10 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         CustomActivityManager.removeActivity(this)
+        //考虑是否执行finishAll
+        CustomActivityManager.finishAll()
     }
 
     override fun initViews() {
