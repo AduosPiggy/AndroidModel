@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import com.example.androidmodel.base.annotation.ContentLayout
 
+/**
+ * plus: this one is useless, please check by AndroidManifest.xml launcher
+ */
 @ContentLayout(R.layout.activity_main)
 class MainActivity : AppCompatActivity() {
 

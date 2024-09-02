@@ -78,7 +78,7 @@ object PermissionUtils {
     /**
      * 跳转到权限设置界面
      */
-    fun toAppSetting(context: Context) {
+    fun toAppPermissionSetting(context: Context) {
         val intent = Intent().apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {

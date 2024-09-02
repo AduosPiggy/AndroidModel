@@ -1,6 +1,6 @@
 package com.example.androidmodel.activities.login
 
-import android.app.WallpaperManager
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +11,8 @@ import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityLoginBinding
 import com.example.androidmodel.tools.CustomActivityManager
+import com.example.androidmodel.tools.PermissionUtils
+import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 
 //import kotlinx.android.synthetic.main.activity_login.*
 
@@ -38,6 +40,16 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         }
         binding.btnSignIn.setOnClickListener {
 
+        }
+        binding.btnLogApk.setOnClickListener{
+            val permissions = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            val REQUEST_CODE_PERMISSIONS = 0
+            PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
+            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/autoClickApps.apk")
+            val apkInfo = apkInfoImpl.apkInfo
         }
 
     }
