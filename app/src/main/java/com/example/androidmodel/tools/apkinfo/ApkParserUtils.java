@@ -223,6 +223,8 @@ public class ApkParserUtils {
     }
 
     // 应用加固信息
+    // todo 根据加固的壳的特征, 返回采用的加固类型
+    // https://blog.csdn.net/g5703129/article/details/85054405
     public String getApkHardenInfo(){
         return "";
     }
