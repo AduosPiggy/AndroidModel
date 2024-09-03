@@ -34,6 +34,13 @@ public class ApkInfo {
     private String[] apkRequestedPermission;
     // 应用加固信息
     private String apkHardenInfo;
+    //todo 用 V1 V2 V3 V31 V4 certificate 代替 apkHashMd5 apkHashSha256 apkSignedDeveloper apkSignedSerialNumber
+    //每一个具体的字段, 可以考虑用Json来存;最后jsonObj.toString;
+    private String[] certificate_v1;
+    private String[] certificate_v2;
+    private String[] certificate_v3;
+    private String[] certificate_v31;
+    private String[] certificate_v4;
 
     public String getApkName() {
         return apkName;
