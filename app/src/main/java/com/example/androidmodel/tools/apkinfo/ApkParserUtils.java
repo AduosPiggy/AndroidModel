@@ -6,15 +6,30 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.graphics.drawable.Drawable;
-import android.util.Base64;
+import android.util.Log;
 
+import com.android.apksig.ApkVerifier;
+import com.android.apksig.apk.ApkFormatException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -43,6 +58,14 @@ public class ApkParserUtils {
     private PackageManager packageManager;
     private PackageInfo packageInfo;
 
+    //签名信息
+    ApkVerifier.Result result;
+    List<ApkVerifier.Result.V1SchemeSignerInfo> mV1SchemeSigners = new ArrayList<>();
+    List<ApkVerifier.Result.V2SchemeSignerInfo> mV2SchemeSigners = new ArrayList<>();
+    List<ApkVerifier.Result.V3SchemeSignerInfo> mV3SchemeSigners = new ArrayList<>();
+    List<ApkVerifier.Result.V3SchemeSignerInfo> mV31SchemeSigners = new ArrayList<>();
+    List<ApkVerifier.Result.V4SchemeSignerInfo> mV4SchemeSigners = new ArrayList<>();
+
     public ApkParserUtils(Context context, String apkPath) {
         this.context = context;
         if(isApkPathValid(apkPath)){
@@ -59,6 +82,12 @@ public class ApkParserUtils {
 //                        PackageManager.GET_SERVICES |
 //                        PackageManager.GET_RECEIVERS |
 //                        PackageManager.GET_PROVIDERS);
+        result = getApkVerifierResult(apkPath);
+        mV1SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV1SchemeSigners() : null;
+        mV2SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV2SchemeSigners() : null;
+        mV3SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV3SchemeSigners() : null;
+        mV31SchemeSigners= result.isVerifiedUsingV1Scheme() ? result.getV31SchemeSigners() : null;
+        mV4SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV4SchemeSigners() : null;
     }
     /**
      * 检测 APK 路径是否有效
@@ -107,47 +136,120 @@ public class ApkParserUtils {
             for (byte b : hashBytes) {
                 sb.append(String.format("%02x", b));
             }
-            return sb.toString();
+            return sb.toString().toUpperCase();
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // 应用开发者签名 developer
-    public String getApkSignedDeveloper(){
-        String developerSignature = "";
-        SigningInfo signingInfo = getApkSigningInfo();
-        if(signingInfo != null ){
-            Signature[] signatures = signingInfo.getApkContentsSigners();
-            if(signatures != null && signatures.length > 0){
-                Signature signature = signatures[0];
-                developerSignature = Base64.encodeToString(signature.toByteArray(),Base64.DEFAULT);
-            }
+    public String getApkSignedDeveloper() {
+        JsonObject jsonObject = new JsonObject();
+        String developer = "";
+
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V1SchemeSignerInfo V = mV1SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            developer = certificate.getIssuerX500Principal().getName();
         }
-        return developerSignature;
+        jsonObject.addProperty("V1",developer.isEmpty()? "" : developer);
+        developer = "";
+
+        if(mV2SchemeSigners != null){
+            ApkVerifier.Result.V2SchemeSignerInfo V = mV2SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            developer = certificate.getIssuerX500Principal().getName();
+        }
+        jsonObject.addProperty("V2",developer.isEmpty()? "" : developer);
+        developer = "";
+
+        if(mV3SchemeSigners != null){
+            ApkVerifier.Result.V3SchemeSignerInfo V = mV3SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            developer = certificate.getIssuerX500Principal().getName();
+        }
+        jsonObject.addProperty("V3",developer.isEmpty()? "" : developer);
+        developer = "";
+
+        if(mV31SchemeSigners != null){
+            ApkVerifier.Result.V3SchemeSignerInfo V = mV31SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            developer = certificate.getIssuerX500Principal().getName();
+        }
+        jsonObject.addProperty("V31",developer.isEmpty()? "" : developer);
+        developer = "";
+
+        if(mV4SchemeSigners != null){
+            ApkVerifier.Result.V4SchemeSignerInfo V = mV4SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            developer = certificate.getIssuerX500Principal().getName();
+        }
+        jsonObject.addProperty("V4",developer.isEmpty()? "" : developer);
+
+        return jsonObject.toString();
     }
 
-    // 应用开发者签名 KeyHash
-    public String getApkSignedKeyHash(){
-        String keyHash = "";
-        try {
-            SigningInfo signingInfo = getApkSigningInfo();
-            if(signingInfo != null){
-                Signature[] signatures = signingInfo.getApkContentsSigners();
-                if(signatures != null && signatures.length > 0){
-                    Signature signature = signatures[0];
-                    MessageDigest md = null;
-                    md = MessageDigest.getInstance("SHA-256");
-                    md.update(signature.toByteArray());
-                    keyHash = Base64.encodeToString(md.digest(), Base64.DEFAULT);
-                }
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }finally {
-            return keyHash;
+
+    public String getApkSignedSerialNumber() {
+        JsonObject jsonObject = new JsonObject();
+        StringBuilder stringBuilder = new StringBuilder();
+        String serial = "";
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V1SchemeSignerInfo V = mV1SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            serial = String.valueOf(certificate.getSerialNumber());
         }
+        jsonObject.addProperty("V1",serial.isEmpty() ? "" : serial);
+        serial = "";
+
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V2SchemeSignerInfo V = mV2SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            serial = String.valueOf(certificate.getSerialNumber());
+
+
+        }
+        jsonObject.addProperty("V2",serial.isEmpty() ? "" : serial);
+        serial = "";
+
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V3SchemeSignerInfo V = mV3SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            serial = String.valueOf(certificate.getSerialNumber());
+
+        }
+        jsonObject.addProperty("V3",serial.isEmpty() ? "" : serial);
+        serial = "";
+
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V3SchemeSignerInfo V = mV31SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            serial = String.valueOf(certificate.getSerialNumber());
+        }
+        jsonObject.addProperty("V31",serial.isEmpty() ? "" : serial);
+        serial = "";
+
+        if(mV1SchemeSigners != null){
+            ApkVerifier.Result.V4SchemeSignerInfo V = mV4SchemeSigners.get(0);
+            X509Certificate certificate = V.getCertificate();
+            serial = String.valueOf(certificate.getSerialNumber());
+        }
+        jsonObject.addProperty("V4",serial.isEmpty() ? "" : serial);
+
+        return jsonObject.toString();
+    }
+
+
+    private ApkVerifier.Result getApkVerifierResult(String apkPath){
+        ApkVerifier.Result result = null;
+        try {
+            File apkFile = new File(apkPath);
+            ApkVerifier apkVerifier = new ApkVerifier.Builder(apkFile).build();
+            result = apkVerifier.verify();
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     private SigningInfo getApkSigningInfo(){

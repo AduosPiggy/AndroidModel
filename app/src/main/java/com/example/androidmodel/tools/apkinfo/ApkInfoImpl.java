@@ -29,7 +29,11 @@ public class ApkInfoImpl {
         apkInfo.setApkHashMd5(apkParserUtils.getApkHashMd5());
         apkInfo.setApkHashSha256(apkParserUtils.getApkHashSha256());
         apkInfo.setApkSignedDeveloper(apkParserUtils.getApkSignedDeveloper());
-        apkInfo.setApkSignedKeyHash(apkParserUtils.getApkSignedKeyHash());
+        apkInfo.setApkSignedSerialNumber(apkParserUtils.getApkSignedSerialNumber());
+        Log.d("twy001", "developer: " + new Gson().toJson(apkInfo.getApkSignedDeveloper()));
+        Log.d("twy001", "----------------------------------------------------------------------------------");
+        Log.d("twy001", "developer: " + new Gson().toJson(apkInfo.getApkSignedSerialNumber()));
+
         apkInfo.setApkLastPackedTime(apkParserUtils.getFormattedPackedTime());
         apkInfo.setApkSize(apkParserUtils.getApkSize());
         apkInfo.setApkVersion(apkParserUtils.getApkVersion());

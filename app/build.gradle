@@ -56,4 +56,6 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     //gson
     implementation 'com.google.code.gson:gson:2.10.1'
+    //ApkVerifier
+    implementation("com.android.tools.build:apksig:8.2.2")
 }

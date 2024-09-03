@@ -2,8 +2,6 @@ package com.example.androidmodel.tools.apkinfo;
 
 import android.graphics.drawable.Drawable;
 
-import java.util.Date;
-
 /**
  * @author kfflso
  * @data 2024/9/2 13:59
@@ -23,7 +21,7 @@ public class ApkInfo {
     // 应用开发者签名developer
     private String apkSignedDeveloper;
     // 应用开发者签名 KeyHash
-    private String apkSignedKeyHash;
+    private String apkSignedSerialNumber;
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
     private String apkLastPackedTime;
     // apk 文件大小 单位 byte
@@ -85,12 +83,12 @@ public class ApkInfo {
         this.apkSignedDeveloper = apkSignedDeveloper;
     }
 
-    public String getApkSignedKeyHash() {
-        return apkSignedKeyHash;
+    public String getApkSignedSerialNumber() {
+        return apkSignedSerialNumber;
     }
 
-    public void setApkSignedKeyHash(String apkSignedKeyHash) {
-        this.apkSignedKeyHash = apkSignedKeyHash;
+    public void setApkSignedSerialNumber(String apkSignedSerialNumber) {
+        this.apkSignedSerialNumber = apkSignedSerialNumber;
     }
 
     public String getApkLastPackedTime() {
