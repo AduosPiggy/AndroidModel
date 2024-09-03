@@ -6,6 +6,7 @@ package com.example.androidmodel.tools
  * @author kfflso
  * @data 2024/8/1/001 17:17
  * @plus:
+ *      不能中文
  */
 import android.graphics.Bitmap
 import android.graphics.Color
