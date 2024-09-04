@@ -1,6 +1,8 @@
-package com.example.androidmodel.tools.apkinfo;
+package com.example.androidmodel.tools.apkinfo.bean;
 
 import android.graphics.drawable.Drawable;
+
+import java.util.List;
 
 /**
  * @author kfflso
@@ -14,14 +16,7 @@ public class ApkInfo {
     private Drawable apkIcon;
     // 应用包名
     private String apkPackageName;
-    // 应用Hash md5
-    private String apkHashMd5;
-    // 应用Hash sha256
-    private String apkHashSha256;
-    // 应用开发者签名developer
-    private String apkSignedDeveloper;
-    // 应用开发者签名 KeyHash
-    private String apkSignedSerialNumber;
+
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
     private String apkLastPackedTime;
     // apk 文件大小 单位 byte
@@ -34,13 +29,17 @@ public class ApkInfo {
     private String[] apkRequestedPermission;
     // 应用加固信息
     private String apkHardenInfo;
-    //todo 用 V1 V2 V3 V31 V4 certificate 代替 apkHashMd5 apkHashSha256 apkSignedDeveloper apkSignedSerialNumber
-    //每一个具体的字段, 可以考虑用Json来存;最后jsonObj.toString;
-    private String[] certificate_v1;
-    private String[] certificate_v2;
-    private String[] certificate_v3;
-    private String[] certificate_v31;
-    private String[] certificate_v4;
+
+    //签名证书 V1
+    private List<CertificateInfo> certificateV1;
+    //签名证书 V2
+    private List<CertificateInfo> certificateV2;
+    //签名证书 V3
+    private List<CertificateInfo> certificateV3;
+    //签名证书 V31
+    private List<CertificateInfo> certificateV31;
+    //签名证书 V4
+    private List<CertificateInfo> certificateV4;
 
     public String getApkName() {
         return apkName;
@@ -64,38 +63,6 @@ public class ApkInfo {
 
     public void setApkPackageName(String apkPackageName) {
         this.apkPackageName = apkPackageName;
-    }
-
-    public String getApkHashMd5() {
-        return apkHashMd5;
-    }
-
-    public void setApkHashMd5(String apkHashMd5) {
-        this.apkHashMd5 = apkHashMd5;
-    }
-
-    public String getApkHashSha256() {
-        return apkHashSha256;
-    }
-
-    public void setApkHashSha256(String apkHashSha256) {
-        this.apkHashSha256 = apkHashSha256;
-    }
-
-    public String getApkSignedDeveloper() {
-        return apkSignedDeveloper;
-    }
-
-    public void setApkSignedDeveloper(String apkSignedDeveloper) {
-        this.apkSignedDeveloper = apkSignedDeveloper;
-    }
-
-    public String getApkSignedSerialNumber() {
-        return apkSignedSerialNumber;
-    }
-
-    public void setApkSignedSerialNumber(String apkSignedSerialNumber) {
-        this.apkSignedSerialNumber = apkSignedSerialNumber;
     }
 
     public String getApkLastPackedTime() {
@@ -144,5 +111,45 @@ public class ApkInfo {
 
     public void setApkHardenInfo(String apkHardenInfo) {
         this.apkHardenInfo = apkHardenInfo;
+    }
+
+    public List<CertificateInfo> getCertificateV1() {
+        return certificateV1;
+    }
+
+    public void setCertificateV1(List<CertificateInfo> certificateV1) {
+        this.certificateV1 = certificateV1;
+    }
+
+    public List<CertificateInfo> getCertificateV2() {
+        return certificateV2;
+    }
+
+    public void setCertificateV2(List<CertificateInfo> certificateV2) {
+        this.certificateV2 = certificateV2;
+    }
+
+    public List<CertificateInfo> getCertificateV3() {
+        return certificateV3;
+    }
+
+    public void setCertificateV3(List<CertificateInfo> certificateV3) {
+        this.certificateV3 = certificateV3;
+    }
+
+    public List<CertificateInfo> getCertificateV31() {
+        return certificateV31;
+    }
+
+    public void setCertificateV31(List<CertificateInfo> certificateV31) {
+        this.certificateV31 = certificateV31;
+    }
+
+    public List<CertificateInfo> getCertificateV4() {
+        return certificateV4;
+    }
+
+    public void setCertificateV4(List<CertificateInfo> certificateV4) {
+        this.certificateV4 = certificateV4;
     }
 }

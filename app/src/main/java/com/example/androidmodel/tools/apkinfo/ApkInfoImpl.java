@@ -3,6 +3,7 @@ package com.example.androidmodel.tools.apkinfo;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.androidmodel.tools.apkinfo.bean.ApkInfo;
 import com.google.gson.Gson;
 
 /**
@@ -26,20 +27,17 @@ public class ApkInfoImpl {
         apkInfo.setApkName(apkParserUtils.getApkName());
         apkInfo.setApkIcon(apkParserUtils.getApkIcon());
         apkInfo.setApkPackageName(apkParserUtils.getApkPackageName());
-        apkInfo.setApkHashMd5(apkParserUtils.getApkHashMd5());
-        apkInfo.setApkHashSha256(apkParserUtils.getApkHashSha256());
-        apkInfo.setApkSignedDeveloper(apkParserUtils.getApkSignedDeveloper());
-        apkInfo.setApkSignedSerialNumber(apkParserUtils.getApkSignedSerialNumber());
-        Log.d("twy001", "developer: " + new Gson().toJson(apkInfo.getApkSignedDeveloper()));
-        Log.d("twy001", "----------------------------------------------------------------------------------");
-        Log.d("twy001", "developer: " + new Gson().toJson(apkInfo.getApkSignedSerialNumber()));
-
         apkInfo.setApkLastPackedTime(apkParserUtils.getFormattedPackedTime());
         apkInfo.setApkSize(apkParserUtils.getApkSize());
         apkInfo.setApkVersion(apkParserUtils.getApkVersion());
         apkInfo.setApkTargetSDK(apkParserUtils.getApkTargetSDK());
         apkInfo.setApkRequestedPermission(apkParserUtils.getApkRequestedPermission());
         apkInfo.setApkHardenInfo(apkParserUtils.getApkHardenInfo());
+        apkInfo.setCertificateV1(apkParserUtils.getCertificateV1());
+        apkInfo.setCertificateV2(apkParserUtils.getCertificateV2());
+        apkInfo.setCertificateV3(apkParserUtils.getCertificateV3());
+        apkInfo.setCertificateV31(apkParserUtils.getCertificateV31());
+        apkInfo.setCertificateV4(apkParserUtils.getCertificateV4());
         Log.d("ApkInfo",new Gson().toJson(apkInfo));
     }
     public ApkInfo getApkInfo(){
