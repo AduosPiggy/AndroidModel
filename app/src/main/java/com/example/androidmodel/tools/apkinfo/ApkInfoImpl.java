@@ -38,6 +38,7 @@ public class ApkInfoImpl {
         apkInfo.setCertificateV3(apkParserUtils.getCertificateV3());
         apkInfo.setCertificateV31(apkParserUtils.getCertificateV31());
         apkInfo.setCertificateV4(apkParserUtils.getCertificateV4());
+        String json = new Gson().toJson(apkInfo);
         Log.d("ApkInfo",new Gson().toJson(apkInfo));
     }
     public ApkInfo getApkInfo(){

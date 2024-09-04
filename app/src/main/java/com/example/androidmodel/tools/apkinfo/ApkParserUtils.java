@@ -134,7 +134,8 @@ public class ApkParserUtils {
         Date date = new Date(timestamp );
         SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getInstance();
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         return sdf.format(date);
     }
     // 应用上一次打包时间 单位ms
