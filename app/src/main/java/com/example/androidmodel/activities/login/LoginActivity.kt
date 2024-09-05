@@ -49,6 +49,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
             val REQUEST_CODE_PERMISSIONS = 0
             PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
             val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/weibo.apk")
+            val apkInfoJson = apkInfoImpl.apkInfoJson
             val apkInfo = apkInfoImpl.apkInfo
         }
 

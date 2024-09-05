@@ -4,13 +4,18 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.SigningInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 import com.example.androidmodel.tools.apkinfo.bean.CertificateInfo;
-import com.google.gson.JsonObject;
+import com.example.androidmodel.tools.apkinfo.cache.ApkParserCache;
+import com.example.androidmodel.tools.apkinfo.cache.ApkShellFeaturesCache;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,8 +28,14 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -33,32 +44,22 @@ import java.util.zip.ZipFile;
  * @data 2024/9/2 13:56
  * @plus:
  *     getApkName; // 应用名
- *     getApkIcon; // 应用图标
+ *     getApkIconBase64; // 应用图标 icon -> bytearray -> gzip -> base64
  *     getApkPackageName; // 应用包名
- *     getApkHashMd5; // 应用Hash md5
- *     getApkHashSha256; // 应用Hash sha256
- *     getApkSignedDeveloper; // 应用开发者签名developer
- *     getApkSignedKeyHash; // 应用开发者签名 KeyHash
- *     getApkPackedTime; // 应用打包时间
+ *     getFormattedPackedTime; // 应用打包时间
  *     getApkSize; // apk 文件大小
  *     getApkVersion; // apk 应用版本
  *     getApkTargetSDK; // apk targetSDK
  *     getApkRequestedPermission; // 应用申请权限
  *     getApkHardenInfo; // 应用加固信息
+ *
  */
 public class ApkParserUtils {
     private Context context;
     private String apkPath;
     private PackageManager packageManager;
     private PackageInfo packageInfo;
-
-    //签名信息
-    ApkVerifier.Result result;
-    List<ApkVerifier.Result.V1SchemeSignerInfo> mV1SchemeSigners = new ArrayList<>();
-    List<ApkVerifier.Result.V2SchemeSignerInfo> mV2SchemeSigners = new ArrayList<>();
-    List<ApkVerifier.Result.V3SchemeSignerInfo> mV3SchemeSigners = new ArrayList<>();
-    List<ApkVerifier.Result.V3SchemeSignerInfo> mV31SchemeSigners = new ArrayList<>();
-    List<ApkVerifier.Result.V4SchemeSignerInfo> mV4SchemeSigners = new ArrayList<>();
+    private ApkParserCache apkParserCache;
 
     public ApkParserUtils(Context context, String apkPath) {
         this.context = context;
@@ -70,24 +71,9 @@ public class ApkParserUtils {
         packageManager = context.getPackageManager();
         //获取对应apkPath的 packageInfo
         packageInfo = packageManager.getPackageArchiveInfo(apkPath, 0);
-
-//        packageInfo = packageManager.getPackageArchiveInfo(apkPath,
-//                PackageManager.GET_ACTIVITIES |
-//                        PackageManager.GET_SERVICES |
-//                        PackageManager.GET_RECEIVERS |
-//                        PackageManager.GET_PROVIDERS);
-        result = getApkVerifierResult(apkPath);
-        mV1SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV1SchemeSigners() : null;
-        mV2SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV2SchemeSigners() : null;
-        mV3SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV3SchemeSigners() : null;
-        mV31SchemeSigners= result.isVerifiedUsingV1Scheme() ? result.getV31SchemeSigners() : null;
-        mV4SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV4SchemeSigners() : null;
-        result = null;
+        apkParserCache = new ApkParserCache(apkPath);
     }
-    /**
-     * 检测 APK 路径是否有效
-     * @return true：路径有效； false：路径无效
-     */
+
     private Boolean isApkPathValid(String apkPath) {
         File file = new File(apkPath);
         return file.exists() && file.isFile() && file.getName().endsWith(".apk");
@@ -97,36 +83,106 @@ public class ApkParserUtils {
     public String getApkName(){
         return packageInfo != null ? packageInfo.applicationInfo.loadLabel(packageManager).toString() : null;
     }
-
-    // 应用图标
-    public Drawable getApkIcon(){
-        return packageInfo != null ? packageInfo.applicationInfo.loadIcon(packageManager) : null;
+    public String getApkIconBase64(){
+        return getApkIconBase64_();
     }
-
     // 应用包名
     public String getApkPackageName(){
         return packageInfo != null ? packageInfo.packageName : null;
     }
-
-    private ApkVerifier.Result getApkVerifierResult(String apkPath){
-        ApkVerifier.Result result = null;
+    //上一次打包的时间
+    public String getFormattedPackedTime() {
+        return getFormattedPackedTime_();
+    }
+    // apk 文件大小
+    public long getApkSize(){
         try {
-            File apkFile = new File(apkPath);
-            ApkVerifier apkVerifier = new ApkVerifier.Builder(apkFile).build();
-            result = apkVerifier.verify();
-        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            File file = new File(apkPath);
+            return file.length();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        return result;
+    }
+    // apk 应用版本
+    public long getApkVersion(){
+        return packageInfo != null ? packageInfo.getLongVersionCode() : 0;
     }
 
-    private SigningInfo getApkSigningInfo(){
-        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath,PackageManager.GET_SIGNING_CERTIFICATES);
-        return packageInfo != null ? packageInfo.signingInfo : null;
+    // apk targetSDK
+    public int getApkTargetSDK() {
+        try {
+            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+            return packageInfo != null ? packageInfo.applicationInfo.targetSdkVersion : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // 应用申请权限
+    public String[] getApkRequestedPermission() {
+        try {
+            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS);
+            return packageInfo != null ? packageInfo.requestedPermissions : new String[0];
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[0];
+        }
+    }
+
+    //应用加固信息
+    public Set<String > getStubInfo(){
+        return getStubInfo_();
+    }
+    public List<CertificateInfo> getCertificateV1(){
+        return getCertificateV1_();
+    }
+    public List<CertificateInfo> getCertificateV2(){
+        return getCertificateV2_();
+    }
+    public List<CertificateInfo> getCertificateV3(){
+        return getCertificateV3_(apkParserCache.getmV3SchemeSigners());
+    }
+    public List<CertificateInfo> getCertificateV31(){
+        return getCertificateV3_(apkParserCache.getmV31SchemeSigners());
+    }
+    public List<CertificateInfo> getCertificateV4(){
+        return getCertificateV4_();
+    }
+
+    /**
+     *
+     * @return icon drawable -> BitmapDrawable -> bitmap -> bytearray -> gzip -> string
+     */
+    public String getApkIconBase64_(){
+        Drawable icon = getApkIcon();
+        Bitmap bitmap = ((BitmapDrawable) icon).getBitmap();
+        byte[] byteArray = bitmapToByteArray(bitmap);
+        byte[] gzipCompressed = gzipCompress(byteArray);
+        return Base64.encodeToString(gzipCompressed, Base64.DEFAULT);
+    }
+    public Drawable getApkIcon(){
+        return packageInfo != null ? packageInfo.applicationInfo.loadIcon(packageManager) : null;
+    }
+    private byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private byte[] gzipCompress(byte[] data) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteStream)) {
+            gzipOutputStream.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteStream.toByteArray();
     }
 
     // 应用上一次打包时间
-    public String getFormattedPackedTime() {
+    public String getFormattedPackedTime_() {
         long timestamp = getApkLastPackedTime();
         if (timestamp == 0) {
             return "unKnown time: 0";
@@ -154,51 +210,8 @@ public class ApkParserUtils {
         return time;
     }
 
-    // apk 文件大小
-    public long getApkSize(){
-        try {
-            File file = new File(apkPath);
-            return file.length();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // apk 应用版本
-    public long getApkVersion(){
-        return packageInfo != null ? packageInfo.getLongVersionCode() : 0;
-    }
-
-    // apk targetSDK
-    public int getApkTargetSDK() {
-        try {
-            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
-            return packageInfo != null ? packageInfo.applicationInfo.targetSdkVersion : 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
 
 
-    // 应用申请权限
-    public String[] getApkRequestedPermission() {
-        try {
-            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS);
-            return packageInfo != null ? packageInfo.requestedPermissions : new String[0];
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new String[0];
-        }
-    }
-
-    // 应用加固信息
-    // todo 根据加固的壳的特征, 返回采用的加固类型
-    // https://blog.csdn.net/g5703129/article/details/85054405
-    public String getApkHardenInfo(){
-        return "";
-    }
 
     // 应用Hash MD5
     private String getSignHashMD5(){
@@ -232,12 +245,33 @@ public class ApkParserUtils {
             return null;
         }
     }
-    public List<CertificateInfo> getCertificateV1(){
+
+    //应用加固信息
+    public Set<String> getStubInfo_() {
+        Set<String> stubInfo = new HashSet<>();
+        Map<String, String> shellFeaturesMap = ApkShellFeaturesCache.getInstance().getShellFeaturesMap();
+        try {
+            File apkFile = new File(apkPath);
+            ZipFile zipFile = new ZipFile(apkFile);
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                if (shellFeaturesMap.containsKey(entry.getName())) {
+                    stubInfo.add(shellFeaturesMap.get(entry.getName()));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return stubInfo;
+    }
+
+    public List<CertificateInfo> getCertificateV1_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(mV1SchemeSigners == null){
+        if(apkParserCache.getmV1SchemeSigners() == null){
             return certificateInfoList;
         }
-        for(ApkVerifier.Result.V1SchemeSignerInfo schemeSignerInfo: mV1SchemeSigners){
+        for(ApkVerifier.Result.V1SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV1SchemeSigners()){
             String signerName = schemeSignerInfo.getName();
             List<X509Certificate> mCertChain = schemeSignerInfo.getCertificateChain();
             String signerBlockFileName = schemeSignerInfo.getSignatureBlockFileName();
@@ -259,9 +293,9 @@ public class ApkParserUtils {
                 certificateInfo.setCertificateNotAfter(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
-                String cfAlgorithmType = publicKey.getAlgorithm();
-                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setCfAlgorithmType(cfAlgorithmType);
+//                certificateInfo.setPublicKey(publicKey);
+                certificateInfo.setPublicKeyBase64( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT)  );
+                certificateInfo.setCfAlgorithmType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
@@ -281,12 +315,12 @@ public class ApkParserUtils {
         }
         return certificateInfoList;
     }
-    public List<CertificateInfo> getCertificateV2(){
+    public List<CertificateInfo> getCertificateV2_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(mV2SchemeSigners == null){
+        if(apkParserCache.getmV2SchemeSigners() == null){
             return certificateInfoList;
         }
-        for(ApkVerifier.Result.V2SchemeSignerInfo schemeSignerInfo: mV2SchemeSigners){
+        for(ApkVerifier.Result.V2SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV2SchemeSigners()){
             int signerIndex = schemeSignerInfo.getIndex();
 
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
@@ -305,7 +339,7 @@ public class ApkParserUtils {
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
-                certificateInfo.setPublicKey(publicKey);
+//                certificateInfo.setPublicKey(publicKey);
                 certificateInfo.setCfAlgorithmType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
@@ -325,12 +359,6 @@ public class ApkParserUtils {
             }
         }
         return certificateInfoList;
-    }
-    public List<CertificateInfo> getCertificateV3(){
-        return getCertificateV3_(mV3SchemeSigners);
-    }
-    public List<CertificateInfo> getCertificateV31(){
-        return getCertificateV3_(mV31SchemeSigners);
     }
     private List<CertificateInfo> getCertificateV3_(List<ApkVerifier.Result.V3SchemeSignerInfo> mV3_SchemeSigners){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
@@ -355,7 +383,7 @@ public class ApkParserUtils {
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
-                certificateInfo.setPublicKey(publicKey);
+//                certificateInfo.setPublicKey(publicKey);
                 certificateInfo.setCfAlgorithmType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
@@ -376,12 +404,12 @@ public class ApkParserUtils {
         }
         return certificateInfoList;
     }
-    public List<CertificateInfo> getCertificateV4(){
+    public List<CertificateInfo> getCertificateV4_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(mV4SchemeSigners == null){
+        if(apkParserCache.getmV4SchemeSigners() == null){
             return certificateInfoList;
         }
-        for(ApkVerifier.Result.V4SchemeSignerInfo schemeSignerInfo: mV4SchemeSigners){
+        for(ApkVerifier.Result.V4SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV4SchemeSigners()){
             int signerIndex = schemeSignerInfo.getIndex();
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
             String signHashMD5 = getSignHashMD5();
@@ -399,7 +427,7 @@ public class ApkParserUtils {
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
-                certificateInfo.setPublicKey(publicKey);
+//                certificateInfo.setPublicKey(publicKey);
                 certificateInfo.setCfAlgorithmType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;

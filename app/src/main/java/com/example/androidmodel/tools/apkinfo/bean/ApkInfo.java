@@ -1,8 +1,7 @@
 package com.example.androidmodel.tools.apkinfo.bean;
 
-import android.graphics.drawable.Drawable;
-
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author kfflso
@@ -12,11 +11,12 @@ import java.util.List;
 public class ApkInfo {
     // 应用名
     private String apkName;
-    // 应用图标
-    private Drawable apkIcon;
+//    // 应用图标
+//    private Drawable apkIcon;
+    //应用图标
+    private String apkIconBase64;
     // 应用包名
     private String apkPackageName;
-
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
     private String apkLastPackedTime;
     // apk 文件大小 单位 byte
@@ -28,7 +28,7 @@ public class ApkInfo {
     // 应用申请权限
     private String[] apkRequestedPermission;
     // 应用加固信息
-    private String apkHardenInfo;
+    private Set<String> apkStubInfo;
 
     //签名证书 V1
     private List<CertificateInfo> certificateV1;
@@ -49,12 +49,20 @@ public class ApkInfo {
         this.apkName = apkName;
     }
 
-    public Drawable getApkIcon() {
-        return apkIcon;
+//    public Drawable getApkIcon() {
+//        return apkIcon;
+//    }
+//
+//    public void setApkIcon(Drawable apkIcon) {
+//        this.apkIcon = apkIcon;
+//    }
+
+    public String getApkIconBase64() {
+        return apkIconBase64;
     }
 
-    public void setApkIcon(Drawable apkIcon) {
-        this.apkIcon = apkIcon;
+    public void setApkIconBase64(String apkIconBase64) {
+        this.apkIconBase64 = apkIconBase64;
     }
 
     public String getApkPackageName() {
@@ -105,12 +113,12 @@ public class ApkInfo {
         this.apkRequestedPermission = apkRequestedPermission;
     }
 
-    public String getApkHardenInfo() {
-        return apkHardenInfo;
+    public Set<String> getApkStubInfo() {
+        return apkStubInfo;
     }
 
-    public void setApkHardenInfo(String apkHardenInfo) {
-        this.apkHardenInfo = apkHardenInfo;
+    public void setApkStubInfo(Set<String> apkStubInfo) {
+        this.apkStubInfo = apkStubInfo;
     }
 
     public List<CertificateInfo> getCertificateV1() {

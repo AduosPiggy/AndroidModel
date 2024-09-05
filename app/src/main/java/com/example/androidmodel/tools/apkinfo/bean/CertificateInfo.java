@@ -29,8 +29,9 @@ public class CertificateInfo {
     // 有效期末
     private Date certificateNotAfter;
 
-    //公钥完整信息
-    private PublicKey publicKey;
+//    //公钥完整信息
+//    private PublicKey publicKey;
+    private String publicKeyBase64;
     // 公钥类型
     private String cfAlgorithmType;
     //公钥指数
@@ -134,12 +135,12 @@ public class CertificateInfo {
         this.certificateNotAfter = certificateNotAfter;
     }
 
-    public PublicKey getPublicKey() {
-        return publicKey;
+    public String getPublicKeyBase64() {
+        return publicKeyBase64;
     }
 
-    public void setPublicKey(PublicKey publicKey) {
-        this.publicKey = publicKey;
+    public void setPublicKeyBase64(String publicKeyBase64) {
+        this.publicKeyBase64 = publicKeyBase64;
     }
 
     public String getCfAlgorithmType() {

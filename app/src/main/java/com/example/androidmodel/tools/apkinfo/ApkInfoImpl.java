@@ -25,24 +25,27 @@ public class ApkInfoImpl {
         ApkParserUtils apkParserUtils = new ApkParserUtils(context,apkPath);
         apkInfo = new ApkInfo();
         apkInfo.setApkName(apkParserUtils.getApkName());
-        apkInfo.setApkIcon(apkParserUtils.getApkIcon());
+//        apkInfo.setApkIcon(apkParserUtils.getApkIcon());
+        apkInfo.setApkIconBase64(apkParserUtils.getApkIconBase64());
         apkInfo.setApkPackageName(apkParserUtils.getApkPackageName());
         apkInfo.setApkLastPackedTime(apkParserUtils.getFormattedPackedTime());
         apkInfo.setApkSize(apkParserUtils.getApkSize());
         apkInfo.setApkVersion(apkParserUtils.getApkVersion());
         apkInfo.setApkTargetSDK(apkParserUtils.getApkTargetSDK());
         apkInfo.setApkRequestedPermission(apkParserUtils.getApkRequestedPermission());
-        apkInfo.setApkHardenInfo(apkParserUtils.getApkHardenInfo());
+        apkInfo.setApkStubInfo(apkParserUtils.getStubInfo());
         apkInfo.setCertificateV1(apkParserUtils.getCertificateV1());
         apkInfo.setCertificateV2(apkParserUtils.getCertificateV2());
         apkInfo.setCertificateV3(apkParserUtils.getCertificateV3());
         apkInfo.setCertificateV31(apkParserUtils.getCertificateV31());
         apkInfo.setCertificateV4(apkParserUtils.getCertificateV4());
-        String json = new Gson().toJson(apkInfo);
         Log.d("ApkInfo",new Gson().toJson(apkInfo));
     }
     public ApkInfo getApkInfo(){
         return apkInfo;
+    }
+    public String getApkInfoJson(){
+        return new Gson().toJson(apkInfo);
     }
 
 }
