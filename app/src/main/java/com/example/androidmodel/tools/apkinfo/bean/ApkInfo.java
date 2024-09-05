@@ -10,25 +10,27 @@ import java.util.Set;
  */
 public class ApkInfo {
     // 应用名
-    private String apkName;
-//    // 应用图标
-//    private Drawable apkIcon;
+    private String name;
     //应用图标
-    private String apkIconBase64;
+    private String icon;
     // 应用包名
-    private String apkPackageName;
+    private String packageName;
+    private String MD5;
+    private String SHA1;
+    private String SHA256;
+
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
-    private String apkLastPackedTime;
-    // apk 文件大小 单位 byte
-    private long apkSize;
+    private String LastModifyTime;
+    // apk 文件大小 单位 bytes
+    private long size;
     // apk 应用版本
-    private long apkVersion;
+    private long version;
     // apk targetSDK
-    private int apkTargetSDK;
+    private int targetSDK;
     // 应用申请权限
-    private String[] apkRequestedPermission;
+    private String[] permissions;
     // 应用加固信息
-    private Set<String> apkStubInfo;
+    private Set<String> stubInfo;
 
     //签名证书 V1
     private List<CertificateInfo> certificateV1;
@@ -41,84 +43,101 @@ public class ApkInfo {
     //签名证书 V4
     private List<CertificateInfo> certificateV4;
 
-    public String getApkName() {
-        return apkName;
+    public String getName() {
+        return name;
     }
 
-    public void setApkName(String apkName) {
-        this.apkName = apkName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-//    public Drawable getApkIcon() {
-//        return apkIcon;
-//    }
-//
-//    public void setApkIcon(Drawable apkIcon) {
-//        this.apkIcon = apkIcon;
-//    }
 
-    public String getApkIconBase64() {
-        return apkIconBase64;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setApkIconBase64(String apkIconBase64) {
-        this.apkIconBase64 = apkIconBase64;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
-    public String getApkPackageName() {
-        return apkPackageName;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setApkPackageName(String apkPackageName) {
-        this.apkPackageName = apkPackageName;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
-    public String getApkLastPackedTime() {
-        return apkLastPackedTime;
+    public String getMD5() {
+        return MD5;
     }
 
-    public void setApkLastPackedTime(String apkLastPackedTime) {
-        this.apkLastPackedTime = apkLastPackedTime;
+    public void setMD5(String MD5) {
+        this.MD5 = MD5;
     }
 
-    public long getApkSize() {
-        return apkSize;
+    public String getSHA1() {
+        return SHA1;
     }
 
-    public void setApkSize(long apkSize) {
-        this.apkSize = apkSize;
+    public void setSHA1(String SHA1) {
+        this.SHA1 = SHA1;
     }
 
-    public long getApkVersion() {
-        return apkVersion;
+    public String getSHA256() {
+        return SHA256;
     }
 
-    public void setApkVersion(long apkVersion) {
-        this.apkVersion = apkVersion;
+    public void setSHA256(String SHA256) {
+        this.SHA256 = SHA256;
     }
 
-    public int getApkTargetSDK() {
-        return apkTargetSDK;
+    public String getLastModifyTime() {
+        return LastModifyTime;
     }
 
-    public void setApkTargetSDK(int apkTargetSDK) {
-        this.apkTargetSDK = apkTargetSDK;
+    public void setLastModifyTime(String lastModifyTime) {
+        this.LastModifyTime = lastModifyTime;
     }
 
-    public String[] getApkRequestedPermission() {
-        return apkRequestedPermission;
+    public long getSize() {
+        return size;
     }
 
-    public void setApkRequestedPermission(String[] apkRequestedPermission) {
-        this.apkRequestedPermission = apkRequestedPermission;
+    public void setSize(long size) {
+        this.size = size;
     }
 
-    public Set<String> getApkStubInfo() {
-        return apkStubInfo;
+    public long getVersion() {
+        return version;
     }
 
-    public void setApkStubInfo(Set<String> apkStubInfo) {
-        this.apkStubInfo = apkStubInfo;
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    public int getTargetSDK() {
+        return targetSDK;
+    }
+
+    public void setTargetSDK(int targetSDK) {
+        this.targetSDK = targetSDK;
+    }
+
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String[] permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<String> getStubInfo() {
+        return stubInfo;
+    }
+
+    public void setStubInfo(Set<String> stubInfo) {
+        this.stubInfo = stubInfo;
     }
 
     public List<CertificateInfo> getCertificateV1() {

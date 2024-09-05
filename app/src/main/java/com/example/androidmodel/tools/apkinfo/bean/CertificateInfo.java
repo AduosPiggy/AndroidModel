@@ -1,7 +1,6 @@
 package com.example.androidmodel.tools.apkinfo.bean;
 
 import java.math.BigInteger;
-import java.security.PublicKey;
 import java.util.Date;
 
 /**
@@ -11,29 +10,29 @@ import java.util.Date;
  */
 public class CertificateInfo {
     //签名者信息
-    private String signerName;
-    private String signerBlockFileName;
-    private String signerFileName;
+    private String name;
+    private String blockFileName;
+    private String fileName;
     private int index;
 
     // 证书类型 X.509
-    private String certificateType;
+    private String type;
     // 版本
-    private int certificateVersion;
+    private int version;
     // 序列号 -> 应用开发者签名序列号 16进制
-    private String cfSerialNumber;
+    private String serialNumber;
     // developer -> 应用开发者签名主题
-    private String cfIX500PName;
+    private String distinguishedName;
     // 有效期始
-    private Date certificateNotBefore;
+    private Date validFrom;
     // 有效期末
-    private Date certificateNotAfter;
+    private Date validTo;
 
 //    //公钥完整信息
 //    private PublicKey publicKey;
-    private String publicKeyBase64;
+    private String publicKey;
     // 公钥类型
-    private String cfAlgorithmType;
+    private String publicKeyType;
     //公钥指数
     private BigInteger rsaPublicExponent;
     //公钥模数大小(位)
@@ -45,38 +44,35 @@ public class CertificateInfo {
     private String signAlgorithms;
     // 签名 OID
     private String signOID;
-
     // 应用Hash md5
-    private String signHashMD5;
+    private String MD5;
     // 应用Hash SHA-1
-    private String signHashSHA1;
+    private String SHA1;
     // 应用Hash SHA256
-    private String signHashSHA256;
+    private String SHA256;
 
-
-
-    public String getSignerName() {
-        return signerName;
+    public String getName() {
+        return name;
     }
 
-    public void setSignerName(String signerName) {
-        this.signerName = signerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getSignerBlockFileName() {
-        return signerBlockFileName;
+    public String getBlockFileName() {
+        return blockFileName;
     }
 
-    public void setSignerBlockFileName(String signerBlockFileName) {
-        this.signerBlockFileName = signerBlockFileName;
+    public void setBlockFileName(String blockFileName) {
+        this.blockFileName = blockFileName;
     }
 
-    public String getSignerFileName() {
-        return signerFileName;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setSignerFileName(String signerFileName) {
-        this.signerFileName = signerFileName;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public int getIndex() {
@@ -87,68 +83,68 @@ public class CertificateInfo {
         this.index = index;
     }
 
-    public String getCertificateType() {
-        return certificateType;
+    public String getType() {
+        return type;
     }
 
-    public void setCertificateType(String certificateType) {
-        this.certificateType = certificateType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public int getCertificateVersion() {
-        return certificateVersion;
+    public int getVersion() {
+        return version;
     }
 
-    public void setCertificateVersion(int certificateVersion) {
-        this.certificateVersion = certificateVersion;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
-    public String getCfSerialNumber() {
-        return cfSerialNumber;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setCfSerialNumber(String cfSerialNumber) {
-        this.cfSerialNumber = cfSerialNumber;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
-    public String getCfIX500PName() {
-        return cfIX500PName;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
-    public void setCfIX500PName(String cfIX500PName) {
-        this.cfIX500PName = cfIX500PName;
+    public void setDistinguishedName(String distinguishedName) {
+        this.distinguishedName = distinguishedName;
     }
 
-    public Date getCertificateNotBefore() {
-        return certificateNotBefore;
+    public Date getValidFrom() {
+        return validFrom;
     }
 
-    public void setCertificateNotBefore(Date certificateNotBefore) {
-        this.certificateNotBefore = certificateNotBefore;
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
     }
 
-    public Date getCertificateNotAfter() {
-        return certificateNotAfter;
+    public Date getValidTo() {
+        return validTo;
     }
 
-    public void setCertificateNotAfter(Date certificateNotAfter) {
-        this.certificateNotAfter = certificateNotAfter;
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
     }
 
-    public String getPublicKeyBase64() {
-        return publicKeyBase64;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setPublicKeyBase64(String publicKeyBase64) {
-        this.publicKeyBase64 = publicKeyBase64;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
-    public String getCfAlgorithmType() {
-        return cfAlgorithmType;
+    public String getPublicKeyType() {
+        return publicKeyType;
     }
 
-    public void setCfAlgorithmType(String cfAlgorithmType) {
-        this.cfAlgorithmType = cfAlgorithmType;
+    public void setPublicKeyType(String publicKeyType) {
+        this.publicKeyType = publicKeyType;
     }
 
     public BigInteger getRsaPublicExponent() {
@@ -191,27 +187,27 @@ public class CertificateInfo {
         this.signOID = signOID;
     }
 
-    public String getSignHashMD5() {
-        return signHashMD5;
+    public String getMD5() {
+        return MD5;
     }
 
-    public void setSignHashMD5(String signHashMD5) {
-        this.signHashMD5 = signHashMD5;
+    public void setMD5(String MD5) {
+        this.MD5 = MD5;
     }
 
-    public String getSignHashSHA1() {
-        return signHashSHA1;
+    public String getSHA1() {
+        return SHA1;
     }
 
-    public void setSignHashSHA1(String signHashSHA1) {
-        this.signHashSHA1 = signHashSHA1;
+    public void setSHA1(String SHA1) {
+        this.SHA1 = SHA1;
     }
 
-    public String getSignHashSHA256() {
-        return signHashSHA256;
+    public String getSHA256() {
+        return SHA256;
     }
 
-    public void setSignHashSHA256(String signHashSHA256) {
-        this.signHashSHA256 = signHashSHA256;
+    public void setSHA256(String SHA256) {
+        this.SHA256 = SHA256;
     }
 }

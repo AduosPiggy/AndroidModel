@@ -3,15 +3,12 @@ package com.example.androidmodel.tools.apkinfo;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.SigningInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
-import android.util.Log;
 
 import com.android.apksig.ApkVerifier;
-import com.android.apksig.apk.ApkFormatException;
 import com.example.androidmodel.tools.apkinfo.bean.CertificateInfo;
 import com.example.androidmodel.tools.apkinfo.cache.ApkParserCache;
 import com.example.androidmodel.tools.apkinfo.cache.ApkShellFeaturesCache;
@@ -24,13 +21,13 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +87,21 @@ public class ApkParserUtils {
     // 应用包名
     public String getApkPackageName(){
         return packageInfo != null ? packageInfo.packageName : null;
+    }
+    // 应用Hash MD5
+    public String getApkHashMD5(){
+        File file = new File(apkPath);
+        return getHash("MD5",file);
+    }
+    // 应用Hash SHA-1
+    public String getApkHashSHA1(){
+        File file = new File(apkPath);
+        return getHash("SHA-1",file);
+    }
+    // 应用Hash SHA-256
+    public String getApkHashSHA256(){
+        File file = new File(apkPath);
+        return getHash("SHA-256",file);
     }
     //上一次打包的时间
     public String getFormattedPackedTime() {
@@ -154,6 +166,34 @@ public class ApkParserUtils {
 
     /**
      *
+     * @param algorithm MD5
+     * @param certBytes certificate.getEncode()
+     * @return 签名证书 md5 hash
+     */
+    private String getCFHashMD5(String algorithm, byte[] certBytes){
+       return getHash(algorithm,certBytes);
+    }
+
+    /**
+     *
+     * @param algorithm SHA1
+     * @param certBytes certificate.getEncode()
+     * @return 签名证书 md5 hash
+     */
+    private String getCFHashSHA1(String algorithm, byte[] certBytes){
+        return getHash(algorithm,certBytes);
+    }
+    /**
+     *
+     * @param algorithm SHA256
+     * @param certBytes certificate.getEncode()
+     * @return 签名证书 md5 hash
+     */
+    private String getCFHashSHA256(String algorithm, byte[] certBytes){
+        return getHash(algorithm,certBytes);
+    }
+    /**
+     *
      * @return icon drawable -> BitmapDrawable -> bitmap -> bytearray -> gzip -> string
      */
     public String getApkIconBase64_(){
@@ -211,24 +251,8 @@ public class ApkParserUtils {
         return time;
     }
 
-
-
-
-    // 应用Hash MD5
-    private String getSignHashMD5(){
-        return getApkHash("MD5");
-    }
-    // 应用Hash SHA-1
-    private String getSignHashSHA1(){
-        return getApkHash("SHA-1");
-    }
-    // 应用Hash SHA-256
-    private String getSignHashSHA256(){
-        return getApkHash("SHA-256");
-    }
-
-    private String getApkHash(String algorithm) {
-        try (FileInputStream fis = new FileInputStream(new File(apkPath))) {
+    private String getHash(String algorithm, File file) {
+        try (FileInputStream fis = new FileInputStream(file) ) {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
             byte[] buffer = new byte[1024];
             int bytesRead;
@@ -245,6 +269,19 @@ public class ApkParserUtils {
             e.printStackTrace();
             return null;
         }
+    }
+    private String getHash(String algorithm, byte[] certBytes){
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            byte[] algorithmCertBytes = digest.digest(certBytes);
+            for(byte b : algorithmCertBytes){
+                stringBuilder.append(String.format("%02x", b));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return stringBuilder.toString().toUpperCase();
     }
 
     //应用加固信息
@@ -281,25 +318,21 @@ public class ApkParserUtils {
             String signerBlockFileName = schemeSignerInfo.getSignatureBlockFileName();
             String signerFileName = schemeSignerInfo.getSignatureFileName();
 
-            String signHashMD5 = getSignHashMD5();
-            String signHashSHA1 = getSignHashSHA1();
-            String signHashSHA256 = getSignHashSHA256();
             for(X509Certificate certificate : mCertChain){
                 CertificateInfo certificateInfo = new CertificateInfo();
-                certificateInfo.setSignerName(signerName);
-                certificateInfo.setSignerBlockFileName(signerBlockFileName);
-                certificateInfo.setSignerFileName(signerFileName);
-                certificateInfo.setCertificateType(certificate.getType());
-                certificateInfo.setCertificateVersion(certificate.getVersion());
-                certificateInfo.setCfSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setCfIX500PName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setCertificateNotBefore(certificate.getNotBefore());
-                certificateInfo.setCertificateNotAfter(certificate.getNotAfter());
-
+                certificateInfo.setName(signerName);
+                certificateInfo.setBlockFileName(signerBlockFileName);
+                certificateInfo.setFileName(signerFileName);
+                certificateInfo.setType(certificate.getType());
+                certificateInfo.setVersion(certificate.getVersion());
+                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                certificateInfo.setValidFrom(certificate.getNotBefore());
+                certificateInfo.setValidTo(certificate.getNotAfter());
                 PublicKey publicKey = certificate.getPublicKey();
 //                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setPublicKeyBase64( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT)  );
-                certificateInfo.setCfAlgorithmType(publicKey.getAlgorithm());
+                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT)  );
+                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
@@ -310,9 +343,14 @@ public class ApkParserUtils {
                 }
                 certificateInfo.setSignAlgorithms(certificate.getSigAlgName());
                 certificateInfo.setSignOID(certificate.getSigAlgOID());
-                certificateInfo.setSignHashMD5(signHashMD5);
-                certificateInfo.setSignHashSHA1(signHashSHA1);
-                certificateInfo.setSignHashSHA256(signHashSHA256);
+                try {
+                    byte[] certBytes = certificate.getEncoded();
+                    certificateInfo.setMD5(getCFHashMD5("MD5",certBytes));
+                    certificateInfo.setSHA1(getCFHashSHA1("SHA1",certBytes) );
+                    certificateInfo.setSHA256(getCFHashSHA256("SHA256",certBytes));
+                } catch (CertificateEncodingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 certificateInfoList.add(certificateInfo);
             }
@@ -328,23 +366,20 @@ public class ApkParserUtils {
             int signerIndex = schemeSignerInfo.getIndex();
 
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
-            String signHashMD5 = getSignHashMD5();
-            String signHashSHA1 = getSignHashSHA1();
-            String signHashSHA256 = getSignHashSHA256();
             for(X509Certificate certificate : mCerts){
                 CertificateInfo certificateInfo = new CertificateInfo();
                 certificateInfo.setIndex(signerIndex);
-                certificateInfo.setCertificateType(certificate.getType());
-                certificateInfo.setCertificateVersion(certificate.getVersion());
-                certificateInfo.setCfSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setCfIX500PName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setCertificateNotBefore(certificate.getNotBefore());
-                certificateInfo.setCertificateNotAfter(certificate.getNotAfter());
+                certificateInfo.setType(certificate.getType());
+                certificateInfo.setVersion(certificate.getVersion());
+                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                certificateInfo.setValidFrom(certificate.getNotBefore());
+                certificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
 //                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setCfAlgorithmType(cfAlgorithmType);
+                certificateInfo.setPublicKeyType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
@@ -355,9 +390,14 @@ public class ApkParserUtils {
                 }
                 certificateInfo.setSignAlgorithms(certificate.getSigAlgName());
                 certificateInfo.setSignOID(certificate.getSigAlgOID());
-                certificateInfo.setSignHashMD5(signHashMD5);
-                certificateInfo.setSignHashSHA1(signHashSHA1);
-                certificateInfo.setSignHashSHA256(signHashSHA256);
+                try {
+                    byte[] certBytes = certificate.getEncoded();
+                    certificateInfo.setMD5(getCFHashMD5("MD5",certBytes));
+                    certificateInfo.setSHA1(getCFHashSHA1("SHA1",certBytes) );
+                    certificateInfo.setSHA256(getCFHashSHA256("SHA256",certBytes));
+                } catch (CertificateEncodingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 certificateInfoList.add(certificateInfo);
             }
@@ -372,23 +412,20 @@ public class ApkParserUtils {
         for(ApkVerifier.Result.V3SchemeSignerInfo schemeSignerInfo: mV3_SchemeSigners){
             int signerIndex = schemeSignerInfo.getIndex();
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
-            String signHashMD5 = getSignHashMD5();
-            String signHashSHA1 = getSignHashSHA1();
-            String signHashSHA256 = getSignHashSHA256();
             for(X509Certificate certificate : mCerts){
                 CertificateInfo certificateInfo = new CertificateInfo();
                 certificateInfo.setIndex(signerIndex);
-                certificateInfo.setCertificateType(certificate.getType());
-                certificateInfo.setCertificateVersion(certificate.getVersion());
-                certificateInfo.setCfSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setCfIX500PName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setCertificateNotBefore(certificate.getNotBefore());
-                certificateInfo.setCertificateNotAfter(certificate.getNotAfter());
+                certificateInfo.setType(certificate.getType());
+                certificateInfo.setVersion(certificate.getVersion());
+                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                certificateInfo.setValidFrom(certificate.getNotBefore());
+                certificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
 //                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setCfAlgorithmType(cfAlgorithmType);
+                certificateInfo.setPublicKeyType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
@@ -399,9 +436,14 @@ public class ApkParserUtils {
                 }
                 certificateInfo.setSignAlgorithms(certificate.getSigAlgName());
                 certificateInfo.setSignOID(certificate.getSigAlgOID());
-                certificateInfo.setSignHashMD5(signHashMD5);
-                certificateInfo.setSignHashSHA1(signHashSHA1);
-                certificateInfo.setSignHashSHA256(signHashSHA256);
+                try {
+                    byte[] certBytes = certificate.getEncoded();
+                    certificateInfo.setMD5(getCFHashMD5("MD5",certBytes));
+                    certificateInfo.setSHA1(getCFHashSHA1("SHA1",certBytes) );
+                    certificateInfo.setSHA256(getCFHashSHA256("SHA256",certBytes));
+                } catch (CertificateEncodingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 certificateInfoList.add(certificateInfo);
             }
@@ -416,23 +458,20 @@ public class ApkParserUtils {
         for(ApkVerifier.Result.V4SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV4SchemeSigners()){
             int signerIndex = schemeSignerInfo.getIndex();
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
-            String signHashMD5 = getSignHashMD5();
-            String signHashSHA1 = getSignHashSHA1();
-            String signHashSHA256 = getSignHashSHA256();
             for(X509Certificate certificate : mCerts){
                 CertificateInfo certificateInfo = new CertificateInfo();
                 certificateInfo.setIndex(signerIndex);
-                certificateInfo.setCertificateType(certificate.getType());
-                certificateInfo.setCertificateVersion(certificate.getVersion());
-                certificateInfo.setCfSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setCfIX500PName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setCertificateNotBefore(certificate.getNotBefore());
-                certificateInfo.setCertificateNotAfter(certificate.getNotAfter());
+                certificateInfo.setType(certificate.getType());
+                certificateInfo.setVersion(certificate.getVersion());
+                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                certificateInfo.setValidFrom(certificate.getNotBefore());
+                certificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
                 String cfAlgorithmType = publicKey.getAlgorithm();
 //                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setCfAlgorithmType(cfAlgorithmType);
+                certificateInfo.setPublicKeyType(cfAlgorithmType);
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
@@ -443,9 +482,14 @@ public class ApkParserUtils {
                 }
                 certificateInfo.setSignAlgorithms(certificate.getSigAlgName());
                 certificateInfo.setSignOID(certificate.getSigAlgOID());
-                certificateInfo.setSignHashMD5(signHashMD5);
-                certificateInfo.setSignHashSHA1(signHashSHA1);
-                certificateInfo.setSignHashSHA256(signHashSHA256);
+                try {
+                    byte[] certBytes = certificate.getEncoded();
+                    certificateInfo.setMD5(getCFHashMD5("MD5",certBytes));
+                    certificateInfo.setSHA1(getCFHashSHA1("SHA1",certBytes) );
+                    certificateInfo.setSHA256(getCFHashSHA256("SHA256",certBytes));
+                } catch (CertificateEncodingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 certificateInfoList.add(certificateInfo);
             }

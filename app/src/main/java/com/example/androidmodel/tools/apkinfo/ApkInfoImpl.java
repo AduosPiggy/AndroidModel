@@ -1,7 +1,6 @@
 package com.example.androidmodel.tools.apkinfo;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.androidmodel.tools.apkinfo.bean.ApkInfo;
 import com.google.gson.Gson;
@@ -24,16 +23,18 @@ public class ApkInfoImpl {
     private void setApkInfo(Context context,String apkPath){
         ApkParserUtils apkParserUtils = new ApkParserUtils(context,apkPath);
         apkInfo = new ApkInfo();
-        apkInfo.setApkName(apkParserUtils.getApkName());
-//        apkInfo.setApkIcon(apkParserUtils.getApkIcon());
-        apkInfo.setApkIconBase64(apkParserUtils.getApkIconBase64());
-        apkInfo.setApkPackageName(apkParserUtils.getApkPackageName());
-        apkInfo.setApkLastPackedTime(apkParserUtils.getFormattedPackedTime());
-        apkInfo.setApkSize(apkParserUtils.getApkSize());
-        apkInfo.setApkVersion(apkParserUtils.getApkVersion());
-        apkInfo.setApkTargetSDK(apkParserUtils.getApkTargetSDK());
-        apkInfo.setApkRequestedPermission(apkParserUtils.getApkRequestedPermission());
-        apkInfo.setApkStubInfo(apkParserUtils.getStubInfo());
+        apkInfo.setName(apkParserUtils.getApkName());
+        apkInfo.setIcon(apkParserUtils.getApkIconBase64());
+        apkInfo.setPackageName(apkParserUtils.getApkPackageName());
+        apkInfo.setMD5(apkParserUtils.getApkHashMD5());
+        apkInfo.setSHA1(apkParserUtils.getApkHashSHA1());
+        apkInfo.setSHA256(apkParserUtils.getApkHashSHA256());
+        apkInfo.setLastModifyTime(apkParserUtils.getFormattedPackedTime());
+        apkInfo.setSize(apkParserUtils.getApkSize());
+        apkInfo.setVersion(apkParserUtils.getApkVersion());
+        apkInfo.setTargetSDK(apkParserUtils.getApkTargetSDK());
+        apkInfo.setPermissions(apkParserUtils.getApkRequestedPermission());
+        apkInfo.setStubInfo(apkParserUtils.getStubInfo());
         apkInfo.setCertificateV1(apkParserUtils.getCertificateV1());
         apkInfo.setCertificateV2(apkParserUtils.getCertificateV2());
         apkInfo.setCertificateV3(apkParserUtils.getCertificateV3());
