@@ -41,15 +41,15 @@ public class CertificateInfo {
     private BigInteger rsaModulus;
 
     // 签名算法
-    private String signAlgorithms;
+    private String algorithms;
     // 签名 OID
-    private String signOID;
+    private String OID;
     // 应用Hash md5
-    private String MD5;
+    private String md5;
     // 应用Hash SHA-1
-    private String SHA1;
+    private String sha1;
     // 应用Hash SHA256
-    private String SHA256;
+    private String sha256;
 
     public String getName() {
         return name;
@@ -171,43 +171,43 @@ public class CertificateInfo {
         this.rsaModulus = rsaModulus;
     }
 
-    public String getSignAlgorithms() {
-        return signAlgorithms;
+    public String getAlgorithms() {
+        return algorithms;
     }
 
-    public void setSignAlgorithms(String signAlgorithms) {
-        this.signAlgorithms = signAlgorithms;
+    public void setAlgorithms(String algorithms) {
+        this.algorithms = algorithms;
     }
 
-    public String getSignOID() {
-        return signOID;
+    public String getOID() {
+        return OID;
     }
 
-    public void setSignOID(String signOID) {
-        this.signOID = signOID;
+    public void setOID(String OID) {
+        this.OID = OID;
     }
 
-    public String getMD5() {
-        return MD5;
+    public String getMd5() {
+        return md5;
     }
 
-    public void setMD5(String MD5) {
-        this.MD5 = MD5;
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
-    public String getSHA1() {
-        return SHA1;
+    public String getSha1() {
+        return sha1;
     }
 
-    public void setSHA1(String SHA1) {
-        this.SHA1 = SHA1;
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
     }
 
-    public String getSHA256() {
-        return SHA256;
+    public String getSha256() {
+        return sha256;
     }
 
-    public void setSHA256(String SHA256) {
-        this.SHA256 = SHA256;
+    public void setSha256(String sha256) {
+        this.sha256 = sha256;
     }
 }

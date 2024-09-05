@@ -15,12 +15,12 @@ public class ApkInfo {
     private String icon;
     // 应用包名
     private String packageName;
-    private String MD5;
-    private String SHA1;
-    private String SHA256;
+    private String md5;
+    private String sha1;
+    private String sha256;
 
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
-    private String LastModifyTime;
+    private String lastModifyTime;
     // apk 文件大小 单位 bytes
     private long size;
     // apk 应用版本
@@ -68,36 +68,36 @@ public class ApkInfo {
         this.packageName = packageName;
     }
 
-    public String getMD5() {
-        return MD5;
+    public String getMd5() {
+        return md5;
     }
 
-    public void setMD5(String MD5) {
-        this.MD5 = MD5;
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
-    public String getSHA1() {
-        return SHA1;
+    public String getSha1() {
+        return sha1;
     }
 
-    public void setSHA1(String SHA1) {
-        this.SHA1 = SHA1;
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
     }
 
-    public String getSHA256() {
-        return SHA256;
+    public String getSha256() {
+        return sha256;
     }
 
-    public void setSHA256(String SHA256) {
-        this.SHA256 = SHA256;
+    public void setSha256(String sha256) {
+        this.sha256 = sha256;
     }
 
     public String getLastModifyTime() {
-        return LastModifyTime;
+        return lastModifyTime;
     }
 
     public void setLastModifyTime(String lastModifyTime) {
-        this.LastModifyTime = lastModifyTime;
+        this.lastModifyTime = lastModifyTime;
     }
 
     public long getSize() {
