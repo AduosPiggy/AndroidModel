@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
@@ -256,8 +257,11 @@ public class ApkParserUtils {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (shellFeaturesMap.containsKey(entry.getName())) {
-                    stubInfo.add(shellFeaturesMap.get(entry.getName()));
+                String path = entry.getName();
+                String[] names = path.split("/");
+                String name = names[(names.length - 1)];
+                if ( shellFeaturesMap.containsKey(name) ){
+                    stubInfo.add(shellFeaturesMap.get(name));
                 }
             }
         } catch (IOException e) {

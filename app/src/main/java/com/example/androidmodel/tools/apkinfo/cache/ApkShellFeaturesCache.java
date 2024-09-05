@@ -159,24 +159,11 @@ public class ApkShellFeaturesCache {
         shellFeaturesMap.put("libuusafe.so", "UU安全");
         shellFeaturesMap.put("libuusafeempty.so", "UU安全");
 
-        // 顶像科技
-        shellFeaturesMap.put("libx3g.so", "顶像科技");
-
-        // 启明星辰
-        shellFeaturesMap.put("libvenSec.so", "启明星辰");
-        shellFeaturesMap.put("libvenustech.so", "启明星辰");
-
-        // 阿里聚安全
-        shellFeaturesMap.put("libzuma.so", "阿里聚安全");
-        shellFeaturesMap.put("libzumadata.so", "阿里聚安全");
-
         // apktoolplus
         shellFeaturesMap.put("apktoolplus", "apktoolplus");
         shellFeaturesMap.put("jiagu_data.bin", "apktoolplus");
         shellFeaturesMap.put("sign.bin", "apktoolplus");
 
-        // 顶像科技
-        shellFeaturesMap.put("libx3g.so", "顶像科技");
     }
 
 
