@@ -86,11 +86,11 @@
                 android:layout_marginRight="30dp"
                 />
             <Button
-                android:id="@+id/btn_log_apk"
+                android:id="@+id/btn_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFB"
-                android:text="打印指定apk的信息"
+                android:text="跳转到Test界面"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:layout_marginLeft="30dp"

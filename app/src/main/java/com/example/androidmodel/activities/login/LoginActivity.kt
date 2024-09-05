@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
+import com.example.androidmodel.activities.test.TestActivity
 import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
@@ -20,6 +21,10 @@ import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
  * @author kfflso
  * @data 2024/8/1/001 18:33
  * @plus:
+ *      使用binding:
+ *      1.注意 activity_login.xml中最外层 layout布局;
+ *      2.注意绑定了 tools:context=".activities.login.LoginActivity"
+ *      3.注意绑定了 ActivityLoginBinding
  */
 @ContentLayout(R.layout.activity_login)
 class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
@@ -41,16 +46,10 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         binding.btnSignIn.setOnClickListener {
 
         }
-        binding.btnLogApk.setOnClickListener{
-            val permissions = arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            val REQUEST_CODE_PERMISSIONS = 0
-            PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
-            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/wenjianjieyawang.apk")
-            val apkInfoJson = apkInfoImpl.apkInfoJson
-            val apkInfo = apkInfoImpl.apkInfo
+        binding.btnTest.setOnClickListener{
+            val intent = Intent(this@LoginActivity, TestActivity::class.java)
+            startActivity(intent)
+
         }
 
     }
