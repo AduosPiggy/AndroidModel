@@ -29,12 +29,14 @@ public class ApkInfoImpl {
         apkInfo.setMd5(apkParserUtils.getApkMD5());
         apkInfo.setSha1(apkParserUtils.getApkSHA1());
         apkInfo.setSha256(apkParserUtils.getApkSHA256());
-        apkInfo.setLastModifyTime(apkParserUtils.getApkLastModifyTime());
+        apkInfo.setBuildTime(apkParserUtils.getApkBuildTime());
         apkInfo.setSize(apkParserUtils.getApkSize());
-        apkInfo.setVersion(apkParserUtils.getApkVersion());
+        apkInfo.setVersionCode(apkParserUtils.getApkVersionCode());
+        apkInfo.setVersionName(apkParserUtils.getApkVersionName());
+        apkInfo.setMinSdk(apkParserUtils.getApkMinSDK());
         apkInfo.setTargetSDK(apkParserUtils.getApkTargetSDK());
         apkInfo.setPermissions(apkParserUtils.getApkRequestedPermission());
-        apkInfo.setStubInfo(apkParserUtils.getStubInfo());
+        apkInfo.setShellInfo(apkParserUtils.getShellInfo());
         apkInfo.setCertificateV1(apkParserUtils.getCertificateV1());
         apkInfo.setCertificateV2(apkParserUtils.getCertificateV2());
         apkInfo.setCertificateV3(apkParserUtils.getCertificateV3());

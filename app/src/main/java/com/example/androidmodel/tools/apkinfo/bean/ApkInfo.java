@@ -20,17 +20,19 @@ public class ApkInfo {
     private String sha256;
 
     // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
-    private String lastModifyTime;
+    private String buildTime;
     // apk 文件大小 单位 bytes
     private long size;
     // apk 应用版本
-    private long version;
+    private long versionCode;
+    private String versionName;
+    private int minSdk;
     // apk targetSDK
     private int targetSDK;
     // 应用申请权限
     private String[] permissions;
     // 应用加固信息
-    private Set<String> stubInfo;
+    private Set<String> shellInfo;
 
     //签名证书 V1
     private List<CertificateInfo> certificateV1;
@@ -92,12 +94,12 @@ public class ApkInfo {
         this.sha256 = sha256;
     }
 
-    public String getLastModifyTime() {
-        return lastModifyTime;
+    public String getBuildTime() {
+        return buildTime;
     }
 
-    public void setLastModifyTime(String lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
+    public void setBuildTime(String buildTime) {
+        this.buildTime = buildTime;
     }
 
     public long getSize() {
@@ -108,12 +110,28 @@ public class ApkInfo {
         this.size = size;
     }
 
-    public long getVersion() {
-        return version;
+    public long getVersionCode() {
+        return versionCode;
     }
 
-    public void setVersion(long version) {
-        this.version = version;
+    public void setVersionCode(long versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
+
+    public int getMinSdk() {
+        return minSdk;
+    }
+
+    public void setMinSdk(int minSdk) {
+        this.minSdk = minSdk;
     }
 
     public int getTargetSDK() {
@@ -132,12 +150,12 @@ public class ApkInfo {
         this.permissions = permissions;
     }
 
-    public Set<String> getStubInfo() {
-        return stubInfo;
+    public Set<String> getShellInfo() {
+        return shellInfo;
     }
 
-    public void setStubInfo(Set<String> stubInfo) {
-        this.stubInfo = stubInfo;
+    public void setShellInfo(Set<String> shellInfo) {
+        this.shellInfo = shellInfo;
     }
 
     public List<CertificateInfo> getCertificateV1() {

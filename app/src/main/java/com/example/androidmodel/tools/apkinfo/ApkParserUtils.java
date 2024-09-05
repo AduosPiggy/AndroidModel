@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Base64;
 
 import com.android.apksig.ApkVerifier;
@@ -47,7 +48,7 @@ import java.util.zip.ZipFile;
  *      getApkMD5 // apk MD5 的 hash
  *      getApkSHA1 // apk SHA1 的 hash
  *      getApkSHA256 // apk SHA256 的 hash
- *      getApkLastModifyTime //应用上次打包的时间, 检查的 AM 文件, 东八区时间
+ *      getApkBuildTime //应用上次打包的时间, 检查的 AM 文件, 东八区时间
  *      getApkSize; // apk 文件大小
  *      getApkVersion; // apk 应用版本
  *      getApkTargetSDK; // apk targetSDK
@@ -112,8 +113,8 @@ public class ApkParserUtils {
         return getHash("SHA-256",file);
     }
 
-    public String getApkLastModifyTime() {
-        return getApkLastModifyTime__();
+    public String getApkBuildTime() {
+        return getApkBuildTime__();
     }
 
     public long getApkSize(){
@@ -126,9 +127,29 @@ public class ApkParserUtils {
         }
     }
 
-    public long getApkVersion(){
-        return packageInfo != null ? packageInfo.getLongVersionCode() : 0;
+    public long getApkVersionCode() {
+        if (packageInfo != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return packageInfo.getLongVersionCode();
+            } else {
+                return packageInfo.versionCode;
+            }
+        }
+        return 0;
     }
+    public String getApkVersionName(){
+        return packageInfo != null ? packageInfo.versionName : "";
+    }
+    public int getApkMinSDK() {
+        try {
+            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+            return packageInfo != null ? packageInfo.applicationInfo.minSdkVersion : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 
     public int getApkTargetSDK() {
         try {
@@ -150,8 +171,8 @@ public class ApkParserUtils {
         }
     }
 
-    public Set<String > getStubInfo(){
-        return getStubInfo_();
+    public Set<String > getShellInfo(){
+        return getShellInfo_();
     }
 
     public List<CertificateInfo> getCertificateV1(){
@@ -230,8 +251,8 @@ public class ApkParserUtils {
      *  1.获取到 apk 压缩文件中 AM 文件上次修改的时间, timestamp ms;
      *  2.将 timestamp 转换为东八区的时间
      */
-    public String getApkLastModifyTime__() {
-        long timestamp = getApkLastModifyTime_();
+    public String getApkBuildTime__() {
+        long timestamp = getApkBuildTime_();
         if (timestamp == 0) {
             return "unKnown time: 0";
         }
@@ -242,7 +263,7 @@ public class ApkParserUtils {
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         return sdf.format(date);
     }
-    private long getApkLastModifyTime_() {
+    private long getApkBuildTime_() {
         long time = 0;
         try (ZipFile zipFile = new ZipFile(apkPath)) {
             ZipEntry manifestEntry = zipFile.getEntry("AndroidManifest.xml");
@@ -309,7 +330,7 @@ public class ApkParserUtils {
      *  1.获取加固的特征规则 map : shellFeaturesMap( key-value : 加固特征文件名称-加固的方式);
      *  2.遍历获取 apkFile 中的文件, 查找 shellFeaturesMap 中是否包含加固特征的文件
      */
-    public Set<String> getStubInfo_() {
+    public Set<String> getShellInfo_() {
         Set<String> stubInfo = new HashSet<>();
         Map<String, String> shellFeaturesMap = ApkShellFeaturesCache.getInstance().getShellFeaturesMap();
         try {
@@ -364,7 +385,7 @@ public class ApkParserUtils {
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
                     certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(rsaModulus);
+                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
                     certificateInfo.setRsaBitLength(rsaBitLength);
                 }
                 certificateInfo.setAlgorithms(x509Certificate.getSigAlgName());
@@ -403,15 +424,14 @@ public class ApkParserUtils {
                 certificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
-                String cfAlgorithmType = publicKey.getAlgorithm();
-//                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setPublicKeyType(cfAlgorithmType);
+                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
                     certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(rsaModulus);
+                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
                     certificateInfo.setRsaBitLength(rsaBitLength);
                 }
                 certificateInfo.setAlgorithms(certificate.getSigAlgName());
@@ -449,15 +469,14 @@ public class ApkParserUtils {
                 certificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
-                String cfAlgorithmType = publicKey.getAlgorithm();
-//                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setPublicKeyType(cfAlgorithmType);
+                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
                     certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(rsaModulus);
+                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
                     certificateInfo.setRsaBitLength(rsaBitLength);
                 }
                 certificateInfo.setAlgorithms(certificate.getSigAlgName());
@@ -493,17 +512,15 @@ public class ApkParserUtils {
                 certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
                 certificateInfo.setValidFrom(certificate.getNotBefore());
                 certificateInfo.setValidTo(certificate.getNotAfter());
-
                 PublicKey publicKey = certificate.getPublicKey();
-                String cfAlgorithmType = publicKey.getAlgorithm();
-//                certificateInfo.setPublicKey(publicKey);
-                certificateInfo.setPublicKeyType(cfAlgorithmType);
+                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
                     certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(rsaModulus);
+                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
                     certificateInfo.setRsaBitLength(rsaBitLength);
                 }
                 certificateInfo.setAlgorithms(certificate.getSigAlgName());

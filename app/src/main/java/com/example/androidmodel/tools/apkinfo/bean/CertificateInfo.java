@@ -38,7 +38,7 @@ public class CertificateInfo {
     //公钥模数大小(位)
     private int rsaBitLength;
     //公钥模数
-    private BigInteger rsaModulus;
+    private String rsaModulus;
 
     // 签名算法
     private String algorithms;
@@ -163,11 +163,11 @@ public class CertificateInfo {
         this.rsaBitLength = rsaBitLength;
     }
 
-    public BigInteger getRsaModulus() {
+    public String getRsaModulus() {
         return rsaModulus;
     }
 
-    public void setRsaModulus(BigInteger rsaModulus) {
+    public void setRsaModulus(String rsaModulus) {
         this.rsaModulus = rsaModulus;
     }
 
