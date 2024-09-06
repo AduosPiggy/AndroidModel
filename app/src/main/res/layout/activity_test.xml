@@ -10,12 +10,26 @@
 
         <Button
             android:id="@+id/btn_apkinfo"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="#FFFFFB"
+            app:layout_constraintEnd_toStartOf="@+id/btn_chinese_equals"
+            android:layout_marginTop="10dp"
+            android:background="@color/green"
             android:text="获取ApkInfo"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            />
+        <Button
+            android:id="@+id/btn_chinese_equals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/btn_apkinfo"
+            app:layout_constraintStart_toEndOf="@+id/btn_apkinfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/blue"
+            android:text="中文字符比较"
             android:textColor="@color/white"
             android:textSize="18sp"
             />
