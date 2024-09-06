@@ -9,46 +9,45 @@ import java.util.Date;
  * @plus:
  */
 public class CertificateInfo {
-    //签名者信息
+    //apk 签名者的名称
     private String name;
+    // apk 签名文件的名称
     private String blockFileName;
+    // apk 签名文件的名称
     private String fileName;
+    // apk 签名者的索引（在证书链中的位置）
     private int index;
-
-    // 证书类型 X.509
+    // apk 签名证书类型 X.509
     private String type;
-    // 版本
+    // apk 签名证书版本号
     private int version;
-    // 序列号 -> 应用开发者签名序列号 16进制
+    // apk 签名证书序列号 16进制
     private String serialNumber;
-    // developer -> 应用开发者签名主题
+    // apk 签名者信息
     private String distinguishedName;
-    // 有效期始
+    // apk 签名证书有效起始日期
     private Date validFrom;
-    // 有效期末
+    // apk 签名证书有效终止日期
     private Date validTo;
-
-//    //公钥完整信息
-//    private PublicKey publicKey;
+    // apk 公钥信息，Base64 编码的证书公钥数据
     private String publicKey;
-    // 公钥类型
+    // apk 公钥的类型
     private String publicKeyType;
-    //公钥指数
+    // apk RSA 公钥指数
     private BigInteger rsaPublicExponent;
-    //公钥模数大小(位)
+    // apk RSA 公钥模数大小(位)
     private int rsaBitLength;
-    //公钥模数
+    // apk RSA 公钥模数（Base64 编码的十六进制表示）
     private String rsaModulus;
-
-    // 签名算法
+    // apk 签名使用的算法
     private String algorithms;
-    // 签名 OID
+    // apk 签名的对象标识符（OID），表示签名算法的类型
     private String OID;
-    // 应用Hash md5
+    // apk 签名证书 MD5 Hash 值
     private String md5;
-    // 应用Hash SHA-1
+    // apk 签名证书 SHA-1 Hash
     private String sha1;
-    // 应用Hash SHA256
+    // 	apk 签名证书 SHA-256 Hash
     private String sha256;
 
     public String getName() {

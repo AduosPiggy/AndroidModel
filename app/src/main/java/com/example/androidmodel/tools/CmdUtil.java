@@ -37,7 +37,7 @@ public class CmdUtil {
             while ((line = reader.readLine()) != null) {
                 result += line;
             }
-            Log.d(TAG, "exeCmd result:" + result);
+            Log.d(TAG, "exeCmd result_ori:" + result);
             process.waitFor();
             is.close();
             reader.close();
@@ -78,7 +78,7 @@ public class CmdUtil {
             while ((line = reader.readLine()) != null) {
                 result += line;
             }
-            Log.d(TAG, "exeCmd result:" + result);
+            Log.d(TAG, "exeCmd result_ori:" + result);
             process.waitFor();
             is.close();
             reader.close();

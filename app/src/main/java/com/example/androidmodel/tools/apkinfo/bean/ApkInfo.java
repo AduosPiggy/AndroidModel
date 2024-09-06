@@ -9,31 +9,35 @@ import java.util.Set;
  * @plus:
  */
 public class ApkInfo {
-    // 应用名
+    // apk name
     private String name;
-    //应用图标
+    // apk icon
     private String icon;
-    // 应用包名
+    // apk package name
     private String packageName;
+    // apk file MD5 Hash
     private String md5;
+    // apk file sha1 Hash
     private String sha1;
+    // apk file sha256 Hash
     private String sha256;
 
-    // 应用上一次打包时间 apk中 AndroidManifest.xml 上次修改时间; 单位s
+    // apk build Time, 东八区时间
     private String buildTime;
-    // apk 文件大小 单位 bytes
+    // apk size; unit: bytes
     private long size;
-    // apk 应用版本
+    // apk versionCode
     private long versionCode;
+    // apk versionName
     private String versionName;
+    // apk minSdk
     private int minSdk;
     // apk targetSDK
     private int targetSDK;
-    // 应用申请权限
+    // apk AM文件申请的权限
     private String[] permissions;
-    // 应用加固信息
+    // apk 加固的方式
     private Set<String> shellInfo;
-
     //签名证书 V1
     private List<CertificateInfo> certificateV1;
     //签名证书 V2

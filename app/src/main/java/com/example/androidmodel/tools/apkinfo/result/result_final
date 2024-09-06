@@ -1,0 +1,120 @@
+{
+    "appVer": "2.4",
+    "sandbox_id": "ABCDEF87238892",
+    "cmd": "sandbox_upload_basicInfo",
+    "sample_hash": "xxx",
+    "timestamp": 1692169732,
+    "task_id": "1234",
+    "data": {
+        "status": 0,
+        "msg": "",
+        "apkInfo": {
+            "buildTime": "2024-08-22 23:55:56",
+            "certificateV1": [
+                {
+                    "OID": "1.2.840.113549.1.1.11",
+                    "algorithms": "SHA256withRSA",
+                    "blockFileName": "META-INF/ANDROID_.RSA",
+                    "distinguishedName": "CN\u003dhu,OU\u003dmakeroad,O\u003dairsky,L\u003dshenzhen,ST\u003dguangdong,C\u003dchina",
+                    "fileName": "META-INF/ANDROID_.SF",
+                    "index": 0,
+                    "md5": "0E5E720DA5B7252F73228231B836843B",
+                    "name": "ANDROID_.RSA",
+                    "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgK...",
+                    "publicKeyType": "RSA",
+                    "rsaBitLength": 2048,
+                    "rsaModulus": "240707273436656921885687...",
+                    "rsaPublicExponent": 65537,
+                    "serialNumber": "0x34D02CD3",
+                    "sha1": "10BB009042BA6DD0D7488C285B78F03083097F43",
+                    "sha256": "D36EC3CB2F62B5F6D3B60CA98A250BC5D93B7D76C50348FA8C156EA76B425A65",
+                    "type": "X.509",
+                    "validFrom": "May 22, 2015 10:42:58 AM",
+                    "validTo": "Feb 22, 2070 10:42:58 AM",
+                    "version": 3
+                }
+            ],
+            "certificateV2": [
+                {
+                    "OID": "1.2.840.113549.1.1.11",
+                    "algorithms": "SHA256withRSA",
+                    "distinguishedName": "CN\u003dhu,OU\u003dmakeroad,O\u003dairsky,L\u003dshenzhen,ST\u003dguangdong,C\u003dchina",
+                    "index": 0,
+                    "md5": "0E5E720DA5B7252F73228231B836843B",
+                    "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMII...",
+                    "publicKeyType": "RSA",
+                    "rsaBitLength": 2048,
+                    "rsaModulus": "24070727343665692188568734895833223...",
+                    "rsaPublicExponent": 65537,
+                    "serialNumber": "0x34D02CD3",
+                    "sha1": "10BB009042BA6DD0D7488C285B78F03083097F43",
+                    "sha256": "D36EC3CB2F62B5F6D3B60CA98A250BC5D93B7D76C50348FA8C156EA76B425A65",
+                    "type": "X.509",
+                    "validFrom": "May 22, 2015 10:42:58 AM",
+                    "validTo": "Feb 22, 2070 10:42:58 AM",
+                    "version": 3
+                }
+            ],
+            "certificateV3": [
+                {
+                    "OID": "1.2.840.113549.1.1.11",
+                    "algorithms": "SHA256withRSA",
+                    "distinguishedName": "CN\u003dhu,OU\u003dmakeroad,O\u003dairsky,L\u003dshenzhen,ST\u003dguangdong,C\u003dchina",
+                    "index": 0,
+                    "md5": "0E5E720DA5B7252F73228231B836843B",
+                    "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBC...",
+                    "publicKeyType": "RSA",
+                    "rsaBitLength": 2048,
+                    "rsaModulus": "2407072734366569218856873489583322371...",
+                    "rsaPublicExponent": 65537,
+                    "serialNumber": "0x34D02CD3",
+                    "sha1": "10BB009042BA6DD0D7488C285B78F03083097F43",
+                    "sha256": "D36EC3CB2F62B5F6D3B60CA98A250BC5D93B7D76C50348FA8C156EA76B425A65",
+                    "type": "X.509",
+                    "validFrom": "May 22, 2015 10:42:58 AM",
+                    "validTo": "Feb 22, 2070 10:42:58 AM",
+                    "version": 3
+                }
+            ],
+            "certificateV31": [
+
+            ],
+            "certificateV4": [
+
+            ],
+            "icon": "H4sIAAAAAAAAALx6BVOcTRNtkBDc3S24u5Pg7u6wSHCXRUOCO0G...",
+            "md5": "625277132675F6150EFD695DD6431CE2",
+            "minSdk": 23,
+            "name": "文件解压王",
+            "packageName": "com.txj.airs.decomp",
+            "permissions": [
+                "android.permission.ACCESS_NETWORK_STATE",
+                "android.permission.ACCESS_WIFI_STATE",
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.WRITE_EXTERNAL_STORAGE",
+                "android.permission.MANAGE_EXTERNAL_STORAGE",
+                "android.permission.INTERNET",
+                "android.permission.RECORD_AUDIO",
+                "com.txj.airs.decomp.andpermission.bridge",
+                "android.permission.REQUEST_INSTALL_PACKAGES",
+                "android.permission.VIBRATE",
+                "android.permission.WAKE_LOCK",
+                "android.permission.MOUNT_UNMOUNT_FILESYSTEMS",
+                "android.permission.CHANGE_NETWORK_STATE",
+                "android.permission.QUERY_ALL_PACKAGES",
+                "android.permission.REORDER_TASKS",
+                "com.txj.airs.decomp.openadsdk.permission.TT_PANGOLIN",
+                "com.asus.msa.SupplementaryDID.ACCESS"
+            ],
+            "sha1": "C58D43A3CB957D4277E54EF2A1FF9AF3942DC059",
+            "sha256": "022B209EDF96379C4C721A288DB11F55A155752D5300AE8446E0F38D2EF67E88",
+            "shellInfo": [
+                "360加固"
+            ],
+            "size": 38404999,
+            "targetSDK": 30,
+            "versionCode": 4172,
+            "versionName": "4.1.7.2"
+        }
+    }
+}
