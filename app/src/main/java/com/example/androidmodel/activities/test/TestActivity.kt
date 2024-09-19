@@ -4,11 +4,13 @@ import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import com.example.androidmodel.R
+import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
 import com.example.androidmodel.tools.PermissionUtils
 import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
+import com.example.androidmodel.tools.apkinfo.ApkParserUsedSdkUtils
 
 /**
  * @author kfflso
@@ -21,6 +23,8 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         super.onCreate(savedInstanceState)
 
         binding.btnApkinfo.setOnClickListener{
+            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
+
             val permissions = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -32,9 +36,12 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
             val apkInfo = apkInfoImpl.apkInfo
         }
 
-        binding.btnApkparser.setOnClickListener{
+        binding.btnApkparserSdk.setOnClickListener{
+            val apkParserUsedSdkUtils = ApkParserUsedSdkUtils("/data/local/tmp/weibo.apk")
+            val sdk_id = apkParserUsedSdkUtils.sdkUsed_
 
         }
+
 
     }
     override fun initViews() {

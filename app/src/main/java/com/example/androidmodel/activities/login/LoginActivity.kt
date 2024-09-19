@@ -40,8 +40,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
-            Log.d("twy001","twy find vc $vc")
+
         }
         binding.btnSignIn.setOnClickListener {
 

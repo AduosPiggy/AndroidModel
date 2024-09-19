@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,8 +12,8 @@ import android.util.Base64;
 
 import com.android.apksig.ApkVerifier;
 import com.example.androidmodel.tools.apkinfo.bean.CertificateInfo;
+import com.example.androidmodel.tools.apkinfo.bean.FeaturesMap;
 import com.example.androidmodel.tools.apkinfo.cache.ApkParserCache;
-import com.example.androidmodel.tools.apkinfo.cache.ApkShellFeaturesCache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,12 +54,13 @@ import java.util.zip.ZipFile;
  *      getApkVersion; // apk 应用版本
  *      getApkTargetSDK; // apk targetSDK
  *      getApkRequestedPermission; // apk 申请的权限
- *      getStubInfo; // 应用采用 ? 公司的加固
+ *      getShellInfo; // 应用采用 ? 公司的加固
  *      getCertificateV1 // apk 签名证书 所有 V1 的信息
  *      getCertificateV2 // apk 签名证书 所有 V2 的信息
  *      getCertificateV3 // apk 签名证书 所有 V3 的信息
  *      getCertificateV31 // apk 签名证书 所有 V31 的信息
  *      getCertificateV4 // apk 签名证书 所有 V4 的信息
+ *
  */
 
 public class ApkParserUtils {
@@ -67,7 +69,6 @@ public class ApkParserUtils {
     private PackageManager packageManager;
     private PackageInfo packageInfo;
     private ApkParserCache apkParserCache;
-
     public ApkParserUtils(Context context, String apkPath) {
         this.context = context;
         if(isApkPathValid(apkPath)){
@@ -219,16 +220,31 @@ public class ApkParserUtils {
      *  5.base64
      *  icon解压: 先base64 去除 /n -> gzip 反解压 -> bitmap
      */
-    public String getApkIconBase64_(){
+    private String getApkIconBase64_(){
         Drawable icon = getApkIcon();
-        Bitmap bitmap = ((BitmapDrawable) icon).getBitmap();
+        Bitmap bitmap = drawableToBitmap(icon);
         byte[] byteArray = bitmapToByteArray(bitmap);
         byte[] gzipCompressed = gzipCompress(byteArray);
         return Base64.encodeToString(gzipCompressed, Base64.DEFAULT);
     }
-    public Drawable getApkIcon(){
+    private Drawable getApkIcon(){
         return packageInfo != null ? packageInfo.applicationInfo.loadIcon(packageManager) : null;
     }
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        width = width > 0 ? width : 1;
+        height = height > 0 ? height : 1;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     private byte[] bitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
@@ -251,7 +267,7 @@ public class ApkParserUtils {
      *  1.获取到 apk 压缩文件中 AM 文件上次修改的时间, timestamp ms;
      *  2.将 timestamp 转换为东八区的时间
      */
-    public String getApkBuildTime__() {
+    private String getApkBuildTime__() {
         long timestamp = getApkBuildTime_();
         if (timestamp == 0) {
             return "unKnown time: 0";
@@ -330,9 +346,9 @@ public class ApkParserUtils {
      *  1.获取加固的特征规则 map : shellFeaturesMap( key-value : 加固特征文件名称-加固的方式);
      *  2.遍历获取 apkFile 中的文件, 查找 shellFeaturesMap 中是否包含加固特征的文件
      */
-    public Set<String> getShellInfo_() {
+    private Set<String> getShellInfo_() {
         Set<String> stubInfo = new HashSet<>();
-        Map<String, String> shellFeaturesMap = ApkShellFeaturesCache.getInstance().getShellFeaturesMap();
+        Map<String, String> shellFeaturesMap = FeaturesMap.getInstance().getShellFeaturesMap();
         try {
             File apkFile = new File(apkPath);
             ZipFile zipFile = new ZipFile(apkFile);
@@ -356,7 +372,7 @@ public class ApkParserUtils {
      *
      * @return 获取 apk 所有 V1 类型的证书信息
      */
-    public List<CertificateInfo> getCertificateV1_(){
+    private List<CertificateInfo> getCertificateV1_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
         if(apkParserCache.getmV1SchemeSigners() == null){
             return certificateInfoList;
@@ -404,7 +420,7 @@ public class ApkParserUtils {
         }
         return certificateInfoList;
     }
-    public List<CertificateInfo> getCertificateV2_(){
+    private List<CertificateInfo> getCertificateV2_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
         if(apkParserCache.getmV2SchemeSigners() == null){
             return certificateInfoList;
@@ -495,7 +511,7 @@ public class ApkParserUtils {
         }
         return certificateInfoList;
     }
-    public List<CertificateInfo> getCertificateV4_(){
+    private List<CertificateInfo> getCertificateV4_(){
         List<CertificateInfo> certificateInfoList = new ArrayList<>();
         if(apkParserCache.getmV4SchemeSigners() == null){
             return certificateInfoList;
@@ -539,7 +555,6 @@ public class ApkParserUtils {
         }
         return certificateInfoList;
     }
-
 
 
 }

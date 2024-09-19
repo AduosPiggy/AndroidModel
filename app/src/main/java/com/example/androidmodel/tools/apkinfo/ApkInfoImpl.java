@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 /**
  * @author kfflso
  * @data 2024/9/2 15:12
- * @plus:
+ * @plus: 获取apk的信息 + 签名信息; apksig
  */
 public class ApkInfoImpl {
     private Context context;

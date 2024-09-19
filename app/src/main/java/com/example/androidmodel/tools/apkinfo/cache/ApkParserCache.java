@@ -28,7 +28,6 @@ public class ApkParserCache {
     public ApkParserCache(String apkPath) {
         initData(apkPath);
     }
-
     private void initData(String apkPath){
         result = getApkVerifierResult(apkPath);
         mV1SchemeSigners = result.isVerifiedUsingV1Scheme() ? result.getV1SchemeSigners() : null;
