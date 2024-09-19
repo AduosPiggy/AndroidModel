@@ -1,16 +1,16 @@
-package com.example.androidmodel.activities.test
+package com.example.androidmodel.activities.login.test
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.example.androidmodel.R
+import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
 import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
 import com.example.androidmodel.tools.PermissionUtils
 import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
-import com.example.androidmodel.tools.apkinfo.ApkParserUsedSdkUtils
 
 /**
  * @author kfflso
@@ -31,15 +31,15 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
             )
             val REQUEST_CODE_PERMISSIONS = 0
             PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
-            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/wenjianjieyawang.apk")
+            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/weibo.apk")
             val apkInfoJson = apkInfoImpl.apkInfoJson
             val apkInfo = apkInfoImpl.apkInfo
         }
 
-        binding.btnApkparserSdk.setOnClickListener{
-            val apkParserUsedSdkUtils = ApkParserUsedSdkUtils("/data/local/tmp/weibo.apk")
-            val sdk_id = apkParserUsedSdkUtils.sdkUsed_
+        binding.btnRunSdksScan.setOnClickListener{
 
+            val intent = Intent(this@TestActivity, SdksScanActivity::class.java)
+            startActivity(intent)
         }
 
 

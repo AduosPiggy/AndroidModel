@@ -32,7 +32,9 @@
         </activity>
         <activity android:name=".activities.home.HomeActivity"
             android:exported="false"/>
-        <activity android:name=".activities.test.TestActivity"
+        <activity android:name=".activities.login.test.TestActivity"
+            android:exported="false"/>
+        <activity android:name=".activities.login.test.sdkscan.SdksScanActivity"
             android:exported="false"/>
     </application>
 

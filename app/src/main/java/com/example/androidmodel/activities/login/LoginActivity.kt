@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
-import com.example.androidmodel.activities.test.TestActivity
+import com.example.androidmodel.activities.login.test.TestActivity
 import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout

@@ -15,13 +15,21 @@ import java.util.zip.ZipFile;
  * @author kfflso
  * @data 2024/9/18 16:51
  * @plus:
+ *       解析 apk 采用的第三方 SDK 思路:
+ *       1.根据 apkPath 安装 apk ---> package manager 得到 install manager,然后创建session来执行install; 这里直接手动adb install
+ *       2.启动 app
+ *       3.获取 app 启动的类加载器
+ *       4.遍历类加载器,比对 SdkFeaturesMap是否包含类加载器包名
  */
 public class ApkParserUsedSdkUtils {
     private String apkPath = "";
+    private String apkPackageName = "";
 
-    public ApkParserUsedSdkUtils(String apkPath) {
+    public ApkParserUsedSdkUtils(String apkPath, String apkPackageName) {
         this.apkPath = apkPath;
+        this.apkPackageName = apkPackageName;
     }
+
     /**
      *
      * @return 加固的方式
