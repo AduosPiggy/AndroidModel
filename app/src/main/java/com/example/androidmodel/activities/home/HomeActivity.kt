@@ -26,6 +26,10 @@ class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
 
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        CustomActivityManager.removeActivity(this)
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()

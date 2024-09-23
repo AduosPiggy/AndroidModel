@@ -49,6 +49,10 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         }
 
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        CustomActivityManager.removeActivity(this)
+    }
     override fun initViews() {
 
     }

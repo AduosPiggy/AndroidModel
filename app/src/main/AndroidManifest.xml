@@ -41,6 +41,8 @@
             android:exported="false"/>
         <activity android:name=".activities.login.test.sdkscan.SdksScanActivity"
             android:exported="false"/>
+        <activity android:name=".activities.login.test.broadcast.BroadSimulateActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

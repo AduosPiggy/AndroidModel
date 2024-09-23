@@ -26,6 +26,10 @@ class SdksScanActivity: BaseVMActivity<SdksScanVM, ActivitySdksscanBinding>(){
         clickers()
 
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        CustomActivityManager.removeActivity(this)
+    }
     private fun initUtils(){
         sdksScanUtils = SdksScanUtils(this, "/data/local/tmp/weibo.apk")
         sdksScanUtil = SdksScanUtil(this,"/data/local/tmp/weibo.apk")

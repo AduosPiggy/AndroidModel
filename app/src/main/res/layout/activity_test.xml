@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="10dp"
             android:background="@color/green"
-            android:text="模拟发送系统广播"
+            android:text="启动 模拟系统广播"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:paddingStart="10dp"
