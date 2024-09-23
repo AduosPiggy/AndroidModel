@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
  *      实现步骤:   1.getPackageName ---> 获取将要启动的app的包名
  *                 2.launchTargetApp ---> 启动app
  *                 3.saveLaunchAppClassNames ---> 启动并保存app加载的类名
- *                 ---> 修改位置:  frameworks/base/core/java/android/app/ActivityThread.java  performLaunchActivity方法return之前,记得开子线程
+ *                 ---> 修改位置:  frameworks/base/core/java/android/app/ActivityThread.java  performLaunchActivity方法 return之前,记得开子线程
  *                      3.1 循环查找每一个 classLoader.getParent;
  *                      3.2 查找每一个 classLoader 加载过的类,并将类名保存在 data/data/ActivityThread.currentProcess.getProcessName()/kfflso/launchAppClassNames
  *                          writeClassNameToFile
@@ -124,7 +124,7 @@ public class SdksScanUtils {
 
 
     public void getAndSaveLoadedAppClassNames(ClassLoader classLoader){
-        String twy001 = "twy001";
+        String zzz = "zzz";
         Object pathList_object = getFieldOjbect("dalvik.system.BaseDexClassLoader", classLoader, "pathList");
         Object[] ElementsArray = (Object[]) getFieldOjbect("dalvik.system.DexPathList", pathList_object, "dexElements");
         if(ElementsArray==null){return;}
@@ -161,15 +161,15 @@ public class SdksScanUtils {
         Field mCookiefield = getClassField(classLoader, "dalvik.system.DexFile", "mCookie");
 
         if (dumpMethodCode_method == null) {
-            Log.e(twy001, "AntiyDumpError dumpMethodCode is null!!!");
+            Log.e(zzz, "AntiyDumpError dumpMethodCode is null!!!");
             return ;
         }
         if (ElementsArray == null) {
-            Log.e(twy001, "AntiyDumpError ElementsArray is null!!!");
+            Log.e(zzz, "AntiyDumpError ElementsArray is null!!!");
             return ;
         }
 
-        Log.e(twy001, "dalvik.system.DexPathList.ElementsArray.length:" + ElementsArray.length);
+        Log.e(zzz, "dalvik.system.DexPathList.ElementsArray.length:" + ElementsArray.length);
         for (int j = 0; j < ElementsArray.length; j++) {
             Object element = ElementsArray[j];
             Object dexfile = null;
@@ -181,19 +181,19 @@ public class SdksScanUtils {
                 e.printStackTrace();
             }
             if (dexfile == null) {
-                Log.e(twy001, "AntiyDumpError dexfile is null");
+                Log.e(zzz, "AntiyDumpError dexfile is null");
                 continue;
             }
             if (dexfile != null) {
                 Object mcookie = getClassFieldObject(classLoader, "dalvik.system.DexFile", dexfile, "mCookie");
                 if (mcookie == null) {
-                    Log.e(twy001, "AntiyDumpError get resultmcookie is null");
+                    Log.e(zzz, "AntiyDumpError get resultmcookie is null");
                     Object mInternalCookie = getClassFieldObject(classLoader, "dalvik.system.DexFile", dexfile, "mInternalCookie");
                     if(mInternalCookie!=null)
                     {
                         mcookie=mInternalCookie;
                     }else{
-                        Log.e(twy001, "AntiyDumpError get mInternalCookie is null");
+                        Log.e(zzz, "AntiyDumpError get mInternalCookie is null");
                         continue;
                     }
 
