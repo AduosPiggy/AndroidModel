@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import com.example.androidmodel.R
+import com.example.androidmodel.activities.login.test.broadcast.BroadSimulateActivity
 import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
 import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
@@ -45,7 +46,8 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         }
 
         binding.btnMockSystemBroadcast.setOnClickListener{
-
+            val intent = Intent(this@TestActivity, BroadSimulateActivity::class.java)
+            startActivity(intent)
         }
 
     }
