@@ -39,7 +39,7 @@
             android:exported="false"/>
         <activity android:name=".activities.login.test.TestActivity"
             android:exported="false"/>
-        <activity android:name=".activities.login.test.sdkscan.SdksScanActivity"
+        <activity android:name=".activities.login.test.sdkscan.MockBroadActivity"
             android:exported="false"/>
     </application>
 

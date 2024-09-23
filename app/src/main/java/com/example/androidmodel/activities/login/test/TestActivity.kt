@@ -44,6 +44,9 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
             startActivity(intent)
         }
 
+        binding.btnMockSystemBroadcast.setOnClickListener{
+
+        }
 
     }
     override fun initViews() {
