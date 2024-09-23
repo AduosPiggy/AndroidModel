@@ -1,10 +1,8 @@
 package com.example.androidmodel.activities.login
 
 import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.ToastUtils
 import com.example.androidmodel.base.BaseViewModel
 import com.example.androidmodel.beans.LoginRespBean
-import kotlinx.coroutines.Dispatchers
 
 /**
  * @author kfflso

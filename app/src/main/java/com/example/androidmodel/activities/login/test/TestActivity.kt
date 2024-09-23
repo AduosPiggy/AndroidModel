@@ -9,6 +9,7 @@ import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
+import com.example.androidmodel.tools.CustomActivityManager
 import com.example.androidmodel.tools.PermissionUtils
 import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 
@@ -21,6 +22,7 @@ import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CustomActivityManager.addActivity(this)
 
         binding.btnApkinfo.setOnClickListener{
             val vc = BaseApp.Companion.CommonHelper.getVersionCode()

@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     //ApkVerifier -> apk 签名信息
     implementation("com.android.tools.build:apksig:8.2.2")
-
+//    //apk-parse -> 解析 apk 文件
+//    implementation 'net.dongliu:apk-parser:2.6.10'
+    //解析xml
+    implementation 'org.simpleframework:simple-xml:2.7.1'
 
 }

@@ -57,7 +57,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         super.onDestroy()
 
         CustomActivityManager.removeActivity(this)
-        //考虑是否执行finishAll
+        //consider exec finishAll ?
         CustomActivityManager.finishAll()
     }
 

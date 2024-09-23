@@ -7,6 +7,7 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityHomeBinding
+import com.example.androidmodel.tools.CustomActivityManager
 import kotlin.math.log
 
 /**
@@ -18,6 +19,7 @@ import kotlin.math.log
 class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CustomActivityManager.addActivity(this)
 
         binding.homeNavBar.setOnClickListener{
             finish()
