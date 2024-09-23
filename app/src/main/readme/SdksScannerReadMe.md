@@ -173,7 +173,7 @@ public void getAndSaveLoadedAppClassNames(ClassLoader classLoader){
     }
 ```
 
-![classLoaderData](./assets/classLoaderData.png)
+![classLoaderData](assets/classLoaderData.png)
 
 #### 2.5 writeClassNameToFile
 
