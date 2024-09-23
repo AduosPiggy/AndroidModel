@@ -6,25 +6,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-
-
-import com.example.androidmodel.tools.PackageUtil;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author kfflso
@@ -34,6 +27,7 @@ import java.util.Set;
  *      实现步骤:   1.getPackageName ---> 获取将要启动的app的包名
  *                 2.launchTargetApp ---> 启动app
  *                 3.saveLaunchAppClassNames ---> 启动并保存app加载的类名
+ *                 ---> 修改位置:  frameworks/base/core/java/android/app/ActivityThread.java  performLaunchActivity方法return之前,记得开子线程
  *                      3.1 循环查找每一个 classLoader.getParent;
  *                      3.2 查找每一个 classLoader 加载过的类,并将类名保存在 data/data/ActivityThread.currentProcess.getProcessName()/kfflso/launchAppClassNames
  *                          writeClassNameToFile
