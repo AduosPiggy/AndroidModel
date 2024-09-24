@@ -1,4 +1,4 @@
-package com.example.androidmodel.tools;
+package com.example.androidmodel.tools.logs;
 
 import android.content.Context;
 import android.util.Log;
