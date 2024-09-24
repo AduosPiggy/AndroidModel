@@ -1,12 +1,20 @@
 package com.example.androidmodel.tools;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author kfflso
@@ -14,14 +22,95 @@ import java.util.Stack;
  * @plus:
  */
 public class LogsUtils {
-    public static LogsUtils getInstance() {
-        return SingletonHolder.instance;
+    //文件存在最长时间
+    private static long MAX_TIME = 7 * 24 * 60 * 60 * 1000;
+    //文件最大大小
+    private static int MAX_SIZE = 100 * 1024 * 1024;
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public static String logDir = "";
+    public static void initLogDir(Context context){
+        if(logDir.isEmpty()){
+            logDir = context.getFilesDir() + "/log";
+        }
     }
-    private static class SingletonHolder {
-        private static LogsUtils instance = new LogsUtils();
+    /**
+     *
+     * logDir getLogDir(context)
+     * @param logTag log tag 即可
+     * @param logMsg 需要 log 的信息
+     *
+     */
+    public static void logToFileAsync(String logTag, String logMsg){
+        if( !logDir.isEmpty() && !logMsg.isEmpty() ){
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    logToFile(logDir, logTag, logMsg);
+                }
+            });
+        }
     }
 
-    public <T> void LogList(String TAG, List<T> list){
+    private static void logToFile(String logDir, String logTag, String logMsg){
+        File fileDir = new File(logDir);
+        if(!fileDir.exists()){
+            fileDir.mkdirs();
+        }
+        checkClearLogDir(fileDir,MAX_TIME,MAX_SIZE);
+        writeToFile(logDir,logTag,logMsg);
+    }
+
+    /**
+     *
+     * @param fileDir 日志文件夹 File形式
+     * @param MAX_TIME 文件最大保留时长
+     * @param MAX_SIZE 清理文件前, 文件最大大小
+     */
+    private static void checkClearLogDir(File fileDir, long MAX_TIME, int MAX_SIZE){
+        File[] files = fileDir.listFiles();
+        if(files != null){
+            for(File f_ : files){
+                long keepTime = System.currentTimeMillis() - f_.lastModified();
+                if(keepTime > MAX_TIME){
+                    f_.delete();
+                    continue;
+                }
+                if(f_.length() > MAX_SIZE){
+                    f_.delete();
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param logDir 日志文件夹 File形式
+     * @param logTag
+     * @param logMsg
+     */
+    private static void writeToFile(String logDir, String logTag, String logMsg){
+        try {
+            long time = System.currentTimeMillis();
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(time);
+            String filename = date + "-tdc.txt";
+            File file = new File(logDir,filename);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file,true);
+            String logTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+            fw.append(logTime).append("\t")
+               .append(logTag).append("\t")
+               .append(logMsg).append("\n");
+            fw.flush();
+            fw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static <T> void LogList(String TAG, List<T> list){
         Gson gson = new Gson();
 
         for (T item : list){
@@ -32,7 +121,7 @@ public class LogsUtils {
             }
         }
     }
-    public <T> void LogList(String TAG, String explain, List<T> list){
+    public static <T> void LogList(String TAG, String explain, List<T> list){
         for (T item : list){
             if( item instanceof List<?>){
                 LogList(TAG, explain, (List<?>) item );
@@ -42,7 +131,7 @@ public class LogsUtils {
         }
     }
 
-    public <T> void LogSet(String TAG, Set<T> set){
+    public static <T> void LogSet(String TAG, Set<T> set){
         Gson gson = new Gson();
 
         for (T item : set){
@@ -54,7 +143,7 @@ public class LogsUtils {
         }
     }
 
-    public <T> void LogStack(String TAG, Stack<T> stack) {
+    public static <T> void LogStack(String TAG, Stack<T> stack) {
         Gson gson = new Gson();
         Stack<T> tempStack = new Stack<>();
         while (!stack.isEmpty()) {
@@ -66,7 +155,7 @@ public class LogsUtils {
             stack.push(tempStack.pop());
         }
     }
-    public <T> void LogStack(String TAG,  String explain, Stack<T> stack) {
+    public static <T> void LogStack(String TAG,  String explain, Stack<T> stack) {
         Gson gson = new Gson();
         Stack<T> tempStack = new Stack<>();
         while (!stack.isEmpty()) {
@@ -79,11 +168,11 @@ public class LogsUtils {
         }
     }
 
-    public <T> void LogT(String TAG,T t){
+    public static <T> void LogT(String TAG,T t){
         Log.d(TAG,new Gson().toJson(t));
     }
 
-    public <T> void LogT(String TAG,String explain,T t){
+    public static <T> void LogT(String TAG,String explain,T t){
         Log.d(TAG,explain + ": " + new Gson().toJson(t));
     }
 

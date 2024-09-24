@@ -11,6 +11,7 @@ import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
 import com.example.androidmodel.tools.CustomActivityManager
+import com.example.androidmodel.tools.LogsUtils
 import com.example.androidmodel.tools.PermissionUtils
 import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 
@@ -48,6 +49,11 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         binding.btnMockSystemBroadcast.setOnClickListener{
             val intent = Intent(this@TestActivity, BroadSimulateActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.btnLogsUtils.setOnClickListener{
+            LogsUtils.initLogDir(this)
+            LogsUtils.logToFileAsync("LogsUtils","hello twy");
         }
 
     }
