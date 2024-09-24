@@ -16,6 +16,10 @@
 <!--    删除app-->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
+
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:name=".base.BaseApp"
         android:allowBackup="true"

@@ -5,10 +5,9 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
-import com.example.androidmodel.databinding.ActivityTestBinding
-import com.example.androidmodel.tools.BroadCastSimulateUtil
+import com.example.androidmodel.tools.broadcast.BroadCastSendUtil
 import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.sdkscan.SdksScanUtils
+import com.example.androidmodel.tools.broadcast.BroadCastReceiverUtil
 
 /**
  * @author kfflso
@@ -17,51 +16,62 @@ import com.example.androidmodel.tools.sdkscan.SdksScanUtils
  */
 @ContentLayout(R.layout.activity_broadcast_simulate)
 class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSimulateBinding>() {
-    private lateinit var broadcastSimulateUtil: BroadCastSimulateUtil
-
+    private lateinit var broadcastSendUtil: BroadCastSendUtil
+    private lateinit var broadCastReceiverUtil: BroadCastReceiverUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CustomActivityManager.addActivity(this)
         initUtils()
+        verifyPermissions()
         clickers()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         CustomActivityManager.removeActivity(this)
+        broadCastReceiverUtil.unregisterReceiver()
     }
 
     private fun initUtils(){
-        broadcastSimulateUtil = BroadCastSimulateUtil(this)
+        broadcastSendUtil =
+            BroadCastSendUtil(this)
+        broadCastReceiverUtil = BroadCastReceiverUtil(this);
+    }
+    private fun verifyPermissions(){
+        broadcastSendUtil.verifyPermission(this)
     }
     private fun clickers(){
+        binding.btnRegisterBroadCast.setOnClickListener{
+            broadCastReceiverUtil.registerReceivers()
+        }
+
         binding.btnSignalStrengthChange.setOnClickListener{
-            broadcastSimulateUtil.simulateSignalStrengthChange(75)
+            broadcastSendUtil.simulateSignalStrengthChange(75)
         }
         binding.btnBatteryLevelChange.setOnClickListener{
-            broadcastSimulateUtil.simulateBatteryChange(85)
+            broadcastSendUtil.simulateBatteryChange(85)
         }
         binding.btnTimeChange.setOnClickListener{
-            broadcastSimulateUtil.simulateTimeChange(System.currentTimeMillis())
+            broadcastSendUtil.simulateTimeChange(System.currentTimeMillis())
         }
         binding.btnScreenUnlock.setOnClickListener{
-            broadcastSimulateUtil.simulateScreenUnlock()
+            broadcastSendUtil.simulateScreenUnlock()
         }
         binding.btnScreenLock.setOnClickListener{
-            broadcastSimulateUtil.simulateScreenLock()
+            broadcastSendUtil.simulateScreenLock()
         }
         binding.btnMediaMounted.setOnClickListener{
-            broadcastSimulateUtil.simulateMediaMounted()
+            broadcastSendUtil.simulateMediaMounted()
         }
         binding.btnUSBMode.setOnClickListener{
-            broadcastSimulateUtil.simulateUsbModeChange()
+            broadcastSendUtil.simulateUsbModeChange()
         }
         binding.btnUserDial.setOnClickListener{
-            broadcastSimulateUtil.simulateUserDial("1234567890")
+            broadcastSendUtil.simulateUserDial("1234567890")
         }
         binding.btnUserCall.setOnClickListener{
-            broadcastSimulateUtil.simulateUserCall("0987654321")
+            broadcastSendUtil.simulateUserCall("0987654321")
         }
     }
 
