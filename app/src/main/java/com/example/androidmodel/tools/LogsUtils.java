@@ -90,15 +90,11 @@ public class LogsUtils {
      */
     private static void writeToFile(String logDir, String logTag, String logMsg){
         try {
-            long time = System.currentTimeMillis();
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(time);
-            String filename = date + "-tdc.txt";
-            File file = new File(logDir,filename);
-            if(!file.exists()){
-                file.createNewFile();
-            }
+
+            File file = checkFileName(logDir);
+
             FileWriter fw = new FileWriter(file,true);
-            String logTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+            String logTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
             fw.append(logTime).append("\t")
                .append(logTag).append("\t")
                .append(logMsg).append("\n");
@@ -107,6 +103,28 @@ public class LogsUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static File checkFileName(String logDir){
+        File file = null;
+        try {
+            String filename = "log-tdc.txt";
+            file = new File(logDir,filename);
+            if(!file.exists()){
+                file.createNewFile();
+                return file;
+            }
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis());
+            String lastDate = new SimpleDateFormat("yyyy-MM-dd").format(file.lastModified());
+            if(!date.equals(lastDate)){
+                filename = date + "-log-tdc.txt";
+                File f = new File(logDir,filename);
+                file.renameTo(f);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return file;
     }
 
 
