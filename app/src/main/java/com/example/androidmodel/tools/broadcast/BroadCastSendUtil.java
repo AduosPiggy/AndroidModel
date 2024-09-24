@@ -77,6 +77,7 @@ public class BroadCastSendUtil {
     // Simulate unlocking the screen
     public void simulateScreenUnlock() {
         Intent intent = new Intent("com.example.ACTION_SCREEN_UNLOCK");
+//        Intent intent = new Intent(Intent.ACTION_SCREEN_OFF);
         context.sendBroadcast(intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }
@@ -84,6 +85,7 @@ public class BroadCastSendUtil {
     // Simulate locking the screen
     public void simulateScreenLock() {
         Intent intent = new Intent("com.example.ACTION_SCREEN_LOCK");
+//        Intent intent = new Intent(Intent.ACTION_SCREEN_ON);
         context.sendBroadcast(intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }

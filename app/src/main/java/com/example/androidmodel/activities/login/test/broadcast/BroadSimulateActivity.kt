@@ -34,8 +34,7 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
     }
 
     private fun initUtils(){
-        broadcastSendUtil =
-            BroadCastSendUtil(this)
+        broadcastSendUtil = BroadCastSendUtil(this)
         broadCastReceiverUtil = BroadCastReceiverUtil(this);
     }
     private fun verifyPermissions(){
