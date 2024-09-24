@@ -149,6 +149,9 @@ public class SdksScanUtils {
         Method dumpMethodCode_method = null;
 
         for (Method field : DexFileClazz.getDeclaredMethods()) {
+            //该方法对应的 framework层
+            // Java path: libcore/dalvik/src/main/java/dalvik/system/DexFile.java
+            // JNI path: art/runtime/native/dalvik_system_DexFile.cc DexFile_getClassNameList
             if (field.getName().equals("getClassNameList")) {
                 getClassNameList_method = field;
                 getClassNameList_method.setAccessible(true);
