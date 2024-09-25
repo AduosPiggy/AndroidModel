@@ -3,6 +3,7 @@ package com.example.androidmodel.activities.login.test
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.login.test.broadcast.BroadSimulateActivity
 import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
@@ -22,6 +23,7 @@ import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
  */
 @ContentLayout(R.layout.activity_test)
 class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
+    var tag = "TestActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CustomActivityManager.addActivity(this)
@@ -35,9 +37,15 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
             )
             val REQUEST_CODE_PERMISSIONS = 0
             PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
+
+            val time1 = System.currentTimeMillis()
+            Log.d("tag","pre: $time1")
             val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/weibo.apk")
             val apkInfoJson = apkInfoImpl.apkInfoJson
             val apkInfo = apkInfoImpl.apkInfo
+            val time2 = System.currentTimeMillis()
+            Log.d("tag","pre: $time2")
+            Log.d("tag","pre: ${(time2-time1)/1000} s")
         }
 
         binding.btnRunSdksScan.setOnClickListener{

@@ -107,16 +107,16 @@ public class BroadCastSendUtil {
 
     // Simulate a user dialing a phone number
     public void simulateUserDial(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
+        Uri uri = Uri.parse(phoneNumber);
+        Intent intent = new Intent(Intent.ACTION_DIAL,uri);
         context.sendBroadcast(intent);
         Log.d(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
     }
 
     // Simulate a user making a call to a phone number
     public void simulateUserCall(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
+        Uri uri = Uri.parse(phoneNumber);
+        Intent intent = new Intent(Intent.ACTION_CALL,uri);
         context.sendBroadcast(intent);
         Log.d(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
     }
