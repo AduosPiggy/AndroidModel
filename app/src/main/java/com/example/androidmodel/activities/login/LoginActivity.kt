@@ -1,21 +1,14 @@
 package com.example.androidmodel.activities.login
 
-import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
 import com.example.androidmodel.activities.login.test.TestActivity
-import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityLoginBinding
 import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.PermissionUtils
-import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
-
-//import kotlinx.android.synthetic.main.activity_login.*
 
 /**
  * @author kfflso

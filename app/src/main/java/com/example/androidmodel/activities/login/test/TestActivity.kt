@@ -7,7 +7,6 @@ import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.login.test.broadcast.BroadSimulateActivity
 import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
-import com.example.androidmodel.base.BaseApp
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
@@ -24,28 +23,33 @@ import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 @ContentLayout(R.layout.activity_test)
 class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
     var tag = "TestActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CustomActivityManager.addActivity(this)
 
-        binding.btnApkinfo.setOnClickListener{
-            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
-
+        binding.btnReqPermission.setOnClickListener{
+//            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
             val permissions = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
-            val REQUEST_CODE_PERMISSIONS = 0
-            PermissionUtils.checkAndRequestMorePermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
+            val reqCode = 0
+            PermissionUtils.checkAndRequestMorePermissions(this, permissions, reqCode)
+            Log.d(TAG,"get permissions: READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE")
+        }
+
+        binding.btnApkinfo.setOnClickListener{
 
             val time1 = System.currentTimeMillis()
-            Log.d("tag","pre: $time1")
-            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/weibo.apk")
+            Log.d(TAG,"pre: $time1")
+            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/qiangtandenglu3d.apk")
             val apkInfoJson = apkInfoImpl.apkInfoJson
-            val apkInfo = apkInfoImpl.apkInfo
+//            val apkInfo = apkInfoImpl.apkInfo
             val time2 = System.currentTimeMillis()
-            Log.d("tag","pre: $time2")
-            Log.d("tag","pre: ${(time2-time1)/1000} s")
+            Log.d(TAG,"after: $time2")
+            Log.d(TAG,"time gap: ${(time2-time1)/1000} s")
+
         }
 
         binding.btnRunSdksScan.setOnClickListener{
