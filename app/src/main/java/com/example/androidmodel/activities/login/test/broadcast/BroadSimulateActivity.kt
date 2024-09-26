@@ -1,11 +1,16 @@
 package com.example.androidmodel.activities.login.test.broadcast
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
+import com.example.androidmodel.tools.BroadcastSimulateUtil
 import com.example.androidmodel.tools.CustomActivityManager
+import com.example.androidmodel.tools.PermissionUtils
 
 /**
  * @author kfflso
@@ -25,6 +30,7 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
     override fun onDestroy() {
         super.onDestroy()
         CustomActivityManager.removeActivity(this)
+
     }
 
     private fun preLoad(){
@@ -37,15 +43,7 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
     }
 
     private fun clickerGet(){
-        binding.btnGetPhoneSignalStrength.setOnClickListener{
 
-        }
-        binding.btnGetPhoneBatteryLevel.setOnClickListener{
-
-        }
-        binding.btnGetPhoneTime.setOnClickListener{
-
-        }
     }
     private fun clickerMock(){
         binding.btnRegisterBroadCast.setOnClickListener{
@@ -59,13 +57,17 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
 
         }
         binding.btnTime.setOnClickListener{
-
+//            //java.lang.SecurityException: Permission Denial: not allowed to send broadcast android.intent.action.SCREEN_OFF from pid=13526, uid=10598
+//            val bsu = BroadcastSimulateUtil(this)
+//            val time = bsu.mockTime
+//            bsu.simulateTimeTick(time)
         }
         binding.btnScreenOn.setOnClickListener{
 
         }
         binding.btnScreenOff.setOnClickListener{
-
+            val bsu = BroadcastSimulateUtil(this)
+            bsu.simulateScreenOff()
         }
         binding.btnMediaMounted.setOnClickListener{
 
@@ -77,7 +79,8 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
 
         }
         binding.btnUserCall.setOnClickListener{
-
+            val bsu = BroadcastSimulateUtil(this)
+            bsu.simulateDial("19102855916")
         }
     }
 

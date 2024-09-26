@@ -13,7 +13,7 @@ public class PermissionImpl {
 
     public static void verify_phone(Activity activity){
         String reqPermission = Manifest.permission.READ_PHONE_STATE;
-        int requestCode = -1;
+        int requestCode = 11;
         PermissionUtils.checkAndRequestPermission(activity, reqPermission, requestCode);
     }
 }
