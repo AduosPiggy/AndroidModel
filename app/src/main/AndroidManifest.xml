@@ -16,6 +16,9 @@
 <!--    删除app-->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -47,6 +50,19 @@
             android:exported="false"/>
         <activity android:name=".activities.login.test.broadcast.BroadSimulateActivity"
             android:exported="false"/>
+
+        <receiver
+            android:name=".tools.screen.MyDeviceAdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

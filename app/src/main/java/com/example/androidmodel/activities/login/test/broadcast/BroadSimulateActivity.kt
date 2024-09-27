@@ -1,16 +1,16 @@
 package com.example.androidmodel.activities.login.test.broadcast
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
 import com.example.androidmodel.tools.BroadcastSimulateUtil
 import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.PermissionUtils
+import com.example.androidmodel.tools.permission.PermissionImpl
+import com.example.androidmodel.tools.screen.ScreenControl
 
 /**
  * @author kfflso
@@ -20,21 +20,22 @@ import com.example.androidmodel.tools.PermissionUtils
 @ContentLayout(R.layout.activity_broadcast_simulate)
 class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSimulateBinding>() {
 
+    private lateinit var screenCtrl: ScreenControl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CustomActivityManager.addActivity(this)
-        preLoad()
+        initUtils()
         clickers()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         CustomActivityManager.removeActivity(this)
-
+        screenCtrl.destroy()
     }
 
-    private fun preLoad(){
-
+    private fun initUtils(){
+        screenCtrl = ScreenControl(this)
     }
 
     private fun clickers(){
@@ -63,11 +64,20 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
 //            bsu.simulateTimeTick(time)
         }
         binding.btnScreenOn.setOnClickListener{
+            /* 1 权限申请
+             * 2 设备管理器lock
+             * 3 5s后点击电源键(无密码设备 屏幕解锁)
+             */
+            PermissionImpl.verify_screenOnAndOff(this)
+            screenCtrl.turnOffScreen()
+            Thread.sleep(3000)
+            screenCtrl.turnOnScreen()
 
         }
         binding.btnScreenOff.setOnClickListener{
-            val bsu = BroadcastSimulateUtil(this)
-            bsu.simulateScreenOff()
+            PermissionImpl.verify_screenOnAndOff(this)
+            screenCtrl.turnOffScreen()
+
         }
         binding.btnMediaMounted.setOnClickListener{
 
