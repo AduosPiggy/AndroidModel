@@ -265,12 +265,10 @@ public void writeClassNameToFile(String filePath, String[] classNames) {
 package com.example.androidmodel.tools.sdkscan;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
-import com.example.androidmodel.tools.apkinfo.bean.FeaturesMap;
+import com.example.androidmodel.tools.apkinfo.bean.Kfflso_FeaturesMap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -292,38 +290,42 @@ public class SdksScanUtil {
     private PackageManager packageManager;
     private PackageInfo packageInfo;
     //app使用的第三方sdk的特征字典; key-value sdk_packageName_feature - sdk_id
-    private static Map<String,String> sdkFeaturesMap ;
+    private static Map<String, String> sdkFeaturesMap;
 
     public SdksScanUtil(Context context, String apkPath) {
         this.context = context;
         this.apkPath = apkPath;
         initData();
     }
-    private void initData(){
+
+    private void initData() {
         packageManager = context.getPackageManager();
         packageInfo = packageManager.getPackageArchiveInfo(apkPath, 0);
-        sdkFeaturesMap = FeaturesMap.getInstance().getSdkFeaturesMap();
+        sdkFeaturesMap = Kfflso_FeaturesMap.getInstance().getSdkFeaturesMap();
     }
 
-    public Set<String> getSdks(){
+    public Set<String> getSdks() {
         Set<String> sdks = new HashSet<>();
         String classNames = getClassNames();
-        for(String key : sdkFeaturesMap.keySet()){
-            if(classNames.contains(key)){
+        for (String key : sdkFeaturesMap.keySet()) {
+            if (classNames.contains(key)) {
                 sdks.add(sdkFeaturesMap.get(key));
             }
         }
         return sdks;
     }
-    private String getClassNames(){
+
+    private String getClassNames() {
         String packageName = getPackageName();
-        if( packageName==null || packageName.isEmpty()) return "";
+        if (packageName == null || packageName.isEmpty()) return "";
         final String classNamesPath = "data/data/" + packageName + "/kfflso/launchAppClassNames";
         return getFileContent(classNamesPath);
     }
-    private String getPackageName(){
-        return  packageInfo != null ? packageInfo.packageName : null;
+
+    private String getPackageName() {
+        return packageInfo != null ? packageInfo.packageName : null;
     }
+
     private String getFileContent(String filePath) {
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {

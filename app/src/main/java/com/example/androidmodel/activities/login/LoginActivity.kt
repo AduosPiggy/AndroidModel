@@ -8,7 +8,7 @@ import com.example.androidmodel.activities.login.test.TestActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityLoginBinding
-import com.example.androidmodel.tools.CustomActivityManager
+import com.example.androidmodel.tools.Kfflso_ActivityManager
 
 /**
  * @author kfflso
@@ -24,7 +24,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CustomActivityManager.addActivity(this)
+        Kfflso_ActivityManager.addActivity(this)
 
         binding.goHome.setOnClickListener {
             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
@@ -49,9 +49,9 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
     override fun onDestroy() {
         super.onDestroy()
 
-        CustomActivityManager.removeActivity(this)
+        Kfflso_ActivityManager.removeActivity(this)
         //consider exec finishAll ?
-        CustomActivityManager.finishAll()
+        Kfflso_ActivityManager.finishAll()
     }
 
     override fun initViews() {

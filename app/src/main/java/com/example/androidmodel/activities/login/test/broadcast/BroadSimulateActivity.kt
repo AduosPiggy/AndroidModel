@@ -1,15 +1,13 @@
 package com.example.androidmodel.activities.login.test.broadcast
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
-import com.example.androidmodel.tools.BroadcastSimulateUtil
-import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.permission.PermissionImpl
+import com.example.androidmodel.tools.Kfflso_BroadcastSimulateUtil
+import com.example.androidmodel.tools.Kfflso_ActivityManager
+import com.example.androidmodel.tools.permission.Kfflso_PermissionImpl
 import com.example.androidmodel.tools.screen.ScreenControl
 
 /**
@@ -23,14 +21,14 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
     private lateinit var screenCtrl: ScreenControl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CustomActivityManager.addActivity(this)
+        Kfflso_ActivityManager.addActivity(this)
         initUtils()
         clickers()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        CustomActivityManager.removeActivity(this)
+        Kfflso_ActivityManager.removeActivity(this)
         screenCtrl.destroy()
     }
 
@@ -68,14 +66,14 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
              * 2 设备管理器lock
              * 3 5s后点击电源键(无密码设备 屏幕解锁)
              */
-            PermissionImpl.verify_screenOnAndOff(this)
+            Kfflso_PermissionImpl.verify_screenOnAndOff(this)
             screenCtrl.turnOffScreen()
             Thread.sleep(3000)
             screenCtrl.turnOnScreen()
 
         }
         binding.btnScreenOff.setOnClickListener{
-            PermissionImpl.verify_screenOnAndOff(this)
+            Kfflso_PermissionImpl.verify_screenOnAndOff(this)
             screenCtrl.turnOffScreen()
 
         }
@@ -89,7 +87,8 @@ class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSim
 
         }
         binding.btnUserCall.setOnClickListener{
-            val bsu = BroadcastSimulateUtil(this)
+            val bsu =
+                Kfflso_BroadcastSimulateUtil(this)
             bsu.simulateDial("19102855916")
         }
     }

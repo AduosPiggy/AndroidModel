@@ -11,9 +11,9 @@ import android.os.Build;
 import android.util.Base64;
 
 import com.android.apksig.ApkVerifier;
-import com.example.androidmodel.tools.apkinfo.bean.CertificateInfo;
-import com.example.androidmodel.tools.apkinfo.bean.FeaturesMap;
-import com.example.androidmodel.tools.apkinfo.cache.ApkParserCache;
+import com.example.androidmodel.tools.apkinfo.bean.Kfflso_CertificateInfo;
+import com.example.androidmodel.tools.apkinfo.bean.Kfflso_FeaturesMap;
+import com.example.androidmodel.tools.apkinfo.cache.Kfflso_ApkParserCache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,13 +63,13 @@ import java.util.zip.ZipFile;
  *
  */
 
-public class ApkParserUtils {
+public class Kfflso_ApkParserUtils {
     private Context context;
     private String apkPath;
     private PackageManager packageManager;
     private PackageInfo packageInfo;
-    private ApkParserCache apkParserCache;
-    public ApkParserUtils(Context context, String apkPath) {
+    private Kfflso_ApkParserCache kfflsoApkParserCache;
+    public Kfflso_ApkParserUtils(Context context, String apkPath) {
         this.context = context;
         if(isApkPathValid(apkPath)){
             this.apkPath = apkPath;
@@ -79,7 +79,7 @@ public class ApkParserUtils {
         packageManager = context.getPackageManager();
         //获取对应apkPath的 packageInfo
         packageInfo = packageManager.getPackageArchiveInfo(apkPath, 0);
-        apkParserCache = new ApkParserCache(apkPath);
+        kfflsoApkParserCache = new Kfflso_ApkParserCache(apkPath);
     }
 
     private Boolean isApkPathValid(String apkPath) {
@@ -176,23 +176,23 @@ public class ApkParserUtils {
         return getShellInfo_();
     }
 
-    public List<CertificateInfo> getCertificateV1(){
+    public List<Kfflso_CertificateInfo> getCertificateV1(){
         return getCertificateV1_();
     }
 
-    public List<CertificateInfo> getCertificateV2(){
+    public List<Kfflso_CertificateInfo> getCertificateV2(){
         return getCertificateV2_();
     }
 
-    public List<CertificateInfo> getCertificateV3(){
-        return getCertificateV3_(apkParserCache.getmV3SchemeSigners());
+    public List<Kfflso_CertificateInfo> getCertificateV3(){
+        return getCertificateV3_(kfflsoApkParserCache.getmV3SchemeSigners());
     }
 
-    public List<CertificateInfo> getCertificateV31(){
-        return getCertificateV3_(apkParserCache.getmV31SchemeSigners());
+    public List<Kfflso_CertificateInfo> getCertificateV31(){
+        return getCertificateV3_(kfflsoApkParserCache.getmV31SchemeSigners());
     }
 
-    public List<CertificateInfo> getCertificateV4(){
+    public List<Kfflso_CertificateInfo> getCertificateV4(){
         return getCertificateV4_();
     }
 
@@ -348,7 +348,7 @@ public class ApkParserUtils {
      */
     private Set<String> getShellInfo_() {
         Set<String> stubInfo = new HashSet<>();
-        Map<String, String> shellFeaturesMap = FeaturesMap.getInstance().getShellFeaturesMap();
+        Map<String, String> shellFeaturesMap = Kfflso_FeaturesMap.getInstance().getShellFeaturesMap();
         try {
             File apkFile = new File(apkPath);
             ZipFile zipFile = new ZipFile(apkFile);
@@ -372,188 +372,188 @@ public class ApkParserUtils {
      *
      * @return 获取 apk 所有 V1 类型的证书信息
      */
-    private List<CertificateInfo> getCertificateV1_(){
-        List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(apkParserCache.getmV1SchemeSigners() == null){
-            return certificateInfoList;
+    private List<Kfflso_CertificateInfo> getCertificateV1_(){
+        List<Kfflso_CertificateInfo> kfflsoCertificateInfoList = new ArrayList<>();
+        if(kfflsoApkParserCache.getmV1SchemeSigners() == null){
+            return kfflsoCertificateInfoList;
         }
-        for(ApkVerifier.Result.V1SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV1SchemeSigners()){
+        for(ApkVerifier.Result.V1SchemeSignerInfo schemeSignerInfo: kfflsoApkParserCache.getmV1SchemeSigners()){
             String name = schemeSignerInfo.getName();
             List<X509Certificate> mCertChain = schemeSignerInfo.getCertificateChain();
             String blockFileName = schemeSignerInfo.getSignatureBlockFileName();
             String fileName = schemeSignerInfo.getSignatureFileName();
             for(X509Certificate x509Certificate : mCertChain){
-                CertificateInfo certificateInfo = new CertificateInfo();
-                certificateInfo.setName(name);
-                certificateInfo.setBlockFileName(blockFileName);
-                certificateInfo.setFileName(fileName);
-                certificateInfo.setType(x509Certificate.getType());
-                certificateInfo.setVersion(x509Certificate.getVersion());
-                certificateInfo.setSerialNumber( String.format("0x%08X", x509Certificate.getSerialNumber()));
-                certificateInfo.setDistinguishedName(x509Certificate.getIssuerX500Principal().getName());
-                certificateInfo.setValidFrom(x509Certificate.getNotBefore());
-                certificateInfo.setValidTo(x509Certificate.getNotAfter());
+                Kfflso_CertificateInfo kfflsoCertificateInfo = new Kfflso_CertificateInfo();
+                kfflsoCertificateInfo.setName(name);
+                kfflsoCertificateInfo.setBlockFileName(blockFileName);
+                kfflsoCertificateInfo.setFileName(fileName);
+                kfflsoCertificateInfo.setType(x509Certificate.getType());
+                kfflsoCertificateInfo.setVersion(x509Certificate.getVersion());
+                kfflsoCertificateInfo.setSerialNumber( String.format("0x%08X", x509Certificate.getSerialNumber()));
+                kfflsoCertificateInfo.setDistinguishedName(x509Certificate.getIssuerX500Principal().getName());
+                kfflsoCertificateInfo.setValidFrom(x509Certificate.getNotBefore());
+                kfflsoCertificateInfo.setValidTo(x509Certificate.getNotAfter());
                 PublicKey publicKey = x509Certificate.getPublicKey();
-                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
-                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
+                kfflsoCertificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                kfflsoCertificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
-                    certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
-                    certificateInfo.setRsaBitLength(rsaBitLength);
+                    kfflsoCertificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
+                    kfflsoCertificateInfo.setRsaModulus(String.valueOf(rsaModulus));
+                    kfflsoCertificateInfo.setRsaBitLength(rsaBitLength);
                 }
-                certificateInfo.setAlgorithms(x509Certificate.getSigAlgName());
-                certificateInfo.setOID(x509Certificate.getSigAlgOID());
+                kfflsoCertificateInfo.setAlgorithms(x509Certificate.getSigAlgName());
+                kfflsoCertificateInfo.setOID(x509Certificate.getSigAlgOID());
                 try {
                     byte[] certBytes = x509Certificate.getEncoded();
-                    certificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
-                    certificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
-                    certificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
+                    kfflsoCertificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
+                    kfflsoCertificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
+                    kfflsoCertificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
                 } catch (CertificateEncodingException e) {
                     throw new RuntimeException(e);
                 }
 
-                certificateInfoList.add(certificateInfo);
+                kfflsoCertificateInfoList.add(kfflsoCertificateInfo);
             }
         }
-        return certificateInfoList;
+        return kfflsoCertificateInfoList;
     }
-    private List<CertificateInfo> getCertificateV2_(){
-        List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(apkParserCache.getmV2SchemeSigners() == null){
-            return certificateInfoList;
+    private List<Kfflso_CertificateInfo> getCertificateV2_(){
+        List<Kfflso_CertificateInfo> kfflsoCertificateInfoList = new ArrayList<>();
+        if(kfflsoApkParserCache.getmV2SchemeSigners() == null){
+            return kfflsoCertificateInfoList;
         }
-        for(ApkVerifier.Result.V2SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV2SchemeSigners()){
+        for(ApkVerifier.Result.V2SchemeSignerInfo schemeSignerInfo: kfflsoApkParserCache.getmV2SchemeSigners()){
             int signerIndex = schemeSignerInfo.getIndex();
 
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
             for(X509Certificate certificate : mCerts){
-                CertificateInfo certificateInfo = new CertificateInfo();
-                certificateInfo.setIndex(signerIndex);
-                certificateInfo.setType(certificate.getType());
-                certificateInfo.setVersion(certificate.getVersion());
-                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setValidFrom(certificate.getNotBefore());
-                certificateInfo.setValidTo(certificate.getNotAfter());
+                Kfflso_CertificateInfo kfflsoCertificateInfo = new Kfflso_CertificateInfo();
+                kfflsoCertificateInfo.setIndex(signerIndex);
+                kfflsoCertificateInfo.setType(certificate.getType());
+                kfflsoCertificateInfo.setVersion(certificate.getVersion());
+                kfflsoCertificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                kfflsoCertificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                kfflsoCertificateInfo.setValidFrom(certificate.getNotBefore());
+                kfflsoCertificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
-                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
-                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
+                kfflsoCertificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                kfflsoCertificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
-                    certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
-                    certificateInfo.setRsaBitLength(rsaBitLength);
+                    kfflsoCertificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
+                    kfflsoCertificateInfo.setRsaModulus(String.valueOf(rsaModulus));
+                    kfflsoCertificateInfo.setRsaBitLength(rsaBitLength);
                 }
-                certificateInfo.setAlgorithms(certificate.getSigAlgName());
-                certificateInfo.setOID(certificate.getSigAlgOID());
+                kfflsoCertificateInfo.setAlgorithms(certificate.getSigAlgName());
+                kfflsoCertificateInfo.setOID(certificate.getSigAlgOID());
                 try {
                     byte[] certBytes = certificate.getEncoded();
-                    certificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
-                    certificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
-                    certificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
+                    kfflsoCertificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
+                    kfflsoCertificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
+                    kfflsoCertificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
                 } catch (CertificateEncodingException e) {
                     throw new RuntimeException(e);
                 }
 
-                certificateInfoList.add(certificateInfo);
+                kfflsoCertificateInfoList.add(kfflsoCertificateInfo);
             }
         }
-        return certificateInfoList;
+        return kfflsoCertificateInfoList;
     }
-    private List<CertificateInfo> getCertificateV3_(List<ApkVerifier.Result.V3SchemeSignerInfo> mV3_SchemeSigners){
-        List<CertificateInfo> certificateInfoList = new ArrayList<>();
+    private List<Kfflso_CertificateInfo> getCertificateV3_(List<ApkVerifier.Result.V3SchemeSignerInfo> mV3_SchemeSigners){
+        List<Kfflso_CertificateInfo> kfflsoCertificateInfoList = new ArrayList<>();
         if(mV3_SchemeSigners == null){
-            return certificateInfoList;
+            return kfflsoCertificateInfoList;
         }
         for(ApkVerifier.Result.V3SchemeSignerInfo schemeSignerInfo: mV3_SchemeSigners){
             int signerIndex = schemeSignerInfo.getIndex();
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
             for(X509Certificate certificate : mCerts){
-                CertificateInfo certificateInfo = new CertificateInfo();
-                certificateInfo.setIndex(signerIndex);
-                certificateInfo.setType(certificate.getType());
-                certificateInfo.setVersion(certificate.getVersion());
-                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setValidFrom(certificate.getNotBefore());
-                certificateInfo.setValidTo(certificate.getNotAfter());
+                Kfflso_CertificateInfo kfflsoCertificateInfo = new Kfflso_CertificateInfo();
+                kfflsoCertificateInfo.setIndex(signerIndex);
+                kfflsoCertificateInfo.setType(certificate.getType());
+                kfflsoCertificateInfo.setVersion(certificate.getVersion());
+                kfflsoCertificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                kfflsoCertificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                kfflsoCertificateInfo.setValidFrom(certificate.getNotBefore());
+                kfflsoCertificateInfo.setValidTo(certificate.getNotAfter());
 
                 PublicKey publicKey = certificate.getPublicKey();
-                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
-                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
+                kfflsoCertificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                kfflsoCertificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
-                    certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
-                    certificateInfo.setRsaBitLength(rsaBitLength);
+                    kfflsoCertificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
+                    kfflsoCertificateInfo.setRsaModulus(String.valueOf(rsaModulus));
+                    kfflsoCertificateInfo.setRsaBitLength(rsaBitLength);
                 }
-                certificateInfo.setAlgorithms(certificate.getSigAlgName());
-                certificateInfo.setOID(certificate.getSigAlgOID());
+                kfflsoCertificateInfo.setAlgorithms(certificate.getSigAlgName());
+                kfflsoCertificateInfo.setOID(certificate.getSigAlgOID());
                 try {
                     byte[] certBytes = certificate.getEncoded();
-                    certificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
-                    certificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
-                    certificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
+                    kfflsoCertificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
+                    kfflsoCertificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
+                    kfflsoCertificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
                 } catch (CertificateEncodingException e) {
                     throw new RuntimeException(e);
                 }
 
-                certificateInfoList.add(certificateInfo);
+                kfflsoCertificateInfoList.add(kfflsoCertificateInfo);
             }
         }
-        return certificateInfoList;
+        return kfflsoCertificateInfoList;
     }
-    private List<CertificateInfo> getCertificateV4_(){
-        List<CertificateInfo> certificateInfoList = new ArrayList<>();
-        if(apkParserCache.getmV4SchemeSigners() == null){
-            return certificateInfoList;
+    private List<Kfflso_CertificateInfo> getCertificateV4_(){
+        List<Kfflso_CertificateInfo> kfflsoCertificateInfoList = new ArrayList<>();
+        if(kfflsoApkParserCache.getmV4SchemeSigners() == null){
+            return kfflsoCertificateInfoList;
         }
-        for(ApkVerifier.Result.V4SchemeSignerInfo schemeSignerInfo: apkParserCache.getmV4SchemeSigners()){
+        for(ApkVerifier.Result.V4SchemeSignerInfo schemeSignerInfo: kfflsoApkParserCache.getmV4SchemeSigners()){
             int signerIndex = schemeSignerInfo.getIndex();
             List<X509Certificate> mCerts = schemeSignerInfo.getCertificates();
             for(X509Certificate certificate : mCerts){
-                CertificateInfo certificateInfo = new CertificateInfo();
-                certificateInfo.setIndex(signerIndex);
-                certificateInfo.setType(certificate.getType());
-                certificateInfo.setVersion(certificate.getVersion());
-                certificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
-                certificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
-                certificateInfo.setValidFrom(certificate.getNotBefore());
-                certificateInfo.setValidTo(certificate.getNotAfter());
+                Kfflso_CertificateInfo kfflsoCertificateInfo = new Kfflso_CertificateInfo();
+                kfflsoCertificateInfo.setIndex(signerIndex);
+                kfflsoCertificateInfo.setType(certificate.getType());
+                kfflsoCertificateInfo.setVersion(certificate.getVersion());
+                kfflsoCertificateInfo.setSerialNumber( String.format("0x%08X", certificate.getSerialNumber()));
+                kfflsoCertificateInfo.setDistinguishedName(certificate.getIssuerX500Principal().getName());
+                kfflsoCertificateInfo.setValidFrom(certificate.getNotBefore());
+                kfflsoCertificateInfo.setValidTo(certificate.getNotAfter());
                 PublicKey publicKey = certificate.getPublicKey();
-                certificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
-                certificateInfo.setPublicKeyType(publicKey.getAlgorithm());
+                kfflsoCertificateInfo.setPublicKey( Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT) );
+                kfflsoCertificateInfo.setPublicKeyType(publicKey.getAlgorithm());
                 if(publicKey instanceof RSAPublicKey){
                     RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                     BigInteger rsaModulus = rsaPublicKey.getModulus();
                     int rsaBitLength = rsaModulus.bitLength();
-                    certificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
-                    certificateInfo.setRsaModulus(String.valueOf(rsaModulus));
-                    certificateInfo.setRsaBitLength(rsaBitLength);
+                    kfflsoCertificateInfo.setRsaPublicExponent(rsaPublicKey.getPublicExponent());
+                    kfflsoCertificateInfo.setRsaModulus(String.valueOf(rsaModulus));
+                    kfflsoCertificateInfo.setRsaBitLength(rsaBitLength);
                 }
-                certificateInfo.setAlgorithms(certificate.getSigAlgName());
-                certificateInfo.setOID(certificate.getSigAlgOID());
+                kfflsoCertificateInfo.setAlgorithms(certificate.getSigAlgName());
+                kfflsoCertificateInfo.setOID(certificate.getSigAlgOID());
                 try {
                     byte[] certBytes = certificate.getEncoded();
-                    certificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
-                    certificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
-                    certificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
+                    kfflsoCertificateInfo.setMd5(getCFHashMD5("MD5",certBytes));
+                    kfflsoCertificateInfo.setSha1(getCFHashSHA1("SHA1",certBytes) );
+                    kfflsoCertificateInfo.setSha256(getCFHashSHA256("SHA256",certBytes));
                 } catch (CertificateEncodingException e) {
                     throw new RuntimeException(e);
                 }
 
-                certificateInfoList.add(certificateInfo);
+                kfflsoCertificateInfoList.add(kfflsoCertificateInfo);
             }
         }
-        return certificateInfoList;
+        return kfflsoCertificateInfoList;
     }
 
 

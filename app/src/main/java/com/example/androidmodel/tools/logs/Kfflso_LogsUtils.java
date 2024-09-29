@@ -14,14 +14,13 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author kfflso
  * @data 2024/8/29 10:47
  * @plus:
  */
-public class LogsUtils {
+public class Kfflso_LogsUtils {
     //文件存在最长时间
     private static long MAX_TIME = 7 * 24 * 60 * 60 * 1000;
     //文件最大大小

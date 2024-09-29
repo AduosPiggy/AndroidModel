@@ -8,7 +8,7 @@ import java.util.Set;
  * @data 2024/9/2 13:59
  * @plus:
  */
-public class ApkInfo {
+public class Kfflso_ApkInfo {
     // apk name
     private String name;
     // apk icon
@@ -39,15 +39,15 @@ public class ApkInfo {
     // apk 加固的方式
     private Set<String> shellInfo;
     //签名证书 V1
-    private List<CertificateInfo> certificateV1;
+    private List<Kfflso_CertificateInfo> certificateV1;
     //签名证书 V2
-    private List<CertificateInfo> certificateV2;
+    private List<Kfflso_CertificateInfo> certificateV2;
     //签名证书 V3
-    private List<CertificateInfo> certificateV3;
+    private List<Kfflso_CertificateInfo> certificateV3;
     //签名证书 V31
-    private List<CertificateInfo> certificateV31;
+    private List<Kfflso_CertificateInfo> certificateV31;
     //签名证书 V4
-    private List<CertificateInfo> certificateV4;
+    private List<Kfflso_CertificateInfo> certificateV4;
 
     public String getName() {
         return name;
@@ -162,43 +162,43 @@ public class ApkInfo {
         this.shellInfo = shellInfo;
     }
 
-    public List<CertificateInfo> getCertificateV1() {
+    public List<Kfflso_CertificateInfo> getCertificateV1() {
         return certificateV1;
     }
 
-    public void setCertificateV1(List<CertificateInfo> certificateV1) {
+    public void setCertificateV1(List<Kfflso_CertificateInfo> certificateV1) {
         this.certificateV1 = certificateV1;
     }
 
-    public List<CertificateInfo> getCertificateV2() {
+    public List<Kfflso_CertificateInfo> getCertificateV2() {
         return certificateV2;
     }
 
-    public void setCertificateV2(List<CertificateInfo> certificateV2) {
+    public void setCertificateV2(List<Kfflso_CertificateInfo> certificateV2) {
         this.certificateV2 = certificateV2;
     }
 
-    public List<CertificateInfo> getCertificateV3() {
+    public List<Kfflso_CertificateInfo> getCertificateV3() {
         return certificateV3;
     }
 
-    public void setCertificateV3(List<CertificateInfo> certificateV3) {
+    public void setCertificateV3(List<Kfflso_CertificateInfo> certificateV3) {
         this.certificateV3 = certificateV3;
     }
 
-    public List<CertificateInfo> getCertificateV31() {
+    public List<Kfflso_CertificateInfo> getCertificateV31() {
         return certificateV31;
     }
 
-    public void setCertificateV31(List<CertificateInfo> certificateV31) {
+    public void setCertificateV31(List<Kfflso_CertificateInfo> certificateV31) {
         this.certificateV31 = certificateV31;
     }
 
-    public List<CertificateInfo> getCertificateV4() {
+    public List<Kfflso_CertificateInfo> getCertificateV4() {
         return certificateV4;
     }
 
-    public void setCertificateV4(List<CertificateInfo> certificateV4) {
+    public void setCertificateV4(List<Kfflso_CertificateInfo> certificateV4) {
         this.certificateV4 = certificateV4;
     }
 }

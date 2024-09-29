@@ -8,7 +8,7 @@ import java.util.Date;
  * @data 2024/9/4 16:08
  * @plus:
  */
-public class CertificateInfo {
+public class Kfflso_CertificateInfo {
     //apk 签名者的名称
     private String name;
     // apk 签名文件的名称

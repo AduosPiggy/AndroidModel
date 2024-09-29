@@ -10,7 +10,7 @@ import android.os.BatteryManager;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.androidmodel.tools.logs.LogsUtils;
+import com.example.androidmodel.tools.logs.Kfflso_LogsUtils;
 
 import java.io.File;
 import java.text.ParseException;
@@ -40,7 +40,7 @@ import java.util.Locale;
  *  8)模拟用户打电话
  *  9)模拟用户拨号
  */
-public class BroadcastSimulateUtil {
+public class Kfflso_BroadcastSimulateUtil {
     private Activity activity;
     private String TAG = "BroadCastSimulateUtil";
     private BroadcastReceiver broadcastReceiver;
@@ -54,7 +54,7 @@ public class BroadcastSimulateUtil {
     private final String DIAL = "android.intent.action.DIAL";
     private final String CALL = "android.intent.action.CALL";
 
-    public BroadcastSimulateUtil(Activity activity) {
+    public Kfflso_BroadcastSimulateUtil(Activity activity) {
         this.activity = activity;
     }
 
@@ -78,49 +78,49 @@ public class BroadcastSimulateUtil {
                     case SIG_STR:
                         int strength = intent.getIntExtra("strength", -1);
                         Log.d(TAG, "Received signal strength change: " + strength);
-                        LogsUtils.logToFileAsync(TAG, "Received signal strength change: " + strength);
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Received signal strength change: " + strength);
                         break;
 
                     case BATTERY_CHANGED:
                         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                         Log.d(TAG,"Received battery change: " + level);
-                        LogsUtils.logToFileAsync(TAG, "Received battery change: " + level);
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Received battery change: " + level);
                         break;
 
                     case TIME_TICK:
                         long newTime = intent.getLongExtra("newTime", -1);
-                        LogsUtils.logToFileAsync(TAG, "Received time change: " + newTime);
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Received time change: " + newTime);
                         Log.d(TAG,"Received time change: " + newTime);
 
                         break;
                     case SCREEN_ON:
-                        LogsUtils.logToFileAsync(TAG, "Screen On");
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Screen On");
                         Log.d(TAG,"Screen On");
 
                         break;
                     case SCREEN_OFF:
-                        LogsUtils.logToFileAsync(TAG, "Screen Off");
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Screen Off");
                         Log.d(TAG,"Screen Off");
                         break;
 
                     case MEDIA_MOUNTED:
-                        LogsUtils.logToFileAsync(TAG, "Media mounted");
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "Media mounted");
                         Log.d(TAG,"Media mounted");
                         break;
 
                     case UMS_CONNECTED:
-                        LogsUtils.logToFileAsync(TAG, "USB mode changed");
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "USB mode changed");
                         Log.d(TAG,"USB mode changed");
                         break;
 
                     case DIAL:
                         String phoneNumberDial = intent.getData() != null ? intent.getData().toString() : "unknown";
-                        LogsUtils.logToFileAsync(TAG, "User dialed: " + phoneNumberDial);
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "User dialed: " + phoneNumberDial);
                         Log.d(TAG,"User dialed: " + phoneNumberDial);
                         break;
                     case CALL:
                         String phoneNumberCall = intent.getData() != null ? intent.getData().toString() : "unknown";
-                        LogsUtils.logToFileAsync(TAG, "User called: " + phoneNumberCall);
+                        Kfflso_LogsUtils.logToFileAsync(TAG, "User called: " + phoneNumberCall);
                         Log.d(TAG,"User called: " + phoneNumberCall);
                         break;
                 }
@@ -128,7 +128,7 @@ public class BroadcastSimulateUtil {
         };
         activity.registerReceiver(broadcastReceiver,intentFilter);
 
-        LogsUtils.logToFileAsync(TAG, "finished register, start to receive broadcast");
+        Kfflso_LogsUtils.logToFileAsync(TAG, "finished register, start to receive broadcast");
         Log.d(TAG,"finished register, start to receive broadcast ");
     }
     public void screenTest(){
@@ -182,7 +182,7 @@ public class BroadcastSimulateUtil {
         Intent intent = new Intent(SIG_STR);
         intent.putExtra("strength", strength);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; strength: " + strength);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; strength: " + strength);
         Log.d(TAG,"sendBroadcast: " + intent + "; strength: " + strength);
     }
 
@@ -190,7 +190,7 @@ public class BroadcastSimulateUtil {
         Intent intent = new Intent(BATTERY_CHANGED);
         intent.putExtra(BatteryManager.EXTRA_LEVEL, level);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; level: " + level);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; level: " + level);
         Log.d(TAG,"sendBroadcast: " + intent + "; level: " + level);
     }
 
@@ -198,21 +198,21 @@ public class BroadcastSimulateUtil {
         Intent intent = new Intent(TIME_TICK);
         intent.putExtra("newTime", newTime);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; newTime: " + newTime);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; newTime: " + newTime);
         Log.d(TAG,"sendBroadcast: " + intent + "; newTime: " + newTime);
     }
 
     public void simulateScreenOn() {
         Intent intent = new Intent(SCREEN_ON);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }
 
     public void simulateScreenOff() {
         Intent intent = new Intent(SCREEN_OFF);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }
 
@@ -220,14 +220,14 @@ public class BroadcastSimulateUtil {
         Intent intent = new Intent(MEDIA_MOUNTED);
         intent.setData(Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "dummy")));
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }
 
     public void simulateUmsConnected() {
         Intent intent = new Intent(UMS_CONNECTED);
         activity.sendBroadcast(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent);
         Log.d(TAG,"sendBroadcast: " + intent);
     }
 
@@ -235,7 +235,7 @@ public class BroadcastSimulateUtil {
         Uri uri = Uri.parse("tel:" + phoneNumber);
         Intent intent = new Intent(DIAL,uri);
         activity.startActivity(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
         Log.d(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
     }
 
@@ -243,7 +243,7 @@ public class BroadcastSimulateUtil {
         Intent intent = new Intent(CALL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
         activity.startActivity(intent);
-        LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
+        Kfflso_LogsUtils.logToFileAsync(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
         Log.d(TAG,"sendBroadcast: " + intent + "; phoneNumber: " + phoneNumber);
     }
 

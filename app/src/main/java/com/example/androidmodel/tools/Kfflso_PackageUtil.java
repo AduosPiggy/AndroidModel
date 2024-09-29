@@ -11,7 +11,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.File;
@@ -22,15 +21,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class PackageUtil {
+public class Kfflso_PackageUtil {
     public String TAG = getClass().getName();
     private Context context;
-    private static volatile PackageUtil instance;
+    private static volatile Kfflso_PackageUtil instance;
     private DevicePolicyManager dpm;
     private PackageManager packageManager;
     private ActivityManager activityManager;
 
-    private PackageUtil(Context ctx) {
+    private Kfflso_PackageUtil(Context ctx) {
         this.context = ctx;
         dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
@@ -38,11 +37,11 @@ public class PackageUtil {
         activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     }
 
-    public static PackageUtil getInstance(Context ctx) {
+    public static Kfflso_PackageUtil getInstance(Context ctx) {
         if (instance == null) {
-            synchronized (PackageUtil.class) {
+            synchronized (Kfflso_PackageUtil.class) {
                 if (instance == null) {
-                    instance = new PackageUtil(ctx);
+                    instance = new Kfflso_PackageUtil(ctx);
                 }
             }
         }

@@ -8,15 +8,15 @@ import java.util.Map;
  * @data 2024/9/19 10:21
  * @plus:
  */
-public class FeaturesMap {
+public class Kfflso_FeaturesMap {
 
-    public static FeaturesMap getInstance(){
+    public static Kfflso_FeaturesMap getInstance(){
         return SingletonHolder.instance;
     }
     private static class SingletonHolder {
-        private static FeaturesMap instance = new FeaturesMap();
+        private static Kfflso_FeaturesMap instance = new Kfflso_FeaturesMap();
     }
-    private FeaturesMap() {
+    private Kfflso_FeaturesMap() {
         initShellFeaturesMap();
         initSdkFeaturesMap();
     }

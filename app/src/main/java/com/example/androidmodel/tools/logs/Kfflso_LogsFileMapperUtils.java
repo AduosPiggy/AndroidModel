@@ -14,9 +14,9 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @plus:
  *      to do 用 queue 存储想要打印的日志, 用 buffer 共享内存来消费队列
  */
-public class LogsFileMapperUtils {
+public class Kfflso_LogsFileMapperUtils {
 
-    private static LinkedBlockingDeque<LogBean> queue;
+    private static LinkedBlockingDeque<Kfflso_LogBean> queue;
     private static MappedByteBuffer buffer;
 
     private static String logDir;
@@ -28,7 +28,7 @@ public class LogsFileMapperUtils {
     }
     public static void addLogMsg(String logTag, String logMsg){
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
-        LogBean bean = new LogBean(time,logTag,logMsg);
+        Kfflso_LogBean bean = new Kfflso_LogBean(time,logTag,logMsg);
         queue.add(bean);
     }
 

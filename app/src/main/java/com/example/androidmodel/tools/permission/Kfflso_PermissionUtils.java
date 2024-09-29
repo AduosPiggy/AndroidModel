@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PermissionUtils {
+public class Kfflso_PermissionUtils {
 
     /**
      * 检测权限

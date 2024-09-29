@@ -5,12 +5,12 @@ package com.example.androidmodel.tools.logs;
  * @data 2024/9/24 18:06
  * @plus:
  */
-public class LogBean {
+public class Kfflso_LogBean {
     private String time;
     private String tag;
     private String logMsg;
 
-    public LogBean(String time, String tag, String logMsg) {
+    public Kfflso_LogBean(String time, String tag, String logMsg) {
         this.time = time;
         this.tag = tag;
         this.logMsg = logMsg;

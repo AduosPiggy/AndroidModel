@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5Util {
+public class Kfflso_MD5Util {
     private static String TAG = "MD5Util";
 
     public static String getMD5String(String value) {

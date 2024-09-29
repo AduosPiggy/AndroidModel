@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.VersionedPackage
 import android.os.Build
-import com.example.androidmodel.tools.SPUtils
+import com.example.androidmodel.tools.Kfflso_SPUtils
 
 open class BaseApp : Application() {
     override fun onCreate() {
@@ -29,7 +29,7 @@ open class BaseApp : Application() {
         //handle share preferences
         object SPHelper{
             //share preferences
-            fun isPad() = SPUtils.getInstance(appContext).isPad()
+            fun isPad() = Kfflso_SPUtils.getInstance(appContext).isPad()
         }
 
         //handle common function

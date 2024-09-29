@@ -9,7 +9,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 
-object BitmapUtil {
+object Kfflso_BitmapUtil {
     // string -> bitmap  base64
     fun stringToBitmap(string: String?): Bitmap? {
         return if (string != null) {

@@ -24,15 +24,15 @@ import java.io.IOException;
  *
  */
 
-public class WallPaperUtil {
+public class Kfflso_WallPaperUtil {
     private String TAG = getClass().getSimpleName();
 
-    public static WallPaperUtil getInstance() {
+    public static Kfflso_WallPaperUtil getInstance() {
         return SingletonHolder.instance;
     }
 
     private static class SingletonHolder {
-        private static WallPaperUtil instance = new WallPaperUtil();
+        private static Kfflso_WallPaperUtil instance = new Kfflso_WallPaperUtil();
     }
 
     //清除桌面和锁屏壁纸，重新设置回系统默认壁纸

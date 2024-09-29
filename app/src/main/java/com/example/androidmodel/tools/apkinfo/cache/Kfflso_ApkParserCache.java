@@ -16,7 +16,7 @@ import java.util.List;
  *      ApkVerifier 依赖库的缓存数据
  *      implementation("com.android.tools.build:apksig:8.2.2")
  */
-public class ApkParserCache {
+public class Kfflso_ApkParserCache {
     //签名信息
     ApkVerifier.Result result;
     List<ApkVerifier.Result.V1SchemeSignerInfo> mV1SchemeSigners = new ArrayList<>();
@@ -25,7 +25,7 @@ public class ApkParserCache {
     List<ApkVerifier.Result.V3SchemeSignerInfo> mV31SchemeSigners = new ArrayList<>();
     List<ApkVerifier.Result.V4SchemeSignerInfo> mV4SchemeSigners = new ArrayList<>();
 
-    public ApkParserCache(String apkPath) {
+    public Kfflso_ApkParserCache(String apkPath) {
         initData(apkPath);
     }
     private void initData(String apkPath){

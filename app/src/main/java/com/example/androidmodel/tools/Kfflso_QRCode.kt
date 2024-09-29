@@ -15,12 +15,11 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import com.journeyapps.barcodescanner.BarcodeEncoder
 import org.json.JSONObject
 
 
 
-object QRCode {
+object Kfflso_QRCode {
 //    不能中文
 //    val imageView = findViewById<ImageView>(R.id.iv_bitmap)
 //    val bitmapStr = QRCode.generateJsonStringForQRCode("zjy","ba jie gege")

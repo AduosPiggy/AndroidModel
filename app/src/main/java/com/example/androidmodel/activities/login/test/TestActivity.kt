@@ -10,10 +10,10 @@ import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
-import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.logs.LogsUtils
-import com.example.androidmodel.tools.PermissionUtils
-import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
+import com.example.androidmodel.tools.Kfflso_ActivityManager
+import com.example.androidmodel.tools.logs.Kfflso_LogsUtils
+import com.example.androidmodel.tools.Kfflso_PermissionUtils
+import com.example.androidmodel.tools.apkinfo.Kfflso_ApkInfoImpl
 
 /**
  * @author kfflso
@@ -26,7 +26,7 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CustomActivityManager.addActivity(this)
+        Kfflso_ActivityManager.addActivity(this)
 
         binding.btnReqPermission.setOnClickListener{
 //            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
@@ -35,7 +35,7 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             val reqCode = 0
-            PermissionUtils.checkAndRequestMorePermissions(this, permissions, reqCode)
+            Kfflso_PermissionUtils.checkAndRequestMorePermissions(this, permissions, reqCode)
             Log.d(TAG,"get permissions: READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE")
         }
 
@@ -43,8 +43,12 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
 
             val time1 = System.currentTimeMillis()
             Log.d(TAG,"pre: $time1")
-            val apkInfoImpl = ApkInfoImpl(this,"/data/local/tmp/qiangtandenglu3d.apk")
-            val apkInfoJson = apkInfoImpl.apkInfoJson
+            val kfflsoApkInfoImpl =
+                Kfflso_ApkInfoImpl(
+                    this,
+                    "/data/local/tmp/qiangtandenglu3d.apk"
+                )
+            val apkInfoJson = kfflsoApkInfoImpl.apkInfoJson
 //            val apkInfo = apkInfoImpl.apkInfo
             val time2 = System.currentTimeMillis()
             Log.d(TAG,"after: $time2")
@@ -64,14 +68,14 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         }
 
         binding.btnLogsUtils.setOnClickListener{
-            LogsUtils.initLogDir(this)
-            LogsUtils.logToFileAsync("LogsUtils","hello twy");
+            Kfflso_LogsUtils.initLogDir(this)
+            Kfflso_LogsUtils.logToFileAsync("LogsUtils","hello twy");
         }
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        CustomActivityManager.removeActivity(this)
+        Kfflso_ActivityManager.removeActivity(this)
     }
     override fun initViews() {
 
