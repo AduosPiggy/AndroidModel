@@ -197,6 +197,17 @@ public class Kfflso_PackageUtil {
         for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
             Log.d("RunningApp", "Process Name: " + processInfo.processName);
         }
-
     }
+    public int getPackageUid(String packageName){
+        try {
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            if (applicationInfo == null) {
+                return -1;
+            }
+            return applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            return -1;
+        }
+    }
+
 }

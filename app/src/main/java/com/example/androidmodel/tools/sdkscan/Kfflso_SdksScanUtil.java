@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.example.androidmodel.tools.Kfflso_CmdUtil;
+import com.example.androidmodel.tools.Kfflso_PackageUtil;
 import com.example.androidmodel.tools.Kfflso_SystemPropUtils;
 import com.example.androidmodel.tools.apkinfo.bean.Kfflso_FeaturesMap;
 import com.example.androidmodel.tools.logs.Kfflso_LogsUtils;
@@ -77,7 +78,7 @@ public class Kfflso_SdksScanUtil {
         sdkScanResPathTdc = "/data/data/" + packageNameTdc + "/dumpClassName/sdkScanResult.txt";
     }
 
-    public String checkBusinessFlow(){
+    public String testTaskFlow(){
         if (packageNameApk.isEmpty()) {
             Kfflso_LogsUtils.logToFileAsync(TAG,"packageName is empty");
             return "";
@@ -104,8 +105,18 @@ public class Kfflso_SdksScanUtil {
         String sdksJson = new Gson().toJson(sdkFeaturesMap);
         mkFile(sdkFeaturesMapPathTdc);
         writeStringToFile(sdksJson,sdkFeaturesMapPathTdc);
-        //得有系统权限才能cp, 不然会进程隔离;android 5 之后,只能访问当前app目录的内容;
-        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk);
+        String sdkFeaturesMapPathDirApk = sdkFeaturesMapPathApk.substring(0,sdkFeaturesMapPathApk.lastIndexOf('/') );
+        String cmd = "mkdir -p " + sdkFeaturesMapPathDirApk;
+        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        //如果存在,就只修改文件时间
+        cmd = "touch " + sdkFeaturesMapPathApk;
+        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        //覆盖式cp
+        cmd = "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk;
+        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        int uid = Kfflso_PackageUtil.getInstance(context).getPackageUid(packageNameApk);
+        cmd  = "chown -R " + uid + ":" + uid + " " + sdkFeaturesMapPathDirApk; // 设置用户和用户组 uid 和 gid
+        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
         return errInfo;
     }
 
@@ -120,6 +131,9 @@ public class Kfflso_SdksScanUtil {
         }
         try {
             File file = new File(filePath);
+            if(file.exists() && file.length() > 0){
+                return;
+            }
             File parent = file.getParentFile();
             if(!parent.exists()){
                 parent.mkdirs();
@@ -154,7 +168,7 @@ public class Kfflso_SdksScanUtil {
         if (!file.exists() || !file.isFile()) {
             return "";
         }
-        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "mv " + sdkScanResPathApk + " " + sdkScanResPathTdc);
+        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "cp " + sdkScanResPathApk + " " + sdkScanResPathTdc);
         if(!errInfo.isEmpty()){
             Kfflso_LogsUtils.logToFileAsync(TAG,"CommandTask.exec err: " + errInfo);
             return "";

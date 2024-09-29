@@ -10,6 +10,8 @@ import com.example.androidmodel.tools.Kfflso_ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author kfflso
@@ -36,7 +38,7 @@ import java.util.HashMap;
 public class Kfflso_Framework_ActivityThread {
 
     private final String TAG = "Framework_ActivityThread";
-    private StringBuffer sdkScanResultBuffer = new StringBuffer();
+    private Set<String> sdkScanResultSet = new HashSet<>();
 
 
     public Kfflso_Framework_ActivityThread() {
@@ -105,18 +107,20 @@ public class Kfflso_Framework_ActivityThread {
         Kfflso_FileUtils.checkAndCreateFile(sdkScanResPathApk);
         String json = Kfflso_FileUtils.readFileToString(sdkFeaturesMapPathApk);
         HashMap<String,String> sdkFeaturesMap = Kfflso_JsonUtils.jsonStrToHashMap(json);
-        if(sdkScanResultBuffer.length() == 0){
+        if(sdkScanResultSet.size() == 0){
             String sdkResult = Kfflso_FileUtils.readFileToString(sdkScanResPathApk);
-            sdkScanResultBuffer.append(sdkResult);
+            for(String result : sdkResult.split("\n")){
+                sdkScanResultSet.add(result);
+            }
         }
         ClassLoader parentClassloader = getClassloader();
         while (parentClassloader != null){
             if(!parentClassloader.toString().contains("java.lang.BootClassLoader")) {
-                sdkScanImpl(parentClassloader, sdkScanResPathApk, sdkFeaturesMap,sdkScanResultBuffer, dumpClassNamesPath);
+                sdkScanImpl(parentClassloader, sdkScanResPathApk, sdkFeaturesMap,sdkScanResultSet, dumpClassNamesPath);
             }
             parentClassloader = parentClassloader.getParent();
         }
-        sdkScanResultBuffer.setLength(0);
+        sdkScanResultSet.clear();
     }
 
     public static ClassLoader getClassloader() {
@@ -130,7 +134,7 @@ public class Kfflso_Framework_ActivityThread {
         return resultClassloader;
     }
 
-    public void sdkScanImpl(ClassLoader appClassloader, String sdkScanResPathApk, HashMap<String,String> sdkFeaturesMap,StringBuffer sdkScanResultBuffer, String dumpClassNamesPath) {
+    public void sdkScanImpl(ClassLoader appClassloader, String sdkScanResPathApk, HashMap<String,String> sdkFeaturesMap,Set<String> sdkScanResultSet, String dumpClassNamesPath) {
         Object pathList_object = Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.BaseDexClassLoader", appClassloader, "pathList");
         Object[] ElementsArray = (Object[]) Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.DexPathList", pathList_object, "dexElements");
         if (ElementsArray == null) {
@@ -191,10 +195,16 @@ public class Kfflso_Framework_ActivityThread {
             if (classnames != null) {
                 for(String className : classnames){
                     for(String key : sdkFeaturesMap.keySet()){
+                        if(key.isEmpty()){
+                            continue;
+                        }
                         if(className.contains(key)){
                             String value = sdkFeaturesMap.get(key);
-                            if(!sdkScanResultBuffer.toString().contains(value)){
-                                sdkScanResultBuffer.append("\n").append(value);
+                            if(value.isEmpty()) {
+                                Log.e(TAG,"err: sdkFeaturesMap values contains empty value!");
+                            }
+                            if(!sdkScanResultSet.contains(value)){
+                                sdkScanResultSet.add(value);
                                 //todo: consider use value or className as final result;
                                 Kfflso_FileUtils.appendToFile(sdkScanResPathApk,value);//应该用这个
 //                                appendToFile(sdkScanResPathApk,className);//测试看效果
