@@ -30,15 +30,15 @@ import java.util.Map;
  *     应用层代码:
  *     重点是 apkPath 参数
  *     流程:
- *     ---> 下载apk完成
- *     ---> 安装apk完成
- *     ---> 设置系统属性 setProp("antiy.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
- *     ---> tdc在apk对应目录下写入特征 featureMap.txt ;
- *     ---> 启动app
- *     ---> 加载 featureMap到framework层
- *     ---> dump class names,有一条就和 featuresMap 比对,有新的sdks就写Txt
- *     ---> tdc 查看 sdk scan 结果: mv SdkScanResPathApk SdkScanResPathTdc; 然后在tdc中查看
- *     ---> tdc 查看 sdk scan 结果: 定时推送 或者 用户自己点击获取
+ *    ---> 下载apk完成
+ *    ---> 安装apk完成
+ *    ---> 设置系统属性 setProp("antiy.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
+ *    ---> app 在apk对应目录下写入特征 featureMap.txt ;
+ *    ---> app 系统权限 ---> cp /data/data/com.example.app/dump/sdkFeaturesMap.txt .../com.xxx.apk/...;
+ *    ---> 启动app
+ *    ---> 加载 featureMap到framework层
+ *    ---> dump class names,有一条就和 featuresMap 比对,有新的sdks时,利用sdkScanResultBuffer结果去重后就写Txt;
+ *    ---> app 查看 sdk scan 结果: mv SdkScanResPathApk SdkScanResPathTdc; 然后在app中查看
  *
  */
 public class Kfflso_SdksScanUtil {
@@ -78,20 +78,11 @@ public class Kfflso_SdksScanUtil {
     }
 
     public String checkBusinessFlow(){
-        // 下载apk完成
-        // 安装apk完成
-        // 设置系统属性 setProp("antiy.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
-        // tdc 在 apk 对应目录下写入特征 featureMap.txt(包含 sdk 的特征)
-        // 启动app
-        // 加载 featureMap 到 framework 层 ActivityThread.Java
-        // dump class names,有一条就和 featuresMap 比对,有新的 sdk 特征就写 txt
-        // tdc 想看现在这个app使用了哪些sdk, 就查看txt中有哪些sdk;  定时推送 或者 用户自己点击获取
-
         if (packageNameApk.isEmpty()) {
             Kfflso_LogsUtils.logToFileAsync(TAG,"packageName is empty");
             return "";
         }
-        Kfflso_SystemPropUtils.setProp("antiy.dumpclass.name", packageNameApk);
+        Kfflso_SystemPropUtils.setProp("zzz.dumpclass.name", packageNameApk);
         writeSdksFeaturesToFile();
         launchTargetApp();
         //fwk load sdkFeaturesMap

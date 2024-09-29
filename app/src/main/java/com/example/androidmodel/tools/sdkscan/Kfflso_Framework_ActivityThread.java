@@ -67,12 +67,7 @@ public class Kfflso_Framework_ActivityThread {
 //        return activity;
 //    }
 
-    /**
-     * plus:
-     *      一、前提
-     *      1 权限: 1) 操作系统新增属性; 2) 读写、cp、mv 相关系统权限;
-     *
-     */
+
     public void sdkScanThread() {
         if (shouldDumpClasses()) {
             new Thread(() -> {
