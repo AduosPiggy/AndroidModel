@@ -6,16 +6,19 @@
 方案: 应用层准备第三方sdkFeaturesMap,修改framework层ActivityThread.java源码,通过反射来遍历classLoader,然后获取到加载过的classNames;每一条都与sdkFeaturesMap比对,记录使用过的sdk。
 通过类加载器存储app启动后加载的类名,然后通过比对sdk的特征包名,判定使用的sdk
 流程:
+testTaskFlow() // prepare and dump classNames
+testGetResult  // wait some time and then get results;
+重点是 apkPath 参数
+流程:
 ---> 下载apk完成
 ---> 安装apk完成
----> 设置系统属性 setProp("antiy.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
+---> 设置系统属性 setProp("zzz.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
 ---> app 在apk对应目录下写入特征 featureMap.txt ;
----> app 系统权限 ---> cp /data/data/com.example.app/dump/sdkFeaturesMap.txt .../com.xxx.apk/...;
+---> app 系统权限(chown -R uid:uid dir) ---> mkdir; touch; mv; chown
 ---> 启动app
 ---> 加载 featureMap到framework层
 ---> dump class names,有一条就和 featuresMap 比对,有新的sdks时,利用sdkScanResultBuffer结果去重后就写Txt;
----> app 查看 sdk scan 结果: mv SdkScanResPathApk SdkScanResPathTdc; 然后在app中查看
----> app 查看 sdk scan 结果: 定时推送 或者 用户自己点击获取
+---> app 查看 sdk scan 结果: mkdir; touch; cp!!!;chown shell permission; read File
 ```
 
 ## 二、 实现
@@ -87,12 +90,25 @@ public static void setProp(String key, String value) {
 
 ```Java
 public String writeSdksFeaturesToFile(){
-	//Gson 引用依赖 ---> implementation 'com.google.code.gson:gson:2.10.1'
     String sdksJson = new Gson().toJson(sdkFeaturesMap);
     mkFile(sdkFeaturesMapPathTdc);
     writeStringToFile(sdksJson,sdkFeaturesMapPathTdc);
-    //得有系统权限才能cp, 不然会进程隔离;android 5 之后,只能访问当前app目录的内容;
-    String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk);
+    String sdkFeaturesMapPathDirApk = sdkFeaturesMapPathApk.substring(0,sdkFeaturesMapPathApk.lastIndexOf('/') );
+    int uid = Kfflso_PackageUtil.getInstance(context).getPackageUid(packageNameApk);
+    String[] commands = {
+            "mkdir -p " + sdkFeaturesMapPathDirApk,
+            "touch " + sdkFeaturesMapPathApk,
+            "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk,
+            "chown -R " + uid + ":" + uid + " " + sdkFeaturesMapPathDirApk
+    };
+    String errInfo = "";
+    for(String cmd : commands){
+        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        if(!errInfo.isEmpty()){
+            Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+            break;
+        }
+    }
     return errInfo;
 }
 
@@ -157,21 +173,29 @@ public void launchTargetApp( ) {
 ### 2.7 getSdkResults
 
 ```Java
+/**
+ *
+ * @return 获取filePath中的文件内容
+ */
 public String getSdkResults() {
-    File file = new File(sdkScanResPathApk);
-    if (!file.exists() || !file.isFile()) {
-        return "";
+    String sdkFeaturesMapPathDirTdc = sdkFeaturesMapPathTdc.substring(0,sdkFeaturesMapPathTdc.lastIndexOf('/') );
+    int shell = 2000;
+    String[] commands = {
+            "mkdir -p " + sdkFeaturesMapPathDirTdc,
+            "touch " + sdkScanResPathTdc,
+            "cp " + sdkScanResPathApk + " " + sdkScanResPathTdc,
+            "chown -R " + shell + ":" + shell + " " + sdkFeaturesMapPathDirTdc
+    };
+    String errInfo = "";
+    for(String cmd : commands){
+        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        if(!errInfo.isEmpty()){
+            Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+            return errInfo;
+        }
     }
-    String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "mv " + sdkScanResPathApk + " " + sdkScanResPathTdc);
-    if(!errInfo.isEmpty()){
-        Kfflso_LogsUtils.logToFileAsync(TAG,"CommandTask.exec err: " + errInfo);
-        return "";
-    }
-    File file_ = new File(sdkScanResPathTdc);
-    if (!file_.exists() || !file_.isFile()) {
-        return "";
-    }
-    return readFileToString(sdkScanResPathTdc);
+    String sdks = readFileToString(sdkScanResPathTdc);
+    return sdks;
 }
 
 public String readFileToString(String filePath){
@@ -223,6 +247,10 @@ ActivityThread.java : `frameworks/base/core/java/android/app/ActivityThread.java
 ### 3.1 sdkScanThread
 
 ```Java
+//全局变量
+private final String TAG = "Framework_ActivityThread";
+private Set<String> sdkScanResultSet = new HashSet<>();
+
 public void sdkScanThread() {
     if (shouldDumpClasses()) {
         new Thread(() -> {
@@ -255,7 +283,7 @@ public void sdkScanThread() {
 
 ```Java
 public void sdkScan(){
-    //String processName = ActivityThread.currentProcessName();
+      String processName = ActivityThread.currentProcessName();
     String processName = "com.example.testApp";//你启动的app的包名,这里恰巧和进程名称一致
     String sdkFeaturesMapPathApk = "/data/data/" + processName + "/dumpClassName/sdkFeaturesMap.txt";
     String sdkScanResPathApk = "/data/data/" + processName + "/dumpClassName/sdkScanResult.txt";
@@ -264,20 +292,21 @@ public void sdkScan(){
     Kfflso_FileUtils.checkAndCreateFile(sdkScanResPathApk);
     String json = Kfflso_FileUtils.readFileToString(sdkFeaturesMapPathApk);
     HashMap<String,String> sdkFeaturesMap = Kfflso_JsonUtils.jsonStrToHashMap(json);
-    if(sdkScanResultBuffer.length() == 0){
+    if(sdkScanResultSet.size() == 0){
         String sdkResult = Kfflso_FileUtils.readFileToString(sdkScanResPathApk);
-        sdkScanResultBuffer.append(sdkResult);
+        for(String result : sdkResult.split("\n")){
+            sdkScanResultSet.add(result);
+        }
     }
     ClassLoader parentClassloader = getClassloader();
     while (parentClassloader != null){
         if(!parentClassloader.toString().contains("java.lang.BootClassLoader")) {
-            sdkScanImpl(parentClassloader, sdkScanResPathApk, sdkFeaturesMap,sdkScanResultBuffer, dumpClassNamesPath);
+            sdkScanImpl(parentClassloader, sdkScanResPathApk, sdkFeaturesMap,sdkScanResultSet, dumpClassNamesPath);
         }
         parentClassloader = parentClassloader.getParent();
     }
-    sdkScanResultBuffer.setLength(0);
+    sdkScanResultSet.clear();
 }
-
 
 public static ClassLoader getClassloader() {
         ClassLoader resultClassloader = null;
@@ -299,83 +328,86 @@ public static ClassLoader getClassloader() {
 ### 3.3 sdkScanImpl  实现！！！
 
 ```Java
-public void sdkScanImpl(ClassLoader appClassloader, String sdkScanResPathApk, HashMap<String,String> sdkFeaturesMap,StringBuffer sdkScanResultBuffer, String dumpClassNamesPath) {
-        Object pathList_object = Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.BaseDexClassLoader", appClassloader, "pathList");
-        Object[] ElementsArray = (Object[]) Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.DexPathList", pathList_object, "dexElements");
-        if (ElementsArray == null) {
-            Log.e(TAG, "DumpError ElementsArray is null!!!");
-            return;
-        }
-        Field dexFile_fileField;
+public void sdkScanImpl(ClassLoader appClassloader, String sdkScanResPathApk, HashMap<String,String> sdkFeaturesMap,Set<Strin
+    Object pathList_object = Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.BaseDexClassLoader", appClassloader, "pathL
+    Object[] ElementsArray = (Object[]) Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.DexPathList", pathList_object, "
+    if (ElementsArray == null) {
+        Log.e(TAG, "DumpError ElementsArray is null!!!");
+        return;
+    }
+    Field dexFile_fileField;
+    try {
+        dexFile_fileField = (Field) Kfflso_ReflectionUtils.getClassField(appClassloader, "dalvik.system.DexPathList$Element",
+    } catch (Exception e) {
+        e.printStackTrace();
+        return;
+    }
+    Method getClassNameList_method;
+    Method dumpMethodCode_method;
+    try {
+        Class<?> DexFileClazz = appClassloader.loadClass("dalvik.system.DexFile");
+        getClassNameList_method = DexFileClazz.getDeclaredMethod("getClassNameList", Object.class);
+        getClassNameList_method.setAccessible(true);
+        dumpMethodCode_method = DexFileClazz.getDeclaredMethod("dumpMethodCode", Object.class);
+        dumpMethodCode_method.setAccessible(true);
+    } catch (Exception e){
+        e.printStackTrace();
+        return;
+    }
+    Log.e(TAG, "dalvik.system.DexPathList.ElementsArray.length:" + ElementsArray.length);
+    for (Object element : ElementsArray) {
+        Object dexfile;
         try {
-            dexFile_fileField = (Field) Kfflso_ReflectionUtils.getClassField(appClassloader, "dalvik.system.DexPathList$Element", "dexFile");
+            dexfile = (Object) dexFile_fileField.get(element);
+            if (dexfile == null) {
+                Log.e(TAG, "DumpError dexfile is null");
+                continue;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            continue;
         }
-        Method getClassNameList_method;
-        Method dumpMethodCode_method;
+        Object mcookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mCooki
+        if (mcookie == null) {
+            Log.e(TAG, "DumpError get mcookie is null");
+            Object mInternalCookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexf
+            if (mInternalCookie == null) {
+                Log.e(TAG, "DumpError get mInternalCookie is null");
+                continue;
+            }
+            mcookie = mInternalCookie;
+        }
+        String[] classnames;
         try {
-            Class<?> DexFileClazz = appClassloader.loadClass("dalvik.system.DexFile");
-            getClassNameList_method = DexFileClazz.getDeclaredMethod("getClassNameList", Object.class);
-            getClassNameList_method.setAccessible(true);
-            dumpMethodCode_method = DexFileClazz.getDeclaredMethod("dumpMethodCode", Object.class);
-            dumpMethodCode_method.setAccessible(true);
-        } catch (Exception e){
+            classnames = (String[]) getClassNameList_method.invoke(dexfile, mcookie);
+        } catch (Exception e) {
             e.printStackTrace();
-            return;
+            continue;
         }
-
-        Log.e(TAG, "dalvik.system.DexPathList.ElementsArray.length:" + ElementsArray.length);
-        for (Object element : ElementsArray) {
-            Object dexfile;
-            try {
-                dexfile = (Object) dexFile_fileField.get(element);
-                if (dexfile == null) {
-                    Log.e(TAG, "DumpError dexfile is null");
-                    continue;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            Object mcookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mCookie");
-            if (mcookie == null) {
-                Log.e(TAG, "DumpError get mcookie is null");
-                Object mInternalCookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mInternalCookie");
-                if (mInternalCookie == null) {
-                    Log.e(TAG, "DumpError get mInternalCookie is null");
-                    continue;
-                }
-                mcookie = mInternalCookie;
-            }
-            String[] classnames;
-            try {
-                classnames = (String[]) getClassNameList_method.invoke(dexfile, mcookie);
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-            if (classnames != null) {
-                for(String className : classnames){
-                    for(String key : sdkFeaturesMap.keySet()){
-                        if(className.contains(key)){
-                            String value = sdkFeaturesMap.get(key);
-                            if(!sdkScanResultBuffer.toString().contains(value)){
-                                sdkScanResultBuffer.append("\n").append(value);
-                                //todo: consider use value or className as final result;
-                                Kfflso_FileUtils.appendToFile(sdkScanResPathApk,value);//应该用这个
-//                                appendToFile(sdkScanResPathApk,className);//测试看效果
-                            }
+        if (classnames != null) {
+            for(String className : classnames){
+                for(String key : sdkFeaturesMap.keySet()){
+                    if(key.isEmpty()){
+                        continue;
+                    }
+                    if(className.contains(key)){
+                        String value = sdkFeaturesMap.get(key);
+                        if(value.isEmpty()) {
+                            Log.e(TAG,"err: sdkFeaturesMap values contains empty value!");
+                        }
+                        if(!sdkScanResultSet.contains(value)){
+                            sdkScanResultSet.add(value);
+                            //todo: consider use value or className as final result;
+                            Kfflso_FileUtils.appendToFile(sdkScanResPathApk,value);//应该用这个
+                              appendToFile(sdkScanResPathApk,className);//测试看效果
                         }
                     }
                 }
-                Kfflso_FileUtils.appendToFile(dumpClassNamesPath, String.join("\n", classnames));//所有 dumped class names
             }
+            Kfflso_FileUtils.appendToFile(dumpClassNamesPath, String.join("\n", classnames));//所有 dumped class names
         }
     }
-
+}                                                                                
 ```
 
 ### 3.4 FileUtils
