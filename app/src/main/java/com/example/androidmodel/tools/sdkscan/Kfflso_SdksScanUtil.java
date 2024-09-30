@@ -28,18 +28,20 @@ import java.util.Map;
  * @author kfflso
  * @data 2024/9/23 15:48
  * @plus:
- *     应用层代码:
- *     重点是 apkPath 参数
- *     流程:
- *    ---> 下载apk完成
- *    ---> 安装apk完成
- *    ---> 设置系统属性 setProp("antiy.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
- *    ---> app 在apk对应目录下写入特征 featureMap.txt ;
- *    ---> app 系统权限 ---> cp /data/data/com.example.app/dump/sdkFeaturesMap.txt .../com.xxx.apk/...;
- *    ---> 启动app
- *    ---> 加载 featureMap到framework层
- *    ---> dump class names,有一条就和 featuresMap 比对,有新的sdks时,利用sdkScanResultBuffer结果去重后就写Txt;
- *    ---> app 查看 sdk scan 结果: mv SdkScanResPathApk SdkScanResPathTdc; 然后在app中查看
+ *      testTaskFlow() // prepare and dump classNames
+ *      testGetResult  // wait some time and then get results;
+ *
+ *      重点是 apkPath 参数
+ *      流程:
+ *      ---> 下载apk完成
+ *      ---> 安装apk完成
+ *      ---> 设置系统属性 setProp("zzz.dumpclass.name", packageName) ---> 在 framework 层决定是要做 dump class names 还是 unShell
+ *      ---> app 在apk对应目录下写入特征 featureMap.txt ;
+ *      ---> app 系统权限(chown -R uid:uid dir) ---> mkdir; touch; mv; chown
+ *      ---> 启动app
+ *      ---> 加载 featureMap到framework层
+ *      ---> dump class names,有一条就和 featuresMap 比对,有新的sdks时,利用sdkScanResultBuffer结果去重后就写Txt;
+ *      ---> app 查看 sdk scan 结果: mkdir; touch; cp!!!;chown shell permission; read File
  *
  */
 public class Kfflso_SdksScanUtil {
@@ -67,10 +69,10 @@ public class Kfflso_SdksScanUtil {
         packageInfo = packageManager.getPackageArchiveInfo(apkPath, 0);
         packageNameApk = packageInfo != null ? packageInfo.packageName : "";
         if(packageNameApk.isEmpty()){
-            Kfflso_LogsUtils.logToFileAsync(TAG,"parse apk name error, please check apk name!");
+            Kfflso_LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
             return;
         }
-        packageNameTdc = "com.antiy.tdc";
+        packageNameTdc = "com.zzz.tdc";
         sdkFeaturesMap = Kfflso_FeaturesMap.getInstance().getSdkFeaturesMap();
         sdkFeaturesMapPathApk = "/data/data/" + packageNameApk + "/dumpClassName/sdkFeaturesMap.txt";
         sdkFeaturesMapPathTdc = "/data/data/" + packageNameTdc + "/dumpClassName/sdkFeaturesMap.txt";
@@ -78,45 +80,45 @@ public class Kfflso_SdksScanUtil {
         sdkScanResPathTdc = "/data/data/" + packageNameTdc + "/dumpClassName/sdkScanResult.txt";
     }
 
-    public String testTaskFlow(){
+    public void testTaskFlow(){
         if (packageNameApk.isEmpty()) {
-            Kfflso_LogsUtils.logToFileAsync(TAG,"packageName is empty");
-            return "";
+            Kfflso_LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
+            return ;
         }
         Kfflso_SystemPropUtils.setProp("zzz.dumpclass.name", packageNameApk);
         writeSdksFeaturesToFile();
         launchTargetApp();
         //fwk load sdkFeaturesMap
-        //fwk check
-        String sdks = getSdkResults();
-        return sdks;
+        //fwk dump apk class names and sdks
+        // wait some time for classLoader dump classNames when apk performLaunchActivity loading classes, and then get result;
+//        String sdks = getSdkResults();
+//        return sdks;
     }
-
-    /**
-     *
-     * @return launch app by packageName
-     */
-    public void launchTargetApp( ) {
-        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageNameApk);
-        context.startActivity(launchIntent);
+    public String testGetResult(){
+        return getSdkResults();
     }
 
     public String writeSdksFeaturesToFile(){
         String sdksJson = new Gson().toJson(sdkFeaturesMap);
         mkFile(sdkFeaturesMapPathTdc);
         writeStringToFile(sdksJson,sdkFeaturesMapPathTdc);
+
         String sdkFeaturesMapPathDirApk = sdkFeaturesMapPathApk.substring(0,sdkFeaturesMapPathApk.lastIndexOf('/') );
-        String cmd = "mkdir -p " + sdkFeaturesMapPathDirApk;
-        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
-        //如果存在,就只修改文件时间
-        cmd = "touch " + sdkFeaturesMapPathApk;
-        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
-        //覆盖式cp
-        cmd = "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk;
-        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
         int uid = Kfflso_PackageUtil.getInstance(context).getPackageUid(packageNameApk);
-        cmd  = "chown -R " + uid + ":" + uid + " " + sdkFeaturesMapPathDirApk; // 设置用户和用户组 uid 和 gid
-        errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+        String[] commands = {
+                "mkdir -p " + sdkFeaturesMapPathDirApk,
+                "touch " + sdkFeaturesMapPathApk,
+                "cp " + sdkFeaturesMapPathTdc + " " + sdkFeaturesMapPathApk,
+                "chown -R " + uid + ":" + uid + " " + sdkFeaturesMapPathDirApk
+        };
+        String errInfo = "";
+        for(String cmd : commands){
+            errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+            if(!errInfo.isEmpty()){
+                Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+                break;
+            }
+        }
         return errInfo;
     }
 
@@ -161,23 +163,36 @@ public class Kfflso_SdksScanUtil {
 
     /**
      *
+     * @return launch app by packageName
+     */
+    public void launchTargetApp( ) {
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageNameApk);
+        context.startActivity(launchIntent);
+    }
+
+    /**
+     *
      * @return 获取filePath中的文件内容
      */
     public String getSdkResults() {
-        File file = new File(sdkScanResPathApk);
-        if (!file.exists() || !file.isFile()) {
-            return "";
+        String sdkFeaturesMapPathDirTdc = sdkFeaturesMapPathTdc.substring(0,sdkFeaturesMapPathTdc.lastIndexOf('/') );
+        int shell = 2000;
+        String[] commands = {
+                "mkdir -p " + sdkFeaturesMapPathDirTdc,
+                "touch " + sdkScanResPathTdc,
+                "cp " + sdkScanResPathApk + " " + sdkScanResPathTdc,
+                "chown -R " + shell + ":" + shell + " " + sdkFeaturesMapPathDirTdc
+        };
+        String errInfo = "";
+        for(String cmd : commands){
+            errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+            if(!errInfo.isEmpty()){
+                Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+                return errInfo;
+            }
         }
-        String errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", "cp " + sdkScanResPathApk + " " + sdkScanResPathTdc);
-        if(!errInfo.isEmpty()){
-            Kfflso_LogsUtils.logToFileAsync(TAG,"CommandTask.exec err: " + errInfo);
-            return "";
-        }
-        File file_ = new File(sdkScanResPathTdc);
-        if (!file_.exists() || !file_.isFile()) {
-            return "";
-        }
-        return readFileToString(sdkScanResPathTdc);
+        String sdks = readFileToString(sdkScanResPathTdc);
+        return sdks;
 
     }
 
