@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 
 import com.example.androidmodel.tools.Kfflso_CmdUtil;
 import com.example.androidmodel.tools.Kfflso_PackageUtil;
 import com.example.androidmodel.tools.Kfflso_SystemPropUtils;
-import com.example.androidmodel.tools.apkinfo.bean.Kfflso_FeaturesMap;
 import com.example.androidmodel.tools.logs.Kfflso_LogsUtils;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,9 +19,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author kfflso
@@ -51,7 +51,7 @@ public class Kfflso_SdksScanUtil {
     private PackageManager packageManager;
     private PackageInfo packageInfo;
     //app使用的第三方sdk的特征字典; key-value sdk_packageName_feature - sdk_id
-    private Map<String, String> sdkFeaturesMap;
+    private String sdksJson;
     private String packageNameApk;
     private String packageNameTdc;
     private String sdkFeaturesMapPathApk;
@@ -73,7 +73,7 @@ public class Kfflso_SdksScanUtil {
             return;
         }
         packageNameTdc = "com.zzz.tdc";
-        sdkFeaturesMap = Kfflso_FeaturesMap.getInstance().getSdkFeaturesMap();
+        sdksJson = getSdksJsonFromAsset(context,"features_sdk.json");
         sdkFeaturesMapPathApk = "/data/data/" + packageNameApk + "/dumpClassName/sdkFeaturesMap.txt";
         sdkFeaturesMapPathTdc = "/data/data/" + packageNameTdc + "/dumpClassName/sdkFeaturesMap.txt";
         sdkScanResPathApk = "/data/data/" + packageNameApk + "/dumpClassName/sdkScanResult.txt";
@@ -99,7 +99,6 @@ public class Kfflso_SdksScanUtil {
     }
 
     public String writeSdksFeaturesToFile(){
-        String sdksJson = new Gson().toJson(sdkFeaturesMap);
         mkFile(sdkFeaturesMapPathTdc);
         writeStringToFile(sdksJson,sdkFeaturesMapPathTdc);
 
@@ -224,5 +223,20 @@ public class Kfflso_SdksScanUtil {
         }
         return result;
     }
-
+    public static String getSdksJsonFromAsset(Context context, String fileName) {
+        StringBuilder jsonString = new StringBuilder();
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open(fileName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonString.append(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonString.toString();
+    }
 }
