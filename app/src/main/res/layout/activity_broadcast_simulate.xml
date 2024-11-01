@@ -21,7 +21,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
         <Button
-            android:id="@+id/btn_registerBroadCast"
+            android:id="@+id/btn_signal_wifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/glv_50"
@@ -29,191 +29,156 @@
             app:layout_constraintTop_toTopOf="@+id/glh_1"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="注册并接收广播"
+            android:text="signal_wifi"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            />
-<!--        <Button-->
-<!--            android:id="@+id/btn_getPhoneSignalStrength"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/glv_50"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/btn_registerBroadCast"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:background="@color/green"-->
-<!--            android:text="获取电话信号强度"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:paddingStart="10dp"-->
-<!--            android:paddingEnd="10dp"-->
-<!--            />-->
-<!--        <Button-->
-<!--            android:id="@+id/btn_getPhoneBatteryLevel"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/glv_50"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/btn_getPhoneSignalStrength"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:background="@color/green"-->
-<!--            android:text="获取电量"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:paddingStart="10dp"-->
-<!--            android:paddingEnd="10dp"-->
-<!--            />-->
-<!--        <Button-->
-<!--            android:id="@+id/btn_getPhoneTime"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/glv_50"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/btn_getPhoneBatteryLevel"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:background="@color/green"-->
-<!--            android:text="获取手机时间"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:paddingStart="10dp"-->
-<!--            android:paddingEnd="10dp"-->
-<!--            />-->
-
-        <Button
-            android:id="@+id/btn_signalStrength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/glv_50"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_registerBroadCast"
-            android:layout_marginTop="10dp"
-            android:background="@color/blue"
-            android:text="模拟电话信号强度改变"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
 
         <Button
-            android:id="@+id/btn_batteryLevel"
+            android:id="@+id/btn_signal_mobile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_signalStrength"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signal_wifi"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟电量改变"
+            android:text="signal_mobile"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
+
         <Button
-            android:id="@+id/btn_time"
+            android:id="@+id/btn_battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_batteryLevel"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signal_mobile"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟当前时间发生改变"
+            android:text="battery"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_screenOn"
+            android:id="@+id/btn_system_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/glv_50"
+            app:layout_constraintStart_toEndOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_time"
+            app:layout_constraintTop_toBottomOf="@+id/btn_battery"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟屏幕解锁"
+            android:text="system_time"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_ScreenOff"
+            android:id="@+id/btn_screen_lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_screenOn"
+            app:layout_constraintTop_toBottomOf="@+id/btn_system_time"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟锁屏"
+            android:text="screen_lock"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_mediaMounted"
+            android:id="@+id/btn_screen_unlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_ScreenOff"
+            app:layout_constraintTop_toBottomOf="@+id/btn_screen_lock"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟媒体介质被挂载"
+            android:text="screen_unlock"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_USBMode"
+            android:id="@+id/btn_media_mounted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_mediaMounted"
+            app:layout_constraintTop_toBottomOf="@+id/btn_screen_unlock"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟设备进入USB模式"
+            android:text="media_mounted"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_UserDial"
+            android:id="@+id/btn_usb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_USBMode"
+            app:layout_constraintTop_toBottomOf="@+id/btn_media_mounted"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟用户打电话"
+            android:text="usb_device_attached"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />
         <Button
-            android:id="@+id/btn_UserCall"
+            android:id="@+id/btn_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/glv_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_UserDial"
+            app:layout_constraintTop_toBottomOf="@+id/btn_usb"
             android:layout_marginTop="10dp"
             android:background="@color/blue"
-            android:text="模拟用户拨号"
+            android:text="call"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textAllCaps="false"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            />
+        <Button
+            android:id="@+id/btn_dial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/glv_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_call"
+            android:layout_marginTop="10dp"
+            android:background="@color/blue"
+            android:text="dial"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textAllCaps="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             />

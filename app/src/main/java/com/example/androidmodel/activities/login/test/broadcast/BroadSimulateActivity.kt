@@ -5,8 +5,8 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
-import com.example.androidmodel.tools.Kfflso_BroadcastSimulateUtil
 import com.example.androidmodel.tools.Kfflso_ActivityManager
+import com.example.androidmodel.tools.Kfflso_Simulation
 import com.example.androidmodel.tools.permission.Kfflso_PermissionImpl
 import com.example.androidmodel.tools.screen.ScreenControl
 
@@ -18,80 +18,59 @@ import com.example.androidmodel.tools.screen.ScreenControl
 @ContentLayout(R.layout.activity_broadcast_simulate)
 class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSimulateBinding>() {
 
-    private lateinit var screenCtrl: ScreenControl
+    private lateinit var simulation: Kfflso_Simulation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Kfflso_ActivityManager.addActivity(this)
-        initUtils()
+        simulation = Kfflso_Simulation()
         clickers()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Kfflso_ActivityManager.removeActivity(this)
-        screenCtrl.destroy()
-    }
 
-    private fun initUtils(){
-        screenCtrl = ScreenControl(this)
     }
-
     private fun clickers(){
-        clickerGet()
-        clickerMock()
-    }
-
-    private fun clickerGet(){
-
-    }
-    private fun clickerMock(){
-        binding.btnRegisterBroadCast.setOnClickListener{
-
+        binding.btnSignalWifi.setOnClickListener{
+            simulation.simulateSignalStrengthWifi(simulation.signal_strength_wifi)
         }
 
-        binding.btnSignalStrength.setOnClickListener{
-
+        binding.btnSignalMobile.setOnClickListener{
+            simulation.simulateSignalStrengthMobile(simulation.signal_strength_mobile)
         }
-        binding.btnBatteryLevel.setOnClickListener{
-
+        binding.btnBattery.setOnClickListener{
+            simulation.simulateBatteryChanged(this,simulation.battery_level)
         }
-        binding.btnTime.setOnClickListener{
-//            //java.lang.SecurityException: Permission Denial: not allowed to send broadcast android.intent.action.SCREEN_OFF from pid=13526, uid=10598
-//            val bsu = BroadcastSimulateUtil(this)
-//            val time = bsu.mockTime
-//            bsu.simulateTimeTick(time)
+        binding.btnSystemTime.setOnClickListener{
+            simulation.simulateSystemTime(simulation.system_time)
         }
-        binding.btnScreenOn.setOnClickListener{
-            /* 1 权限申请
-             * 2 设备管理器lock
-             * 3 5s后点击电源键(无密码设备 屏幕解锁)
-             */
-            Kfflso_PermissionImpl.verify_screenOnAndOff(this)
-            screenCtrl.turnOffScreen()
+        binding.btnScreenLock.setOnClickListener{
+            simulation.simulateScreenLock()
             Thread.sleep(3000)
-            screenCtrl.turnOnScreen()
+            simulation.simulateScreenUnLock()
 
         }
-        binding.btnScreenOff.setOnClickListener{
-            Kfflso_PermissionImpl.verify_screenOnAndOff(this)
-            screenCtrl.turnOffScreen()
+        binding.btnScreenUnlock.setOnClickListener{
+            simulation.simulateScreenLock()
+            Thread.sleep(3000)
+            simulation.simulateScreenUnLock()
 
         }
         binding.btnMediaMounted.setOnClickListener{
-
+            simulation.simulateMediaMounted(this,simulation.file_media_mounted)
         }
-        binding.btnUSBMode.setOnClickListener{
-
+        binding.btnUsb.setOnClickListener{
+            simulation.simulateUsbDeviceAttached(this)
         }
-        binding.btnUserDial.setOnClickListener{
-
+        binding.btnCall.setOnClickListener{
+            simulation.simulateUserCall(this,simulation.phone_number_call)
         }
-        binding.btnUserCall.setOnClickListener{
-            val bsu =
-                Kfflso_BroadcastSimulateUtil(this)
-            bsu.simulateDial("19102855916")
+        binding.btnDial.setOnClickListener{
+            simulation.simulateDial(this,simulation.phone_number_dial)
         }
     }
+
 
     override fun initViews() {
 
