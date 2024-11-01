@@ -12,6 +12,10 @@ import java.io.File;
  * @data 2024/10/15 11:50
  * @plus:
  *
+ * 原作者 -> fwk 层 dump dex 和 bins
+ * dump dex文件：https://www.cnblogs.com/luoyesiqiu/p/fart.html
+ * 修复：https://github.com/luoyesiqiu/DexRepair
+ *
  * 测试文件:
  * 通过网盘分享的文件：zzz_dex_11859948.zip
  * 链接: https://pan.baidu.com/s/1YvJFXorSsYIlQ0ya_MJ4oA?pwd=mxyg 提取码: mxyg
