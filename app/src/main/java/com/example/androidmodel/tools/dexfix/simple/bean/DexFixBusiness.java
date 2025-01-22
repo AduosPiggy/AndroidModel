@@ -64,25 +64,24 @@ public interface DexFixBusiness {
     public static final int VALUE_BOOLEAN = 0x1F;
 
 
-//    public static final short TYPE_HEADER_ITEM      = 0x0000;
-//    public static final short TYPE_STRING_ID_ITEM   = 0x0001;
-//    public static final short TYPE_TYPE_ID_ITEM     = 0x0002;
-//    public static final short TYPE_PROTO_ID_ITEM    = 0x0003;
-//    public static final short TYPE_FIELD_ID_ITEM    = 0x0004;
-//    public static final short TYPE_METHOD_ID_ITEM   = 0x0005;
-//    public static final short TYPE_CLASS_DEF_ITEM   = 0x0006;
-    public static final int TYPE_MAP_LIST         = 0x1000;
-    public static final int TYPE_TYPE_LIST        = 0x1001;
-    public static final int TYPE_ANNOTATION_SET_REF_LIST = 0x1002;
-    public static final int TYPE_ANNOTATION_SET_ITEM = 0x1003;
-    public static final int TYPE_CLASS_DATA_ITEM  = 0x2000;
-    public static final int TYPE_CODE_ITEM        = 0x2001;
-    public static final int TYPE_STRING_DATA_ITEM = 0x2002;
-    public static final int TYPE_DEBUG_INFO_ITEM  = 0x2003;
-    public static final int TYPE_ANNOTATION_ITEM  = 0x2004;
-    public static final int TYPE_ENCODED_ARRAY_ITEM = 0x2005;
-    public static final int TYPE_ANNOTATION_DIRECTORY_ITEM = 0x2006;
-
+    public static final short TYPE_HEADER_ITEM               = 0x0000;
+    public static final short TYPE_STRING_ID_ITEM            = 0x0001;
+    public static final short TYPE_TYPE_ID_ITEM              = 0x0002;
+    public static final short TYPE_PROTO_ID_ITEM             = 0x0003;
+    public static final short TYPE_FIELD_ID_ITEM             = 0x0004;
+    public static final short TYPE_METHOD_ID_ITEM            = 0x0005;
+    public static final short TYPE_CLASS_DEF_ITEM            = 0x0006;
+    public static final short TYPE_MAP_LIST                  = 0x1000;
+    public static final short TYPE_TYPE_LIST                 = 0x1001;
+    public static final short TYPE_ANNOTATION_SET_REF_LIST   = 0x1002;
+    public static final short TYPE_ANNOTATION_SET_ITEM       = 0x1003;
+    public static final short TYPE_CLASS_DATA_ITEM           = 0x2000;
+    public static final short TYPE_CODE_ITEM                 = 0x2001;
+    public static final short TYPE_STRING_DATA_ITEM          = 0x2002;
+    public static final short TYPE_DEBUG_INFO_ITEM           = 0x2003;
+    public static final short TYPE_ANNOTATION_ITEM           = 0x2004;
+    public static final short TYPE_ENCODED_ARRAY_ITEM        = 0x2005;
+    public static final short TYPE_ANNOTATION_DIRECTORY_ITEM = 0x2006;
 
 
 }

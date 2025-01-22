@@ -2,6 +2,7 @@ package com.example.androidmodel.tools.dexfix.simple.util;
 
 import android.util.Log;
 
+import com.example.androidmodel.tools.dexfix.simple.bean.AnnotationsOff;
 import com.example.androidmodel.tools.dexfix.simple.bean.ClassDataItem;
 import com.example.androidmodel.tools.dexfix.simple.bean.ClassDefItem;
 import com.example.androidmodel.tools.dexfix.simple.bean.CodeItem;
@@ -10,6 +11,8 @@ import com.example.androidmodel.tools.dexfix.simple.bean.DexFixBusiness;
 import com.example.androidmodel.tools.dexfix.simple.bean.Fields;
 import com.example.androidmodel.tools.dexfix.simple.bean.MapItem;
 import com.example.androidmodel.tools.dexfix.simple.bean.Methods;
+import com.example.androidmodel.tools.dexfix.simple.bean.StaticValues;
+import com.example.androidmodel.tools.dexfix.simple.exception.DexException;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -33,6 +36,7 @@ import java.util.zip.Adler32;
  * Dex文件格式https://source.android.google.cn/docs/core/runtime/dex-format?hl=zh-cn#parameter-annotation
  */
 public class DexFixPlusUtils implements DexFixBusiness {
+//    private static final Logger log = LoggerFactory.getLogger(DexFixPlusUtils.class);
     private final String TAG = "DexFixPlusUtils";
     private final String dexPath;
     private final String[] binPaths;
@@ -41,6 +45,26 @@ public class DexFixPlusUtils implements DexFixBusiness {
     private ByteBuffer fixBuffer;//用来存储修复 dex 的数据
     private List<MapItem> mapItemList = new ArrayList<>();
     private List<ClassDefItem> classDefItemList = new ArrayList<>();
+
+    private int index_header_item_in_map_item_list                  = 0;
+    private int index_string_id_item_in_map_item_list               = 0;
+    private int index_type_id_item_in_map_item_list                 = 0;
+    private int index_proto_id_item_in_map_item_list                = 0;
+    private int index_field_id_item_in_map_item_list                = 0;
+    private int index_method_id_item_in_map_item_list               = 0;
+    private int index_class_def_item_in_map_item_list               = 0;
+    private int index_map_list_in_map_item_list                     = 0;
+    private int index_type_list_in_map_item_list                    = 0;
+    private int index_annotation_set_ref_list_in_map_item_list      = 0;
+    private int index_annotation_set_item_in_map_item_list          = 0;
+    private int index_class_data_item_in_map_item_list              = 0;
+    private int index_code_item_in_map_item_list                    = 0;
+    private int index_string_data_item_in_map_item_list             = 0;
+    private int index_debug_info_item_in_map_item_list              = 0;
+    private int index_annotation_item_in_map_item_list              = 0;
+    private int index_encode_array_item_in_map_item_list            = 0;
+    private int index_annotation_directory_item_in_map_item_list    = 0;
+
 
     public DexFixPlusUtils(String dexPath, String[] binPaths) {
         this.dexPath = dexPath;
@@ -132,9 +156,101 @@ public class DexFixPlusUtils implements DexFixBusiness {
         int data_off = dexBuffer.getInt();
 //        int total_dex_len = data_off + data_size;//11859948 = 1597420 + 10262528
 
-        //读取 map_item_list;
-        int index_code_item_in_map_item_list = initMapItemList(map_off,mapItemList);
+        //读取 map_item_list;以及对应的index;
+
+        Log.d(TAG,"start initMapItemList");
+        mapItemList.clear();
         dexBuffer.position(map_off);
+        int map_item_list_size = dexBuffer.getInt();
+        for(int a = 0; a < map_item_list_size; a++){
+            MapItem mapItem = new MapItem();
+            int this_type_start = dexBuffer.position();
+            short type = dexBuffer.getShort();
+            short unused =dexBuffer.getShort();
+            int size = dexBuffer.getInt();
+            int this_type_offset_start = dexBuffer.position();
+            int offset = dexBuffer.getInt();
+            mapItem.setType(type);
+            mapItem.setUnused(unused);
+            mapItem.setSize(size);
+            mapItem.setOffset(offset);
+            mapItem.setThis_type_start(this_type_start);
+            mapItem.setThis_type_offset_start(this_type_offset_start);
+            mapItem.setIndex_of_map_item_list(a);
+            //初始化type 在 map_item_list 中的 index;
+            switch (type){
+                case TYPE_HEADER_ITEM :
+                    index_header_item_in_map_item_list = a;
+                    continue;
+                case TYPE_STRING_ID_ITEM :
+                    index_string_id_item_in_map_item_list = a;
+                    continue;
+                case TYPE_TYPE_ID_ITEM :
+                    index_type_id_item_in_map_item_list = a;
+                    continue;
+                case TYPE_PROTO_ID_ITEM :
+                    index_proto_id_item_in_map_item_list = a;
+                    continue;
+                case TYPE_FIELD_ID_ITEM :
+                    index_field_id_item_in_map_item_list = a;
+                    continue;
+                case TYPE_METHOD_ID_ITEM :
+                    index_method_id_item_in_map_item_list = a;
+                    continue;
+                case TYPE_CLASS_DEF_ITEM :
+                    index_class_def_item_in_map_item_list = a;
+                    continue;
+                case TYPE_MAP_LIST :
+                    index_map_list_in_map_item_list = a;
+                    continue;
+                case TYPE_TYPE_LIST :
+                    index_type_list_in_map_item_list = a;
+                    continue;
+                case TYPE_ANNOTATION_SET_REF_LIST :
+                    index_annotation_set_ref_list_in_map_item_list = a;
+                    continue;
+                case TYPE_ANNOTATION_SET_ITEM :
+                    index_annotation_set_item_in_map_item_list = a;
+                    continue;
+                case TYPE_CLASS_DATA_ITEM :
+                    index_class_data_item_in_map_item_list = a;
+                    continue;
+                case TYPE_CODE_ITEM :
+                    index_code_item_in_map_item_list = a;
+                    mapItem.setNeed_fix_offset(1);
+                    continue;
+                case TYPE_STRING_DATA_ITEM :
+                    index_string_data_item_in_map_item_list = a;
+                    continue;
+                case TYPE_DEBUG_INFO_ITEM :
+                    index_debug_info_item_in_map_item_list = a;
+                    continue;
+                case TYPE_ANNOTATION_ITEM :
+                    index_annotation_item_in_map_item_list = a;
+                    continue;
+                case TYPE_ENCODED_ARRAY_ITEM :
+                    index_encode_array_item_in_map_item_list = a;
+                    continue;
+                case TYPE_ANNOTATION_DIRECTORY_ITEM :
+                    index_annotation_directory_item_in_map_item_list = a;
+                    continue;
+            }
+            mapItemList.add(mapItem);
+        }
+        for(MapItem mapItem : mapItemList){
+            if(index_code_item_in_map_item_list < mapItem.getIndex_of_map_item_list()){
+                mapItem.setNeed_fix_offset(0);
+                continue;
+            }
+            if(index_code_item_in_map_item_list > mapItem.getIndex_of_map_item_list()){
+                mapItem.setNeed_fix_offset(2);
+                continue;
+            }
+            mapItem.setNeed_fix_offset(1);
+        }
+        Log.d(TAG,"finished initMapItemList");
+        dexBuffer.position(map_off);
+
 
         //1.修复 code_item 前的数据
         int position_map_item_code_item_offset = mapItemList.get(index_code_item_in_map_item_list).getOffset();
@@ -183,12 +299,26 @@ public class DexFixPlusUtils implements DexFixBusiness {
             Log.d(TAG,"start interfaces_off: " + interfaces_off);
             if(interfaces_off != 0){
 
+
             }
 
 
             Log.d(TAG,"start annotations_off: " + annotations_off);
             if(annotations_off != 0){
+                AnnotationsOff annotationsOff = new AnnotationsOff();
+                dexBuffer.position(annotations_off);
+                int class_annotations_off = dexBuffer.getInt();
+                int fields_size = dexBuffer.getInt();
+                int methods_size = dexBuffer.getInt();
+                int parameters_size = dexBuffer.getInt();
+                int annotations_off_length = 4*4 + fields_size*8 + methods_size*8 + parameters_size *8;
 
+                annotationsOff.setClass_annotation_off(class_annotations_off);
+                annotationsOff.setFields_size(fields_size);
+                annotationsOff.setMethods_size(methods_size);
+                annotationsOff.setParameters_size(parameters_size);
+                annotationsOff.setAnnotations_off_length(annotations_off_length);
+                classDefItem.setAnnotationsOff(annotationsOff);
             }
 
 
@@ -452,10 +582,26 @@ public class DexFixPlusUtils implements DexFixBusiness {
                 classDefItem.setClassDataItem(classDataItem);
             }
 
-
             Log.d(TAG,"start static_values_off: " + static_values_off);
             if(static_values_off != 0){
+                StaticValues staticValues = new StaticValues();
+                dexBuffer.position(static_values_off);
+                int total_length = 0;
+                int size = Leb128Utils.readULeb128(dexBuffer);
+                dexBuffer.position(static_values_off);
+                total_length += Leb128Utils.readULeb128Count(dexBuffer);
+                for(int b=0; b<size; b++){
+                    byte valueTypeAndArg = dexBuffer.get();
+                    total_length += 1;
+                    int valueType = valueTypeAndArg & 0x1f;
+                    int valueArg = (valueTypeAndArg & 0xe0) >> 5;
+                    int tmp_length = getEncodeValuesLength(valueType);
+                    total_length += tmp_length;
+                }
+                staticValues.setSize(size);
+                staticValues.setTotal_length(total_length);
 
+                classDefItem.setStaticValues(staticValues);
             }
 
             classDefItemList.add(classDefItem);
@@ -488,99 +634,118 @@ public class DexFixPlusUtils implements DexFixBusiness {
                         fixBuffer.position(0x34);
                         fixBuffer.putInt(fix_offset);
                         break;
-                    case TYPE_TYPE_LIST:
-                        break;
-                    case TYPE_ANNOTATION_SET_REF_LIST:
-                        break;
-                    case TYPE_ANNOTATION_SET_ITEM:
-                        break;
-                    case TYPE_CLASS_DATA_ITEM:
-                        break;
-                    case TYPE_STRING_DATA_ITEM:
-                        //主要修复 struct string_id_list dex_string_ids -> struct string_id_item string_id[x] -> uint string_data_off
-                        //修复struct string_id_list dex_string_ids -> offset
-                        int cur_string_data_off = 0x70;
-                        for(int a=0; a<string_ids_size; a++){
-                            dexBuffer.position(cur_string_data_off);
-                            int value_string_data_off = dexBuffer.getInt();
-                            int fix_value_string_data_off = value_string_data_off + total_len_diff;
-                            fixBuffer.position(cur_string_data_off);
-                            fixBuffer.putInt(fix_value_string_data_off);
-                            cur_string_data_off += 4;
-                        }
-                        break;
-                    case TYPE_DEBUG_INFO_ITEM:
-                        break;
-                    case TYPE_ANNOTATION_ITEM:
-                        break;
-                    case TYPE_ENCODED_ARRAY_ITEM:
-                        break;
-                    case TYPE_ANNOTATION_DIRECTORY_ITEM:
-                        break;
                     default:
                         break;
                 }
                 fix_offset = 0;
-
             }
         }
+
+        // 4.4 修复 struct string_id_list dex_string_ids -> struct string_id_item string_id[x] -> uint string_data_off
+        //修复struct string_id_list dex_string_ids -> offset
+        int cur_string_data_off = 0x70;
+        for(int a=0; a<string_ids_size; a++){
+            dexBuffer.position(cur_string_data_off);
+            int value_string_data_off = dexBuffer.getInt();
+            int fix_value_string_data_off = value_string_data_off + total_len_diff;
+            fixBuffer.position(cur_string_data_off);
+            fixBuffer.putInt(fix_value_string_data_off);
+            cur_string_data_off += 4;
+        }
+
+        // 4.5 修复 classDefItem 中相关偏移值
         for(int a=0; a < classDefItemList.size(); a++){
             ClassDefItem classDefItem = classDefItemList.get(a);
+            int interfaces_off = classDefItem.getInterfaces_off();
+            int annotations_off = classDefItem.getAnnotations_off();
+            int class_data_off = classDefItem.getClass_data_off();
+            int static_values_off = classDefItem.getStatic_values_off();
+
+            if(interfaces_off != 0){
+                // 修复class_def interfaces_off
+                int interfaces_off_start = classDefItem.getInterfaces_off_start();
+                int fix_interfaces_off_start = interfaces_off_start + total_len_diff;
+                int fix_interfaces_off = interfaces_off + total_len_diff;
+                fixBuffer.position(fix_interfaces_off_start);
+                fixBuffer.putInt(fix_interfaces_off);
+            }
+            if(annotations_off != 0){
+                // 修复class_def annotations_off
+                int annotations_off_start = classDefItem.getAnnotations_off_start();
+                int fix_annotations_off_start = annotations_off_start + total_len_diff;
+                int fix_annotations_off = annotations_off + total_len_diff;
+                fixBuffer.position(fix_annotations_off_start);
+                fixBuffer.putInt(fix_annotations_off);
+                // 修复 data 区数据 // 考虑不在for循环中处理
+                // 考虑在读取数据的时候计算总长度,然后一次性写入;
+                int length = classDefItem.getAnnotations_off_total_length();
+                writeBBToBB(dexBuffer,annotations_off,length,fixBuffer,fix_annotations_off);
+            }
+            //code_item已经在读取数据时候构建到fixBuffer
+            if(class_data_off != 0){
+
+            }
+            if(static_values_off != 0){
+                int static_values_off_start = classDefItem.getStatic_values_off_start();
+                int total_length = classDefItem.getStaticValues().getTotal_length();
+                int fix_static_values_off_start = static_values_off_start + total_len_diff;
+                writeBBToBB(dexBuffer,static_values_off_start,total_length,fixBuffer,fix_static_values_off_start);
+            }
 
         }
 
-        //主要修复 annotations_off + annotations_directory_item annotations 和 static_values_off + static_values
-        cur_class_def_off = class_defs_off;
-        int cur_annotation_off = cur_class_def_off + 20;
-        for(int a=0; a<class_defs_size; a++){
-            dexBuffer.position(cur_annotation_off);
-            int annotations_off = dexBuffer.getInt();
-            int class_data_off = dexBuffer.getInt();
-            int static_values_off = dexBuffer.getInt();
-            if(static_values_off!=0){
-                int total_length = 0;
-                dexBuffer.position(static_values_off);
-                int size11 = readUleb128();
-                total_length += 1;
-                for(int b=0;b<size11;b++){
-                    byte valueTypeAndArg = dexBuffer.get();
-                    total_length += 1;
-                    int valueType = valueTypeAndArg & 0x1f;
-                    int valueArg = (valueTypeAndArg & 0xe0) >> 5;
-//                    int valueType = (valueTypeAndArg >> 3) & 0x1F; // value_type: 前 5 位
-//                    int valueArg = valueTypeAndArg & 0x07; // value_arg: 后 3 位
-                    int tmp_length = getEncodeValuesLength(valueType);
-                    total_length += tmp_length;
-                }
-                writeBBToBB(dexBuffer,static_values_off,total_length,fixBuffer,static_values_off+total_len_diff);
-            }
-
-
-            if(annotations_off!=0){
-                int total_length = 0;
-                dexBuffer.position(annotations_off);
-                int class_annotations_off = dexBuffer.getInt();
-                int fields_size = dexBuffer.getInt();
-                int methods_size = dexBuffer.getInt();
-                int parameters_size = dexBuffer.getInt();
-                //struct annotation_set_item class_annotations 1A87BCh
-                //fields_size
-                total_length += 8*fields_size;
-                //methods_size
-                total_length += 8*methods_size;
-                //parameters_size
-                total_length += 8*parameters_size;
-                dexBuffer.position(annotations_off+total_length);
-                writeBBToBB(dexBuffer,annotations_off,total_length,fixBuffer,annotations_off+total_len_diff);
-                int zzzzz = 0;
-                if(parameters_size >0){
-                    zzzzz=2;
-                }
-            }
-
-            cur_class_def_off = cur_class_def_off + 32;//0x20
-            cur_annotation_off = cur_class_def_off + 20;
-        }
+//        //主要修复 annotations_off + annotations_directory_item annotations 和 static_values_off + static_values
+//        cur_class_def_off = class_defs_off;
+//        int cur_annotation_off = cur_class_def_off + 20;
+//        for(int a=0; a<class_defs_size; a++){
+//            dexBuffer.position(cur_annotation_off);
+//            int annotations_off = dexBuffer.getInt();
+//            int class_data_off = dexBuffer.getInt();
+//            int static_values_off = dexBuffer.getInt();
+//            if(static_values_off!=0){
+//                int total_length = 0;
+//                dexBuffer.position(static_values_off);
+//                int size11 = readUleb128();
+//                total_length += 1;
+//                for(int b=0;b<size11;b++){
+//                    byte valueTypeAndArg = dexBuffer.get();
+//                    total_length += 1;
+//                    int valueType = valueTypeAndArg & 0x1f;
+//                    int valueArg = (valueTypeAndArg & 0xe0) >> 5;
+////                    int valueType = (valueTypeAndArg >> 3) & 0x1F; // value_type: 前 5 位
+////                    int valueArg = valueTypeAndArg & 0x07; // value_arg: 后 3 位
+//                    int tmp_length = getEncodeValuesLength(valueType);
+//                    total_length += tmp_length;
+//                }
+//                writeBBToBB(dexBuffer,static_values_off,total_length,fixBuffer,static_values_off+total_len_diff);
+//            }
+//
+//
+//            if(annotations_off!=0){
+//                int total_length = 0;
+//                dexBuffer.position(annotations_off);
+//                int class_annotations_off = dexBuffer.getInt();
+//                int fields_size = dexBuffer.getInt();
+//                int methods_size = dexBuffer.getInt();
+//                int parameters_size = dexBuffer.getInt();
+//                //struct annotation_set_item class_annotations 1A87BCh
+//                //fields_size
+//                total_length += 8*fields_size;
+//                //methods_size
+//                total_length += 8*methods_size;
+//                //parameters_size
+//                total_length += 8*parameters_size;
+//                dexBuffer.position(annotations_off+total_length);
+//                writeBBToBB(dexBuffer,annotations_off,total_length,fixBuffer,annotations_off+total_len_diff);
+//                int zzzzz = 0;
+//                if(parameters_size >0){
+//                    zzzzz=2;
+//                }
+//            }
+//
+//            cur_class_def_off = cur_class_def_off + 32;//0x20
+//            cur_annotation_off = cur_class_def_off + 20;
+//        }
 
     }
 
@@ -861,7 +1026,7 @@ public class DexFixPlusUtils implements DexFixBusiness {
             count++;
         } while (((cur & 0x80) == 0x80) && count < 5);
         if ((cur & 0x80) == 0x80) {
-            throw new IllegalArgumentException("Invalid LEB128 sequence");
+            throw new DexException("invalid LEB128 sequence");
         }
         // Sign extend if appropriate
         if (((signBits >> 1) & result) != 0 ) {
@@ -903,7 +1068,7 @@ public class DexFixPlusUtils implements DexFixBusiness {
             count++;
         } while (((cur & 0x80) == 0x80) && count < 5);
         if ((cur & 0x80) == 0x80) {
-            throw new IllegalArgumentException("Invalid LEB128 sequence");
+            throw new DexException("invalid LEB128 sequence");
         }
         // Sign extend if appropriate
         if (((signBits >> 1) & result) != 0 ) {

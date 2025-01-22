@@ -9,11 +9,14 @@ public class ClassDefItem {
     private int annotations_off;
     private int class_data_off;
     private int static_values_off;
+    private AnnotationsOff annotationsOff;
     private ClassDataItem classDataItem;
+    private StaticValues staticValues;
 
     private int class_def_item_start;
     private int interfaces_off_start;
     private int annotations_off_start;
+    private int annotations_off_total_length;
     private int class_data_off_start;
     private int static_values_off_start;
 
@@ -109,6 +112,14 @@ public class ClassDefItem {
         this.annotations_off_start = annotations_off_start;
     }
 
+    public int getAnnotations_off_total_length() {
+        return annotations_off_total_length;
+    }
+
+    public void setAnnotations_off_total_length(int annotations_off_total_length) {
+        this.annotations_off_total_length = annotations_off_total_length;
+    }
+
     public int getClass_data_off_start() {
         return class_data_off_start;
     }
@@ -125,11 +136,27 @@ public class ClassDefItem {
         this.static_values_off_start = static_values_off_start;
     }
 
+    public AnnotationsOff getAnnotationsOff() {
+        return annotationsOff;
+    }
+
+    public void setAnnotationsOff(AnnotationsOff annotationsOff) {
+        this.annotationsOff = annotationsOff;
+    }
+
     public ClassDataItem getClassDataItem() {
         return classDataItem;
     }
 
     public void setClassDataItem(ClassDataItem classDataItem) {
         this.classDataItem = classDataItem;
+    }
+
+    public StaticValues getStaticValues() {
+        return staticValues;
+    }
+
+    public void setStaticValues(StaticValues staticValues) {
+        this.staticValues = staticValues;
     }
 }
