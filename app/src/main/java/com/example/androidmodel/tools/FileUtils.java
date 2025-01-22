@@ -12,7 +12,7 @@ import java.io.IOException;
  * @data 2024/9/29 15:34
  * @plus:
  */
-public class Kfflso_FileUtils {
+public class FileUtils {
     public static void checkAndCreateFile(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {

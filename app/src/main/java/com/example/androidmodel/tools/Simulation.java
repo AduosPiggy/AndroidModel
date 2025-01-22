@@ -1,13 +1,10 @@
 package com.example.androidmodel.tools;
 
-import android.app.Instrumentation;
-import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Environment;
-import android.os.PowerManager;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -20,7 +17,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Kfflso_Simulation {
+public class       Simulation {
 
     public final int signal_strength_mobile;//模拟移动流量信号强度;
     public final int signal_strength_wifi;//模拟 wifi 信号强度;
@@ -33,7 +30,7 @@ public class Kfflso_Simulation {
     public final String phone_number_call;//模拟打电话号码
 
 
-    public Kfflso_Simulation() {
+    public Simulation() {
         //initSimulateData
         signal_strength_mobile = 2;
         signal_strength_wifi = 2;

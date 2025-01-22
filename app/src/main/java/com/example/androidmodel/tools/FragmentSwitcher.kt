@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentManager
 //        .build()
 //    //default show view: home
 //    fragmentSwitchNavBar.changeTag(cl_home)
-class Kfflso_FragmentSwitcher : View.OnClickListener {
+class FragmentSwitcher : View.OnClickListener {
 
     interface OnClickListener {
         fun onClickChangeBG(view: View)
@@ -125,8 +125,8 @@ class Kfflso_FragmentSwitcher : View.OnClickListener {
             this.onDoubleClickListener = onDoubleClickListener
         }
 
-        fun build(): Kfflso_FragmentSwitcher {
-            val kfflsoFragmentSwitcher = Kfflso_FragmentSwitcher()
+        fun build(): FragmentSwitcher {
+            val kfflsoFragmentSwitcher = FragmentSwitcher()
             kfflsoFragmentSwitcher.fragmentManager = this.fragmentManager!!
             kfflsoFragmentSwitcher.containerId = this.containerId
             kfflsoFragmentSwitcher.clickableViews = this.clickableViews!!

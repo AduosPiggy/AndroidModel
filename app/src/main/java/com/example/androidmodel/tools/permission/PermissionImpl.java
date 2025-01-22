@@ -8,17 +8,17 @@ import android.app.Activity;
  * @data 2024/9/26 14:22
  * @plus:
  */
-public class Kfflso_PermissionImpl {
+public class PermissionImpl {
 
     public static void verify_phone(Activity activity){
         String reqPermission = Manifest.permission.READ_PHONE_STATE;
         int requestCode = 11;
-        Kfflso_PermissionUtils.checkAndRequestPermission(activity, reqPermission, requestCode);
+        PermissionUtils.checkAndRequestPermission(activity, reqPermission, requestCode);
     }
 
     public static void verify_screenOnAndOff(Activity activity){
         String[] reqPermissions = { Manifest.permission.BIND_DEVICE_ADMIN, Manifest.permission.WAKE_LOCK };
         int requestCode = 11;
-        Kfflso_PermissionUtils.checkAndRequestMorePermissions(activity, reqPermissions, requestCode);
+        PermissionUtils.checkAndRequestMorePermissions(activity, reqPermissions, requestCode);
     }
 }

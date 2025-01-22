@@ -3,9 +3,9 @@ package com.example.androidmodel.tools.sdkscan;
 import android.app.Application;
 import android.util.Log;
 
-import com.example.androidmodel.tools.Kfflso_FileUtils;
-import com.example.androidmodel.tools.Kfflso_JsonUtils;
-import com.example.androidmodel.tools.Kfflso_ReflectionUtils;
+import com.example.androidmodel.tools.FileUtils;
+import com.example.androidmodel.tools.JsonUtils;
+import com.example.androidmodel.tools.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,13 +35,13 @@ import java.util.Set;
  *              3) art/runtime/native/dalvik_system_DexFile.cc  ---> static jobjectArray DexFile_getClassNameList(JNIEnv* env, jclass, jobject cookie)
  *          5.please remind to sdkScanResultBuffer, which is important for optimizing process! This is a huge reduce for IO file;
  */
-public class Kfflso_Framework_ActivityThread {
+public class Framework_ActivityThread {
 
     private final String TAG = "Framework_ActivityThread";
     private Set<String> sdkScanResultSet = new HashSet<>();
 
 
-    public Kfflso_Framework_ActivityThread() {
+    public Framework_ActivityThread() {
         startTest();
     }
     private void startTest(){
@@ -103,12 +103,12 @@ public class Kfflso_Framework_ActivityThread {
         String sdkFeaturesMapPathApk = "/data/data/" + processName + "/dumpClassName/sdkFeaturesMap.txt";
         String sdkScanResPathApk = "/data/data/" + processName + "/dumpClassName/sdkScanResult.txt";
         String dumpClassNamesPath = "/data/data/" + processName + "/dumpClassName/apkDumpClassNames.txt";
-        Kfflso_FileUtils.checkAndCreateFile(sdkFeaturesMapPathApk);
-        Kfflso_FileUtils.checkAndCreateFile(sdkScanResPathApk);
-        String json = Kfflso_FileUtils.readFileToString(sdkFeaturesMapPathApk);
-        HashMap<String,String> sdkFeaturesMap = Kfflso_JsonUtils.jsonStrToHashMap(json);
+        FileUtils.checkAndCreateFile(sdkFeaturesMapPathApk);
+        FileUtils.checkAndCreateFile(sdkScanResPathApk);
+        String json = FileUtils.readFileToString(sdkFeaturesMapPathApk);
+        HashMap<String,String> sdkFeaturesMap = JsonUtils.jsonStrToHashMap(json);
         if(sdkScanResultSet.size() == 0){
-            String sdkResult = Kfflso_FileUtils.readFileToString(sdkScanResPathApk);
+            String sdkResult = FileUtils.readFileToString(sdkScanResPathApk);
             for(String result : sdkResult.split("\n")){
                 sdkScanResultSet.add(result);
             }
@@ -125,25 +125,25 @@ public class Kfflso_Framework_ActivityThread {
 
     public static ClassLoader getClassloader() {
         ClassLoader resultClassloader = null;
-        Object currentActivityThread = Kfflso_ReflectionUtils.invokeStaticMethod("android.app.ActivityThread", "currentActivityThread", new Class[]{}, new Object[]{});
-        Object mBoundApplication = Kfflso_ReflectionUtils.getFieldOjbect("android.app.ActivityThread", currentActivityThread, "mBoundApplication");
-        Application mInitialApplication = (Application) Kfflso_ReflectionUtils.getFieldOjbect("android.app.ActivityThread", currentActivityThread, "mInitialApplication");
-        Object loadedApkInfo = Kfflso_ReflectionUtils.getFieldOjbect("android.app.ActivityThread$AppBindData", mBoundApplication, "info");
-        Application mApplication = (Application) Kfflso_ReflectionUtils.getFieldOjbect("android.app.LoadedApk", loadedApkInfo, "mApplication");
+        Object currentActivityThread = ReflectionUtils.invokeStaticMethod("android.app.ActivityThread", "currentActivityThread", new Class[]{}, new Object[]{});
+        Object mBoundApplication = ReflectionUtils.getFieldOjbect("android.app.ActivityThread", currentActivityThread, "mBoundApplication");
+        Application mInitialApplication = (Application) ReflectionUtils.getFieldOjbect("android.app.ActivityThread", currentActivityThread, "mInitialApplication");
+        Object loadedApkInfo = ReflectionUtils.getFieldOjbect("android.app.ActivityThread$AppBindData", mBoundApplication, "info");
+        Application mApplication = (Application) ReflectionUtils.getFieldOjbect("android.app.LoadedApk", loadedApkInfo, "mApplication");
         resultClassloader = mApplication.getClassLoader();
         return resultClassloader;
     }
 
     public void sdkScanImpl(ClassLoader appClassloader, String sdkScanResPathApk, HashMap<String,String> sdkFeaturesMap,Set<String> sdkScanResultSet, String dumpClassNamesPath) {
-        Object pathList_object = Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.BaseDexClassLoader", appClassloader, "pathList");
-        Object[] ElementsArray = (Object[]) Kfflso_ReflectionUtils.getFieldOjbect("dalvik.system.DexPathList", pathList_object, "dexElements");
+        Object pathList_object = ReflectionUtils.getFieldOjbect("dalvik.system.BaseDexClassLoader", appClassloader, "pathList");
+        Object[] ElementsArray = (Object[]) ReflectionUtils.getFieldOjbect("dalvik.system.DexPathList", pathList_object, "dexElements");
         if (ElementsArray == null) {
             Log.e(TAG, "DumpError ElementsArray is null!!!");
             return;
         }
         Field dexFile_fileField;
         try {
-            dexFile_fileField = (Field) Kfflso_ReflectionUtils.getClassField(appClassloader, "dalvik.system.DexPathList$Element", "dexFile");
+            dexFile_fileField = (Field) ReflectionUtils.getClassField(appClassloader, "dalvik.system.DexPathList$Element", "dexFile");
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -175,10 +175,10 @@ public class Kfflso_Framework_ActivityThread {
                 continue;
             }
 
-            Object mcookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mCookie");
+            Object mcookie = ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mCookie");
             if (mcookie == null) {
                 Log.e(TAG, "DumpError get mcookie is null");
-                Object mInternalCookie = Kfflso_ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mInternalCookie");
+                Object mInternalCookie = ReflectionUtils.getClassFieldObject(appClassloader, "dalvik.system.DexFile", dexfile, "mInternalCookie");
                 if (mInternalCookie == null) {
                     Log.e(TAG, "DumpError get mInternalCookie is null");
                     continue;
@@ -206,13 +206,13 @@ public class Kfflso_Framework_ActivityThread {
                             if(!sdkScanResultSet.contains(value)){
                                 sdkScanResultSet.add(value);
                                 //todo: consider use value or className as final result;
-                                Kfflso_FileUtils.appendToFile(sdkScanResPathApk,value);//应该用这个
+                                FileUtils.appendToFile(sdkScanResPathApk,value);//应该用这个
 //                                appendToFile(sdkScanResPathApk,className);//测试看效果
                             }
                         }
                     }
                 }
-                Kfflso_FileUtils.appendToFile(dumpClassNamesPath, String.join("\n", classnames));//所有 dumped class names
+                FileUtils.appendToFile(dumpClassNamesPath, String.join("\n", classnames));//所有 dumped class names
             }
         }
     }

@@ -6,10 +6,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 
-import com.example.androidmodel.tools.Kfflso_CmdUtil;
-import com.example.androidmodel.tools.Kfflso_PackageUtil;
-import com.example.androidmodel.tools.Kfflso_SystemPropUtils;
-import com.example.androidmodel.tools.logs.Kfflso_LogsUtils;
+import com.example.androidmodel.tools.CmdUtil;
+import com.example.androidmodel.tools.PackageUtil;
+import com.example.androidmodel.tools.SystemPropUtils;
+import com.example.androidmodel.tools.logs.LogsUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +44,7 @@ import java.util.Iterator;
  *      ---> app 查看 sdk scan 结果: mkdir; touch; cp!!!;chown shell permission; read File
  *
  */
-public class Kfflso_SdksScanUtil {
+public class SdksScanUtil {
     private final String TAG = "SdksScanUtils";
     private Context context;
     private String apkPath;
@@ -59,7 +59,7 @@ public class Kfflso_SdksScanUtil {
     private String sdkScanResPathApk;
     private String sdkScanResPathTdc;
 
-    public Kfflso_SdksScanUtil(Context context, String apkPath) {
+    public SdksScanUtil(Context context, String apkPath) {
         this.context = context;
         this.apkPath = apkPath;
         initData();
@@ -69,7 +69,7 @@ public class Kfflso_SdksScanUtil {
         packageInfo = packageManager.getPackageArchiveInfo(apkPath, 0);
         packageNameApk = packageInfo != null ? packageInfo.packageName : "";
         if(packageNameApk.isEmpty()){
-            Kfflso_LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
+            LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
             return;
         }
         packageNameTdc = "com.zzz.tdc";
@@ -82,10 +82,10 @@ public class Kfflso_SdksScanUtil {
 
     public void testTaskFlow(){
         if (packageNameApk.isEmpty()) {
-            Kfflso_LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
+            LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
             return ;
         }
-        Kfflso_SystemPropUtils.setProp("zzz.dumpclass.name", packageNameApk);
+        SystemPropUtils.setProp("zzz.dumpclass.name", packageNameApk);
         writeSdksFeaturesToFile();
         launchTargetApp();
         //fwk load sdkFeaturesMap
@@ -103,7 +103,7 @@ public class Kfflso_SdksScanUtil {
         writeStringToFile(sdksJson,sdkFeaturesMapPathTdc);
 
         String sdkFeaturesMapPathDirApk = sdkFeaturesMapPathApk.substring(0,sdkFeaturesMapPathApk.lastIndexOf('/') );
-        int uid = Kfflso_PackageUtil.getInstance(context).getPackageUid(packageNameApk);
+        int uid = PackageUtil.getInstance(context).getPackageUid(packageNameApk);
         String[] commands = {
                 "mkdir -p " + sdkFeaturesMapPathDirApk,
                 "touch " + sdkFeaturesMapPathApk,
@@ -112,9 +112,9 @@ public class Kfflso_SdksScanUtil {
         };
         String errInfo = "";
         for(String cmd : commands){
-            errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+            errInfo = CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
             if(!errInfo.isEmpty()){
-                Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+                LogsUtils.logToFileAsync(TAG,errInfo);
                 break;
             }
         }
@@ -184,9 +184,9 @@ public class Kfflso_SdksScanUtil {
         };
         String errInfo = "";
         for(String cmd : commands){
-            errInfo = Kfflso_CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
+            errInfo = CmdUtil.execCmdPlus("/system/xbin/asu", "root", "sh", "-c", cmd);
             if(!errInfo.isEmpty()){
-                Kfflso_LogsUtils.logToFileAsync(TAG,errInfo);
+                LogsUtils.logToFileAsync(TAG,errInfo);
                 return errInfo;
             }
         }

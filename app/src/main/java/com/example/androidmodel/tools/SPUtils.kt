@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.androidmodel.base.BaseApp
 
-class Kfflso_SPUtils private constructor(mContext: Context) {
+class SPUtils private constructor(mContext: Context) {
 
     companion object {
-        fun getInstance(context: Context = BaseApp.appContext) = Kfflso_SPUtils(context)
+        fun getInstance(context: Context = BaseApp.appContext) = SPUtils(context)
         private const val SP_NAME = "Data"
 
         private const val KEY_IS_PAD = "key_is_pad"

@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  *  }
  */
 
-public class Kfflso_DownloadUtil {
+public class DownloadUtil {
 
     DownloadManager downloadManager;
     long nowDownId;
@@ -70,12 +70,12 @@ public class Kfflso_DownloadUtil {
             return this;
         }
 
-        public Kfflso_DownloadUtil build() {
-            return new Kfflso_DownloadUtil(this);
+        public DownloadUtil build() {
+            return new DownloadUtil(this);
         }
     }
 
-    public Kfflso_DownloadUtil(Builder builder) {
+    public DownloadUtil(Builder builder) {
         downloadManager = (DownloadManager) BaseApp.application.getSystemService(Context.DOWNLOAD_SERVICE);
         mScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         this.downloadFileName = builder.downloadFileName;
@@ -113,7 +113,7 @@ public class Kfflso_DownloadUtil {
             public void run() {
                 queryDownloadStatus();
             }
-        }, Kfflso_DownloadUtilCfg.getInstance().getDownloadQueryTime(), Kfflso_DownloadUtilCfg.getInstance().getDownloadQueryTime(), TimeUnit.MILLISECONDS);
+        }, DownloadUtilCfg.getInstance().getDownloadQueryTime(), DownloadUtilCfg.getInstance().getDownloadQueryTime(), TimeUnit.MILLISECONDS);
 
     }
 

@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  * @data 2024/9/29 15:40
  * @plus:
  */
-public class Kfflso_ReflectionUtils {
+public class ReflectionUtils {
 
     public static Object invokeStaticMethod(String class_name, String method_name, Class[] pareTyple, Object[] pareVaules) {
         try {

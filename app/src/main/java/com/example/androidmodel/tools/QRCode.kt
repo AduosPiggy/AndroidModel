@@ -19,7 +19,7 @@ import org.json.JSONObject
 
 
 
-object Kfflso_QRCode {
+object QRCode {
 //    不能中文
 //    val imageView = findViewById<ImageView>(R.id.iv_bitmap)
 //    val bitmapStr = QRCode.generateJsonStringForQRCode("zjy","ba jie gege")

@@ -21,15 +21,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class Kfflso_PackageUtil {
+public class PackageUtil {
     public String TAG = getClass().getName();
     private Context context;
-    private static volatile Kfflso_PackageUtil instance;
+    private static volatile PackageUtil instance;
     private DevicePolicyManager dpm;
     private PackageManager packageManager;
     private ActivityManager activityManager;
 
-    private Kfflso_PackageUtil(Context ctx) {
+    private PackageUtil(Context ctx) {
         this.context = ctx;
         dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
@@ -37,11 +37,11 @@ public class Kfflso_PackageUtil {
         activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     }
 
-    public static Kfflso_PackageUtil getInstance(Context ctx) {
+    public static PackageUtil getInstance(Context ctx) {
         if (instance == null) {
-            synchronized (Kfflso_PackageUtil.class) {
+            synchronized (PackageUtil.class) {
                 if (instance == null) {
-                    instance = new Kfflso_PackageUtil(ctx);
+                    instance = new PackageUtil(ctx);
                 }
             }
         }

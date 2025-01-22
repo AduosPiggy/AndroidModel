@@ -11,7 +11,7 @@ import java.util.Iterator;
  * @data 2024/9/29 15:37
  * @plus:
  */
-public class Kfflso_JsonUtils {
+public class JsonUtils {
 
     public static HashMap<String,String> jsonStrToHashMap(String json){
         HashMap<String,String> result = new HashMap<>();

@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * @data 2024/9/29 15:07
  * @plus:
  */
-public class Kfflso_SystemPropUtils {
+public class SystemPropUtils {
     /**
      * 设置属性值
      *

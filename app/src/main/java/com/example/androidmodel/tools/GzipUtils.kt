@@ -9,7 +9,7 @@ import java.util.zip.GZIPOutputStream
  * @data 2024/9/5 9:54
  * @plus:
  */
-object Kfflso_GzipUtils {
+object GzipUtils {
     /**
      * @return Gzip 压缩 ByteArray; 返回ByteArray;
      */

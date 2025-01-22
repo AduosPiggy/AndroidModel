@@ -5,10 +5,8 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityBroadcastSimulateBinding
-import com.example.androidmodel.tools.Kfflso_ActivityManager
-import com.example.androidmodel.tools.Kfflso_Simulation
-import com.example.androidmodel.tools.permission.Kfflso_PermissionImpl
-import com.example.androidmodel.tools.screen.ScreenControl
+import com.example.androidmodel.tools.ActivityManager
+import com.example.androidmodel.tools.Simulation
 
 /**
  * @author kfflso
@@ -18,17 +16,17 @@ import com.example.androidmodel.tools.screen.ScreenControl
 @ContentLayout(R.layout.activity_broadcast_simulate)
 class BroadSimulateActivity: BaseVMActivity<BroadSimulateVM,ActivityBroadcastSimulateBinding>() {
 
-    private lateinit var simulation: Kfflso_Simulation
+    private lateinit var simulation: Simulation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Kfflso_ActivityManager.addActivity(this)
-        simulation = Kfflso_Simulation()
+        ActivityManager.addActivity(this)
+        simulation = Simulation()
         clickers()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Kfflso_ActivityManager.removeActivity(this)
+        ActivityManager.removeActivity(this)
 
     }
     private fun clickers(){

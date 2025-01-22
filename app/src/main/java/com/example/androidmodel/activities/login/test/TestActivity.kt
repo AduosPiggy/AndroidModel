@@ -10,8 +10,8 @@ import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
-import com.example.androidmodel.tools.Kfflso_ActivityManager
-import com.example.androidmodel.tools.logs.Kfflso_LogsUtils
+import com.example.androidmodel.tools.ActivityManager
+import com.example.androidmodel.tools.logs.LogsUtils
 import com.example.androidmodel.tools.Kfflso_PermissionUtils
 import com.example.androidmodel.tools.apkinfo.Kfflso_ApkInfoImpl
 
@@ -26,7 +26,7 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Kfflso_ActivityManager.addActivity(this)
+        ActivityManager.addActivity(this)
 
         binding.btnReqPermission.setOnClickListener{
 //            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
@@ -68,14 +68,14 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
         }
 
         binding.btnLogsUtils.setOnClickListener{
-            Kfflso_LogsUtils.initLogDir(this)
-            Kfflso_LogsUtils.logToFileAsync("LogsUtils","hello twy");
+            LogsUtils.initLogDir(this)
+            LogsUtils.logToFileAsync("LogsUtils","hello twy");
         }
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        Kfflso_ActivityManager.removeActivity(this)
+        ActivityManager.removeActivity(this)
     }
     override fun initViews() {
 

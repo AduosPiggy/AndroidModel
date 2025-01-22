@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
  * @data 2024/8/29 10:47
  * @plus:
  */
-public class Kfflso_LogsUtils {
+public class LogsUtils {
     //文件存在最长时间
     private static long MAX_TIME = 7 * 24 * 60 * 60 * 1000;
     //文件最大大小

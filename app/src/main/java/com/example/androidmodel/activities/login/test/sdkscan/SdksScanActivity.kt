@@ -5,8 +5,8 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivitySdksscanBinding
-import com.example.androidmodel.tools.Kfflso_ActivityManager
-import com.example.androidmodel.tools.sdkscan.Kfflso_SdksScanUtil
+import com.example.androidmodel.tools.ActivityManager
+import com.example.androidmodel.tools.sdkscan.SdksScanUtil
 
 /**
  * @author kfflso
@@ -17,10 +17,10 @@ import com.example.androidmodel.tools.sdkscan.Kfflso_SdksScanUtil
  */
 @ContentLayout(R.layout.activity_sdksscan)
 class SdksScanActivity: BaseVMActivity<SdksScanVM, ActivitySdksscanBinding>(){
-    private lateinit var kfflsoSdksScanUtil : Kfflso_SdksScanUtil
+    private lateinit var kfflsoSdksScanUtil : SdksScanUtil
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Kfflso_ActivityManager.addActivity(this)
+        ActivityManager.addActivity(this)
 
         initUtils()
         clickers()
@@ -28,10 +28,13 @@ class SdksScanActivity: BaseVMActivity<SdksScanVM, ActivitySdksscanBinding>(){
     }
     override fun onDestroy() {
         super.onDestroy()
-        Kfflso_ActivityManager.removeActivity(this)
+        ActivityManager.removeActivity(this)
     }
     private fun initUtils(){
-        kfflsoSdksScanUtil = Kfflso_SdksScanUtil(this, "/data/local/tmp/weibo.apk")
+        kfflsoSdksScanUtil = SdksScanUtil(
+            this,
+            "/data/local/tmp/weibo.apk"
+        )
     }
 
     private fun clickers(){

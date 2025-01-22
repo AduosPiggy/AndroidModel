@@ -9,15 +9,15 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-public class Kfflso_CmdUtil {
+public class CmdUtil {
 
-    public static Kfflso_CmdUtil getInstance(){
+    public static CmdUtil getInstance(){
         return SingletonHolder.instance;
     }
     private static class SingletonHolder {
-        private static Kfflso_CmdUtil instance = new Kfflso_CmdUtil();
+        private static CmdUtil instance = new CmdUtil();
     }
-    public Kfflso_CmdUtil() {
+    public CmdUtil() {
     }
 
     private static String TAG = "CmdUtil";

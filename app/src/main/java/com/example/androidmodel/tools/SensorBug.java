@@ -8,14 +8,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-public class Kfflso_SensorBug {
+public class SensorBug {
     private Activity activity;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor gyroscope;
     private SensorEventListener sensorEventListener;
 
-    public Kfflso_SensorBug(Activity activity) {
+    public SensorBug(Activity activity) {
         this.activity = activity;
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);

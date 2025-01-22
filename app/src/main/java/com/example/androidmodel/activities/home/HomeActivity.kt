@@ -5,7 +5,7 @@ import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityHomeBinding
-import com.example.androidmodel.tools.Kfflso_ActivityManager
+import com.example.androidmodel.tools.ActivityManager
 
 /**
  * @author kfflso
@@ -16,7 +16,7 @@ import com.example.androidmodel.tools.Kfflso_ActivityManager
 class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Kfflso_ActivityManager.addActivity(this)
+        ActivityManager.addActivity(this)
 
         binding.homeNavBar.setOnClickListener{
             finish()
@@ -25,7 +25,7 @@ class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        Kfflso_ActivityManager.removeActivity(this)
+        ActivityManager.removeActivity(this)
     }
 
     override fun onBackPressed() {
