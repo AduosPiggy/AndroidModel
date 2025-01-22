@@ -8,8 +8,8 @@ import android.content.res.AssetManager;
 
 import com.example.androidmodel.tools.CmdUtil;
 import com.example.androidmodel.tools.PackageUtil;
-import com.example.androidmodel.tools.SystemPropUtils;
 import com.example.androidmodel.tools.logs.LogsUtils;
+import com.example.androidmodel.tools.properties.SystemProperties;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +85,7 @@ public class SdksScanUtil {
             LogsUtils.logToFileAsync(TAG,"apk packageName is empty");
             return ;
         }
-        SystemPropUtils.setProp("zzz.dumpclass.name", packageNameApk);
+        SystemProperties.setProp("zzz.dumpclass.name", packageNameApk);
         writeSdksFeaturesToFile();
         launchTargetApp();
         //fwk load sdkFeaturesMap

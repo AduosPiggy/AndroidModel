@@ -7,7 +7,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-
+/**
+ *  SensorBug sensorBug = new SensorBug(activity)
+ *  sensorBug.start();
+ *  sensorBug.stop();
+ */
 public class SensorBug {
     private Activity activity;
     private SensorManager sensorManager;
