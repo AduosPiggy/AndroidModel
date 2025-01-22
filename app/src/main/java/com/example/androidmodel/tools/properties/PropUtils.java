@@ -12,6 +12,10 @@ import java.util.Properties;
  * @author kfflso
  * @data 2025-01-22 20:33
  * @plus:
+ * Build
+ * System
+ * Settings
+ * 反射 android.os.SystemProperties
  */
 public class PropUtils {
     public void getPropFromClassBuild(){
