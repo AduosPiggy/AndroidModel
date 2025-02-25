@@ -16,11 +16,11 @@
 
  可以连接所有设备,双绞线差分信号方式,一次只能一个设备发消息.
 
-![img01](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\.assets\img01.png)
+![img01](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img01.png)
 
 #### 1.2 ecu:
 
-![img02](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\.assets\img02.png)
+![img02](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img02.png)
 
 ### 2 标准数据帧
 
@@ -28,11 +28,11 @@
 
 #### 2.1 概览:
 
-![img03](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\.assets\img03.png)
+![img03](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img03.png)
 
 #### 2.2 标准数据帧
 
-![image-20231122163752041](C:\Users\Administrator\Desktop\协议.assets\协议.assets\image-20231122163752041.png)
+![img04](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img04.png)
 
 #### 2.3 标准数据帧 补充
 
@@ -42,7 +42,7 @@
 
 ​	拓展格式,IDE逻辑1,则识别码29位
 
-![img04](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\.assets\img04.png)
+![img05](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img05.png)
 
 ##### 2.3.2 控制码中DLC决定数据码
 
@@ -50,7 +50,7 @@
 
 ​		此处DLC为1000, 即8,证明数据码位8个字节, 1byte=64bit,即数据码长度为64位
 
-![img05](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\.assets\img05.png)
+![img06](D:\ProJects\Android\AndroidLearn\AndroidModel\AndroidModel\app\src\main\java\com\example\androidmodel\protocol\can\assets\img06.png)
 
 #### 2.4 标准数据帧详细解释:
 
