@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 /**
  * @author kfflso
  * @data 2024/9/2 15:12
- * @plus:
+ * @plus: 获取apk的信息 + 签名信息; apksig
  */
 public class ApkInfoImpl {
     private Context context;
@@ -18,10 +18,11 @@ public class ApkInfoImpl {
     public ApkInfoImpl(Context context, String apkPath) {
         this.context = context;
         this.apkPath = apkPath;
-        setApkInfo(context,apkPath);
+        setApkInfo(context, apkPath);
     }
-    private void setApkInfo(Context context,String apkPath){
-        ApkParserUtils apkParserUtils = new ApkParserUtils(context,apkPath);
+
+    private void setApkInfo(Context context, String apkPath) {
+        ApkParserUtils apkParserUtils = new ApkParserUtils(context, apkPath);
         apkInfo = new ApkInfo();
         apkInfo.setName(apkParserUtils.getApkName());
         apkInfo.setIcon(apkParserUtils.getApkIconBase64());
@@ -43,10 +44,12 @@ public class ApkInfoImpl {
         apkInfo.setCertificateV31(apkParserUtils.getCertificateV31());
         apkInfo.setCertificateV4(apkParserUtils.getCertificateV4());
     }
-    public ApkInfo getApkInfo(){
+
+    public ApkInfo getApkInfo() {
         return apkInfo;
     }
-    public String getApkInfoJson(){
+
+    public String getApkInfoJson() {
         return new Gson().toJson(apkInfo);
     }
 

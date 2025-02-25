@@ -2,11 +2,8 @@ package com.example.androidmodel.base
 
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.VersionedPackage
 import android.os.Build
-import android.util.Log
-import com.example.androidmodel.tools.PermissionUtils
 import com.example.androidmodel.tools.SPUtils
 
 open class BaseApp : Application() {

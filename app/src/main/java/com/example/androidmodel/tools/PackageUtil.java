@@ -1,5 +1,6 @@
 package com.example.androidmodel.tools;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -10,7 +11,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.File;
@@ -26,10 +26,15 @@ public class PackageUtil {
     private Context context;
     private static volatile PackageUtil instance;
     private DevicePolicyManager dpm;
+    private PackageManager packageManager;
+    private ActivityManager activityManager;
 
     private PackageUtil(Context ctx) {
         this.context = ctx;
         dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        packageManager = context.getPackageManager();
+        activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     }
 
     public static PackageUtil getInstance(Context ctx) {
@@ -160,7 +165,7 @@ public class PackageUtil {
      */
     public boolean launchApp(String packageName) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-        if (intent == null) {
+        if (intent == null || packageName == null || packageName.isEmpty()) {
             // TODO: 2023/11/10 无android.intent.action.MAIN, 需要使用Broadcast启动 or use setComponent to start other activity
             return false;
         }
@@ -168,4 +173,41 @@ public class PackageUtil {
         context.startActivity(intent);
         return true;
     }
+
+    public String getTargetAppProcessName(String tarAppPackageName) {
+        String processName = "";
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
+        for (PackageInfo pi : installedPackages){
+            //不是系统应用 && 不是更新的系统应用 && 应用未停止
+            if (    ( (ApplicationInfo.FLAG_SYSTEM & pi.applicationInfo.flags) == 0)
+                    && ((ApplicationInfo.FLAG_UPDATED_SYSTEM_APP & pi.applicationInfo.flags) == 0)
+                    && ((ApplicationInfo.FLAG_STOPPED & pi.applicationInfo.flags) == 0)) {
+                if(tarAppPackageName.equals(pi.packageName)){
+                    processName = pi.applicationInfo.processName;
+                    break;
+                }
+            }
+        }
+        return processName;
+    }
+    //但是只能获取到当前app的进程
+    public void getRunningAppProcesses( ){
+        List<ActivityManager.RunningAppProcessInfo> runningProcesses = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+            Log.d("RunningApp", "Process Name: " + processInfo.processName);
+        }
+    }
+    public int getPackageUid(String packageName){
+        try {
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            if (applicationInfo == null) {
+                return -1;
+            }
+            return applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            return -1;
+        }
+    }
+
 }

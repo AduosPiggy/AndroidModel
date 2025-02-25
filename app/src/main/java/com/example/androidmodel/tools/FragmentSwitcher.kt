@@ -1,12 +1,8 @@
 package com.example.androidmodel.tools
 
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 
 /**
  * @author kfflso
@@ -130,13 +126,13 @@ class FragmentSwitcher : View.OnClickListener {
         }
 
         fun build(): FragmentSwitcher {
-            val fragmentSwitcher = FragmentSwitcher()
-            fragmentSwitcher.fragmentManager = this.fragmentManager!!
-            fragmentSwitcher.containerId = this.containerId
-            fragmentSwitcher.clickableViews = this.clickableViews!!
-            fragmentSwitcher.fragments = this.fragments!!
-            fragmentSwitcher.onClickListener = this.onClickListener
-            fragmentSwitcher.onDoubleClickListener = this.onDoubleClickListener
+            val kfflsoFragmentSwitcher = FragmentSwitcher()
+            kfflsoFragmentSwitcher.fragmentManager = this.fragmentManager!!
+            kfflsoFragmentSwitcher.containerId = this.containerId
+            kfflsoFragmentSwitcher.clickableViews = this.clickableViews!!
+            kfflsoFragmentSwitcher.fragments = this.fragments!!
+            kfflsoFragmentSwitcher.onClickListener = this.onClickListener
+            kfflsoFragmentSwitcher.onDoubleClickListener = this.onDoubleClickListener
 
 //            if (fragmentSwitcher.onDoubleClickListener == null) {
 //                for (view in fragmentSwitcher.clickableViews) {
@@ -169,7 +165,7 @@ class FragmentSwitcher : View.OnClickListener {
 //                    }
 //                }
 //            }
-            return fragmentSwitcher
+            return kfflsoFragmentSwitcher
         }
     }
 }

@@ -1,13 +1,11 @@
 package com.example.androidmodel.activities.home
 
 import android.os.Bundle
-import android.util.Log
-import androidx.databinding.ViewDataBinding
 import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityHomeBinding
-import kotlin.math.log
+import com.example.androidmodel.tools.ActivityManager
 
 /**
  * @author kfflso
@@ -18,11 +16,16 @@ import kotlin.math.log
 class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ActivityManager.addActivity(this)
 
         binding.homeNavBar.setOnClickListener{
             finish()
 
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        ActivityManager.removeActivity(this)
     }
 
     override fun onBackPressed() {

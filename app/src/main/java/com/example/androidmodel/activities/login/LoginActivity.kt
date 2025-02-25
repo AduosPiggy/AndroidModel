@@ -1,21 +1,14 @@
 package com.example.androidmodel.activities.login
 
-import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
-import com.example.androidmodel.activities.test.TestActivity
-import com.example.androidmodel.base.BaseApp
+import com.example.androidmodel.activities.login.test.TestActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityLoginBinding
-import com.example.androidmodel.tools.CustomActivityManager
-import com.example.androidmodel.tools.PermissionUtils
-import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
-
-//import kotlinx.android.synthetic.main.activity_login.*
+import com.example.androidmodel.tools.ActivityManager
 
 /**
  * @author kfflso
@@ -31,7 +24,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CustomActivityManager.addActivity(this)
+        ActivityManager.addActivity(this)
 
         binding.goHome.setOnClickListener {
             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
@@ -40,8 +33,7 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            val vc = BaseApp.Companion.CommonHelper.getVersionCode()
-            Log.d("twy001","twy find vc $vc")
+
         }
         binding.btnSignIn.setOnClickListener {
 
@@ -57,9 +49,9 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
     override fun onDestroy() {
         super.onDestroy()
 
-        CustomActivityManager.removeActivity(this)
-        //考虑是否执行finishAll
-        CustomActivityManager.finishAll()
+        ActivityManager.removeActivity(this)
+        //consider exec finishAll ?
+        ActivityManager.finishAll()
     }
 
     override fun initViews() {

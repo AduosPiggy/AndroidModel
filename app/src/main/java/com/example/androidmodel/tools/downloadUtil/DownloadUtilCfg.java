@@ -1,7 +1,5 @@
 package com.example.androidmodel.tools.downloadUtil;
 
-import com.example.androidmodel.tools.CmdUtil;
-
 public class DownloadUtilCfg {
 
     public static DownloadUtilCfg getInstance(){

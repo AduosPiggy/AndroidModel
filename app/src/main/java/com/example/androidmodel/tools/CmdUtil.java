@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 public class CmdUtil {
 
@@ -19,7 +21,25 @@ public class CmdUtil {
     }
 
     private static String TAG = "CmdUtil";
-    private static final String CHMOD = "chmod 777 /sdcard/Android/data/lems -R";
+    private static final String CHMOD_777 = "chmod 777 /sdcard/Android/data/lems -R";
+
+    public static String execCmdPlus(String... commands){
+        List<String> list = Arrays.asList(commands);
+        StringBuilder result = new StringBuilder();
+        try {
+            Process process = new ProcessBuilder(commands).redirectErrorStream(true).start();
+
+            BufferedReader stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = stdin.readLine()) != null) {
+                result.append(line).append("\n");
+            }
+            stdin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
 
     public static String exeCmd() {
         Process process = null;
@@ -28,7 +48,7 @@ public class CmdUtil {
         try {
             process = Runtime.getRuntime().exec("/system/xbin/su");
             os = new DataOutputStream(process.getOutputStream());
-            os.writeBytes(CHMOD + "\n");
+            os.writeBytes(CHMOD_777 + "\n");
             os.writeBytes("exit\n");
             os.flush();
             InputStream is = process.getInputStream();
