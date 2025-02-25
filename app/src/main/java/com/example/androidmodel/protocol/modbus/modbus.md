@@ -10,7 +10,7 @@
 
 ### 1 开放互联网参考模型
 
-![img01](C:\Users\Administrator\Desktop\modbus\.assets\img01.png)
+![img01](modbus.assets/img01.png)
 
 [Modbus通信协议](https://so.csdn.net/so/search?q=Modbus通信协议&spm=1001.2101.3001.7020)作用在OSI模型的物理层（1层）、数据链路层（2层）及应用层（7层）。这里的OSI被称为开放系统互联参考模型，它定义了网络互连的七层框架，每层框架都有其各自的通信协议。
 
@@ -20,21 +20,21 @@ Modbus协议有三类，分别是：Modbus-RTU、Modbus-ASCII、Modbus-TCP、Mod
 
 大多主要为RTU,其主要报文格式为:  
 
-![img02](C:\Users\Administrator\Desktop\modbus\.assets\img02.png)
+![img02](modbus.assets/img02.png)
 
 ### 3 实际案例
 
 #### 3.1 协议:
 
-![img03](C:\Users\Administrator\Desktop\modbus\.assets\img03.png)
+![img03](modbus.assets/img03.png)
 
-![img04](C:\Users\Administrator\Desktop\modbus\.assets\img04.png)
+![img04](modbus.assets/img04.png)
 
-![img05](C:\Users\Administrator\Desktop\modbus\.assets\img05.png)
+![img05](modbus.assets/img05.png)
 
 #### 3.2 案例
 
-![img06](C:\Users\Administrator\Desktop\modbus\.assets\img06.png)
+![img06](modbus.assets/img06.png)
 
 ### 4 其他案例:
 
