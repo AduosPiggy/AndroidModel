@@ -32,15 +32,14 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
             startActivity(intent)
         }
 
+        binding.btnTest.setOnClickListener{
+            val intent = Intent(this@LoginActivity, TestActivity::class.java)
+            startActivity(intent)
+        }
         binding.btnSignUp.setOnClickListener {
 
         }
         binding.btnSignIn.setOnClickListener {
-
-        }
-        binding.btnTest.setOnClickListener{
-            val intent = Intent(this@LoginActivity, TestActivity::class.java)
-            startActivity(intent)
 
         }
 

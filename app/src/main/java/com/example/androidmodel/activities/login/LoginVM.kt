@@ -2,7 +2,7 @@ package com.example.androidmodel.activities.login
 
 import androidx.lifecycle.MutableLiveData
 import com.example.androidmodel.base.BaseViewModel
-import com.example.androidmodel.beans.LoginRespBean
+import com.example.androidmodel.network.responseBeans.LoginRespBean
 
 /**
  * @author kfflso

@@ -11,9 +11,9 @@ import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding
 import com.example.androidmodel.tools.ActivityManager
+import com.example.androidmodel.tools.apkinfo.ApkInfoImpl
 import com.example.androidmodel.tools.logs.LogsUtils
-import com.example.androidmodel.tools.Kfflso_PermissionUtils
-import com.example.androidmodel.tools.apkinfo.Kfflso_ApkInfoImpl
+import com.example.androidmodel.tools.permission.PermissionUtils
 
 /**
  * @author kfflso
@@ -35,7 +35,7 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             val reqCode = 0
-            Kfflso_PermissionUtils.checkAndRequestMorePermissions(this, permissions, reqCode)
+            PermissionUtils.checkAndRequestMorePermissions(this, permissions, reqCode)
             Log.d(TAG,"get permissions: READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE")
         }
 
@@ -44,10 +44,7 @@ class TestActivity : BaseVMActivity<TestVM,ActivityTestBinding>() {
             val time1 = System.currentTimeMillis()
             Log.d(TAG,"pre: $time1")
             val kfflsoApkInfoImpl =
-                Kfflso_ApkInfoImpl(
-                    this,
-                    "/data/local/tmp/qiangtandenglu3d.apk"
-                )
+                ApkInfoImpl(this, "/data/local/tmp/qiangtandenglu3d.apk")
             val apkInfoJson = kfflsoApkInfoImpl.apkInfoJson
 //            val apkInfo = apkInfoImpl.apkInfo
             val time2 = System.currentTimeMillis()

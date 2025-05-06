@@ -1,8 +1,8 @@
-package com.example.androidmodel.beans
+package com.example.androidmodel.network.responseBeans
 
 /**
  * @author kfflso
- * @data 2024/8/1/001 18:35
+ * @data 2025-05-06 16:09
  * @plus:
  */
 data class LoginRespBean(

@@ -4,3 +4,9 @@ plugins {
     id 'com.android.library' version '7.4.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
 }
+project.ext {
+    //compileSdkVersion = 28
+    retrofitVersion = "2.9.0"
+    //gsonVersion = "2.8.2"
+    //cookieVersion = "v1.0.1"
+}
