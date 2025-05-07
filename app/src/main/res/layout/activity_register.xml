@@ -20,13 +20,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.2" />
-
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glv_1"
+            android:id="@+id/glh_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.1" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glv_3"
             android:layout_width="wrap_content"
@@ -39,9 +39,9 @@
             android:layout_height="wrap_content"
             android:text="@string/register_phone_num"
             android:textSize="15sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/glh_1"
-            app:layout_constraintStart_toStartOf="@+id/glv_1"
+            app:layout_constraintTop_toBottomOf="@id/glh_1"
+            app:layout_constraintBottom_toTopOf="@+id/glh_2"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/glv_3"
             />
         <EditText
@@ -53,8 +53,8 @@
             android:inputType="phone"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/glh_1"
+            app:layout_constraintTop_toBottomOf="@id/glh_1"
+            app:layout_constraintBottom_toTopOf="@+id/glh_2"
             app:layout_constraintStart_toEndOf="@+id/glv_3"
             />
         <TextView
@@ -62,9 +62,9 @@
             android:layout_height="wrap_content"
             android:text="@string/register_pwd"
             android:textSize="15sp"
-            app:layout_constraintTop_toTopOf="@+id/glh_1"
-            app:layout_constraintBottom_toTopOf="@+id/glh_2"
-            app:layout_constraintStart_toStartOf="@+id/glv_1"
+            app:layout_constraintTop_toBottomOf="@id/glh_2"
+            app:layout_constraintBottom_toTopOf="@+id/glh_3"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/glv_3"
             >
 
@@ -80,8 +80,8 @@
             android:inputType="textVisiblePassword"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            app:layout_constraintTop_toTopOf="@+id/glh_1"
-            app:layout_constraintBottom_toTopOf="@+id/glh_2"
+            app:layout_constraintTop_toBottomOf="@id/glh_2"
+            app:layout_constraintBottom_toTopOf="@+id/glh_3"
             app:layout_constraintStart_toEndOf="@+id/glv_3"
             />
 
@@ -94,7 +94,7 @@
             android:textColor="#FFFFFB"
             android:textSize="15sp"
             android:layout_marginTop="100dp"
-            app:layout_constraintTop_toBottomOf="@+id/glh_2"
+            app:layout_constraintTop_toBottomOf="@+id/glh_3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />

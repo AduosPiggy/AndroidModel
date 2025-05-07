@@ -19,7 +19,6 @@ class HomeActivity : BaseVMActivity<HomeVM,ActivityHomeBinding>() {
         ActivityManager.addActivity(this)
 
         binding.homeNavBar.setOnClickListener{
-            finish()
 
         }
     }

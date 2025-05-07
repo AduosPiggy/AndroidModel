@@ -1,4 +1,4 @@
-package com.example.androidmodel.activities.login.test.sdkscan
+package com.example.androidmodel.activities.test.sdkscan
 
 import android.os.Bundle
 import com.example.androidmodel.R

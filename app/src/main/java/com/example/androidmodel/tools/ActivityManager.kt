@@ -16,6 +16,7 @@ object ActivityManager {
 
     fun removeActivity(activity: Activity) {
         activities.remove(activity)
+        activity.finish()
     }
 
     fun finishAll() {

@@ -8,6 +8,6 @@ package com.example.androidmodel.base
 class Global {
     companion object{
         //调试模式
-        var isDebug = true
+        var isDebug = false
     }
 }

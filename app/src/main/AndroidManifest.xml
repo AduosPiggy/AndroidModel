@@ -50,11 +50,11 @@
             android:exported="false"/>
 
 
-        <activity android:name=".activities.login.test.TestActivity"
+        <activity android:name=".activities.test.TestActivity"
             android:exported="false"/>
-        <activity android:name=".activities.login.test.sdkscan.SdksScanActivity"
+        <activity android:name=".activities.test.sdkscan.SdksScanActivity"
             android:exported="false"/>
-        <activity android:name=".activities.login.test.broadcast.BroadSimulateActivity"
+        <activity android:name=".activities.test.broadcast.BroadSimulateActivity"
             android:exported="false"/>
 
         <receiver

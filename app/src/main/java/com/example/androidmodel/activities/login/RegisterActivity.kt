@@ -1,5 +1,6 @@
 package com.example.androidmodel.activities.login
 
+import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -9,6 +10,7 @@ import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.Global
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityRegisterBinding
+import com.example.androidmodel.tools.ActivityManager
 import com.example.androidmodel.tools.startActivity
 import kotlinx.coroutines.launch
 
@@ -19,10 +21,17 @@ import kotlinx.coroutines.launch
  */
 @ContentLayout(R.layout.activity_register)
 class RegisterActivity : BaseVMActivity<LoginVM,ActivityRegisterBinding>(){
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ActivityManager.addActivity(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ActivityManager.removeActivity(this)
+    }
+
     override fun initViews() {
-        if(Global.isDebug){
-            return
-        }
         binding.SignIn.setOnClickListener{
             var phoneNum = binding.etPhoneNum.text.toString().trim()
             var password =binding.PasswordAgain.text.toString().trim()
@@ -38,9 +47,6 @@ class RegisterActivity : BaseVMActivity<LoginVM,ActivityRegisterBinding>(){
     }
 
     override fun initDatas() {
-        if(Global.isDebug){
-            return
-        }
         viewModel.loginRespBean.observe(this){
             Toast.makeText(this@RegisterActivity,"验证通过,注册成功",Toast.LENGTH_SHORT).show()
             finish()

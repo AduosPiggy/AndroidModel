@@ -1,4 +1,4 @@
-package com.example.androidmodel.activities.login.test
+package com.example.androidmodel.activities.test
 
 import com.example.androidmodel.base.BaseViewModel
 

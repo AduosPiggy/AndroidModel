@@ -1,12 +1,12 @@
-package com.example.androidmodel.activities.login.test
+package com.example.androidmodel.activities.test
 
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.example.androidmodel.R
-import com.example.androidmodel.activities.login.test.broadcast.BroadSimulateActivity
-import com.example.androidmodel.activities.login.test.sdkscan.SdksScanActivity
+import com.example.androidmodel.activities.test.broadcast.BroadSimulateActivity
+import com.example.androidmodel.activities.test.sdkscan.SdksScanActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityTestBinding

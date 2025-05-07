@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.androidmodel.R
 import com.example.androidmodel.activities.home.HomeActivity
-import com.example.androidmodel.activities.login.test.TestActivity
+import com.example.androidmodel.activities.test.TestActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.Global
 import com.example.androidmodel.base.annotation.ContentLayout
@@ -39,17 +39,9 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
         binding.btnTest.setOnClickListener{
             startActivity(TestActivity::class)
         }
-        binding.btnSignUp.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        }
         binding.btnSignIn.setOnClickListener {
             val name = binding.etUsername.text.toString().trim()
             val pwd = binding.etPwd.text.toString().trim()
-            Log.d("kfflso111","going return 50")
-            if(Global.isDebug) return@setOnClickListener
-            Log.d("kfflso111","not be here")
             if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(pwd)){
                 lifecycleScope.launch {
                     viewModel.login(name,pwd)
@@ -58,7 +50,11 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
                 Toast.makeText(this@LoginActivity, "请输入用户名或密码", Toast.LENGTH_SHORT).show()
             }
         }
-
+        binding.btnSignUp.setOnClickListener {
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
