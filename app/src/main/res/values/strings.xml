@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AndroidModel</string>
+    <string name="register_phone_num">手机号</string>
+    <string name="register_input_phone">请输入手机号</string>
+    <string name="register_pwd">密码</string>
+    <string name="register_input_pwd">请输入密码</string>
+    <string name="register_signup">注 册</string>
+
 </resources>

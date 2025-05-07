@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/black">
+            android:background="@color/blue">
             <!--        todo 导航栏布局-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
