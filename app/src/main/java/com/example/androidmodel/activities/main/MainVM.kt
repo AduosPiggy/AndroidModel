@@ -1,4 +1,4 @@
-package com.example.androidmodel.activities.home
+package com.example.androidmodel.activities.main
 
 import com.example.androidmodel.base.BaseViewModel
 

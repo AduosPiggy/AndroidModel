@@ -5,7 +5,7 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.androidmodel.R
-import com.example.androidmodel.activities.home.MainActivity
+import com.example.androidmodel.activities.main.MainActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityRegisterBinding

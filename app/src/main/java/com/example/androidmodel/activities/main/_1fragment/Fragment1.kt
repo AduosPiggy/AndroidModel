@@ -1,6 +1,7 @@
 package com.example.androidmodel.activities.main._1fragment
 
 import android.os.Bundle
+import android.util.Log
 import com.example.androidmodel.R
 import com.example.androidmodel.base.BaseVMFragment
 import com.example.androidmodel.base.annotation.ContentLayout
@@ -20,5 +21,8 @@ class Fragment1 : BaseVMFragment<Fragment1VM,FragmentNav1Binding>(){
     override fun initView(savedInstanceState: Bundle?){
         super.initView(savedInstanceState)
         binding.txtview.text = "第一个fragment"
+        binding.txtview.setOnClickListener{
+            Log.d("kfflsol","change to fragment 1")
+        }
     }
 }

@@ -6,7 +6,8 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.androidmodel.R
-import com.example.androidmodel.activities.home.MainActivity
+import com.example.androidmodel.activities.main.MainActivity
+import com.example.androidmodel.activities.main2.Main2Activity
 import com.example.androidmodel.activities.test.TestActivity
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
@@ -52,6 +53,9 @@ class LoginActivity : BaseVMActivity<LoginVM,ActivityLoginBinding>() {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
 //            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+        }
+        binding.goMain2.setOnClickListener{
+            startActivity(Main2Activity::class)
         }
     }
 

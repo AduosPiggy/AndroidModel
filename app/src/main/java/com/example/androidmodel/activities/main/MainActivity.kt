@@ -1,7 +1,6 @@
-package com.example.androidmodel.activities.home
+package com.example.androidmodel.activities.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.androidmodel.R
@@ -11,7 +10,7 @@ import com.example.androidmodel.activities.main._3fragment.Fragment3
 import com.example.androidmodel.activities.main._4fragment.Fragment4
 import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.annotation.ContentLayout
-import com.example.androidmodel.databinding.ActivityHomeBinding
+import com.example.androidmodel.databinding.ActivityMainBinding
 import com.example.androidmodel.tools.ActivityManager
 import com.example.androidmodel.tools.FragmentSwitcher
 
@@ -20,8 +19,8 @@ import com.example.androidmodel.tools.FragmentSwitcher
  * @data 2024/8/1/001 18:51
  * @plus:
  */
-@ContentLayout(R.layout.activity_home)
-class MainActivity : BaseVMActivity<MainVM,ActivityHomeBinding>() {
+@ContentLayout(R.layout.activity_main)
+class MainActivity : BaseVMActivity<MainVM,ActivityMainBinding>() {
 
     private lateinit var fragmentSwitcher: FragmentSwitcher
     private val fragments: Array<Fragment> = arrayOf(
