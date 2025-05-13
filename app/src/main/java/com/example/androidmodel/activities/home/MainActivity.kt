@@ -42,19 +42,15 @@ class MainActivity : BaseVMActivity<MainVM,ActivityHomeBinding>() {
         super.onCreate(savedInstanceState)
         ActivityManager.addActivity(this)
         binding.mainCl1.setOnClickListener{
-            Log.d("kfflso","clicked cl1")
             fragmentSwitcher.changeTag(binding.mainCl1)
         }
         binding.mainCl2.setOnClickListener{
-            Log.d("kfflso","clicked cl2")
             fragmentSwitcher.changeTag(binding.mainCl2)
         }
         binding.mainCl3.setOnClickListener{
-            Log.d("kfflso","clicked cl3")
             fragmentSwitcher.changeTag(binding.mainCl3)
         }
         binding.mainCl4.setOnClickListener{
-            Log.d("kfflso","clicked cl4")
             fragmentSwitcher.changeTag(binding.mainCl4)
         }
 
