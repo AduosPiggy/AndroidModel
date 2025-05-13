@@ -3,11 +3,12 @@ package com.example.androidmodel.base
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import java.lang.reflect.ParameterizedType
 
 
-abstract class BaseVMFragment<VM : BaseViewModel> : BaseFragment() {
+abstract class BaseVMFragment<VM : BaseViewModel,VB : ViewDataBinding> : BaseFragment<VB>() {
 
     protected lateinit var viewModel: VM
 

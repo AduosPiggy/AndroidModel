@@ -5,9 +5,8 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.androidmodel.R
-import com.example.androidmodel.activities.home.HomeActivity
+import com.example.androidmodel.activities.home.MainActivity
 import com.example.androidmodel.base.BaseVMActivity
-import com.example.androidmodel.base.Global
 import com.example.androidmodel.base.annotation.ContentLayout
 import com.example.androidmodel.databinding.ActivityRegisterBinding
 import com.example.androidmodel.tools.ActivityManager
@@ -50,7 +49,7 @@ class RegisterActivity : BaseVMActivity<LoginVM,ActivityRegisterBinding>(){
         viewModel.loginRespBean.observe(this){
             Toast.makeText(this@RegisterActivity,"验证通过,注册成功",Toast.LENGTH_SHORT).show()
             finish()
-            startActivity(HomeActivity::class)
+            startActivity(MainActivity::class)
         }
     }
 

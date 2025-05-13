@@ -4,18 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.example.androidmodel.base.annotation.ContentLayout
 import org.greenrobot.eventbus.EventBus
 
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<VB:ViewDataBinding> : Fragment() {
 
     //是否第一次加载
     private var isFirst: Boolean = true
 
     private var mUseEventBus = false
+
+    private var _binding:VB? = null
+    val binding get() = _binding!!
 
     private lateinit var rootView: View
     val TAG: String by lazy {
@@ -32,10 +37,17 @@ abstract class BaseFragment : Fragment() {
         initLayoutWithOutAnnotation()
         initAttributes()
         mUseEventBus = userEventBus()
-        rootView = inflater.inflate(layoutResId, container, false)
-        return rootView
+//        rootView = inflater.inflate(layoutResId, container, false)
+//        return rootView
+        _binding = DataBindingUtil.inflate(inflater,layoutResId,container,false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        initView(savedInstanceState)
+    }
     open fun initLayoutWithOutAnnotation() {}
 
     private fun initAttributes() {
@@ -53,11 +65,6 @@ abstract class BaseFragment : Fragment() {
 
     open fun setFragmentLayout(layoutResId: Int) = layoutResId
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initView(savedInstanceState)
-    }
 
     open fun initView(savedInstanceState: Bundle?) {}
 

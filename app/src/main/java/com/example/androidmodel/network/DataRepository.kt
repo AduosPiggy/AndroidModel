@@ -6,4 +6,5 @@ package com.example.androidmodel.network
  * @plus:
  */
 class DataRepository {
+    //some get method
 }

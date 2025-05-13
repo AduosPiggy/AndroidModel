@@ -1,6 +1,5 @@
 package com.example.androidmodel.activities.home
 
-import com.example.androidmodel.base.BaseVMActivity
 import com.example.androidmodel.base.BaseViewModel
 
 /**
@@ -8,6 +7,6 @@ import com.example.androidmodel.base.BaseViewModel
  * @data 2024/8/1/001 18:53
  * @plus:
  */
-class HomeVM: BaseViewModel(){
+class MainVM: BaseViewModel(){
 
 }
